@@ -21,10 +21,9 @@ const Sidebar = ({ isOpen }) => {
             {/* Overlay para móvil */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+                    className="fixed inset-0 bg-black/50 z-50 lg:hidden"
                 />
             )}
-
             {/* Sidebar */}
             <aside
                 className={`
@@ -32,10 +31,10 @@ const Sidebar = ({ isOpen }) => {
                     h-full w-64 
                     bg-background
                     border-r
+                    shadow-lg
                     transition-transform duration-300 ease-in-out
                     ${isOpen ? "translate-x-0" : "-translate-x-full"}
                     p-4
-                    pt-20 // Espacio para el Navbar fijo
                 `}
             >
                 {/* Menú */}
