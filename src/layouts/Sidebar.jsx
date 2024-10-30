@@ -9,17 +9,18 @@ import {
     X
 } from "lucide-react";
 import { Button } from "@nextui-org/react";
+import { Link } from "react-router-dom";
 
 const Sidebar = ({ isOpen, onToggle }) => {
     const menuItems = [
-        { icon: <BarChart size={20} />, text: "Dashboard", href: "#" },
+        { icon: <BarChart size={20} />, text: "Dashboard", to: "/dashboard" },
         { icon: <Home size={20} />, text: "Accommodations", href: "#" },
-        { icon: <HelpCircle size={20} />, text: "Services", href: "#" },
+        { icon: <HelpCircle size={20} />, text: "Services", to: "/services" },
         { icon: <HelpCircle size={20} />, text: "Plains", href: "#" },
         { icon: <Users size={20} />, text: "Clients", href: "#" },
         { icon: <HelpCircle size={20} />, text: "Reservations", href: "#" },
         { icon: <Users size={20} />, text: "Users", href: "#" },
-        { icon: <Settings size={20} />, text: "Config", href: "#" },
+        { icon: <Settings size={20} />, text: "Config", to: "/settings" },
 
     ];
 
@@ -31,7 +32,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
                     onClick={onToggle}
                     variant="light"
                     isIconOnly
-                    className="fixed top-3 left-4 z-50"
+                    className="fixed z-50 top-3 left-4"
                 >
                     <Menu size={20} />
                 </Button>
@@ -40,7 +41,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
             {/* Overlay */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black/50 z-50"
+                    className="fixed inset-0 z-50 bg-black/50"
                     onClick={onToggle}
                 />
             )}
@@ -58,7 +59,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
                 `}
             >
                 {/* Header con botón de cierre */}
-                <div className="flex justify-between items-center mb-8 mt-4">
+                <div className="flex items-center justify-between mt-4 mb-8">
                     <div className="flex items-center gap-2">
                         <span className="text-xl font-bold">ADMIN</span>
                     </div>
@@ -74,16 +75,16 @@ const Sidebar = ({ isOpen, onToggle }) => {
 
                 {/* Menú */}
                 <nav className="space-y-2">
-                    {menuItems.map((item, index) => (
-                        <a
-                            key={index}
-                            href={item.href}
-                            className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
-                        >
-                            {item.icon}
-                            <span>{item.text}</span>
-                        </a>
-                    ))}
+                    <ul>
+                        {menuItems.map((item, index) => (
+                            <li key={index}>
+                                <Link to={item.to} className="flex items-center p-2">
+                                    {item.icon}
+                                    <span className="ml-2">{item.text}</span>
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
                 </nav>
             </aside>
         </>
