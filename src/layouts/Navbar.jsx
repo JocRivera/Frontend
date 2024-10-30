@@ -1,24 +1,34 @@
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, Avatar, Button } from "@nextui-org/react";
-import { Menu } from "lucide-react";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, Avatar } from "@nextui-org/react";
 import { AcmeLogo } from "./AcmeLogo.jsx";
 
-export default function NavbarComponent({ onMenuClick }) {
+export default function NavbarComponent() {
   return (
-    <Navbar className="fixed top-0 w-full z-40" isBordered>
+    <Navbar className="fixed top-0 w-full z-40">
       <NavbarContent>
-        <Button
-          onClick={onMenuClick}
-          variant="light"
-          isIconOnly
-          className="min-w-unit-8 mr-4"
-        >
-          <Menu size={20} />
-        </Button>
         <NavbarBrand>
           <AcmeLogo />
           <p className="font-bold text-inherit">ACME</p>
         </NavbarBrand>
       </NavbarContent>
+
+      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+        <NavbarItem>
+          <Link color="foreground" href="#">
+            Features
+          </Link>
+        </NavbarItem>
+        <NavbarItem isActive>
+          <Link href="#" aria-current="page" color="secondary">
+            Customers
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="#">
+            Integrations
+          </Link>
+        </NavbarItem>
+      </NavbarContent>
+
       <NavbarContent as="div" justify="end">
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
@@ -49,6 +59,6 @@ export default function NavbarComponent({ onMenuClick }) {
           </DropdownMenu>
         </Dropdown>
       </NavbarContent>
-    </Navbar >
+    </Navbar>
   );
 }
