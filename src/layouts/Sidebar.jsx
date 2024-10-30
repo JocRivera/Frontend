@@ -12,11 +12,15 @@ import { Button } from "@nextui-org/react";
 
 const Sidebar = ({ isOpen, onToggle }) => {
     const menuItems = [
-        { icon: <Home size={20} />, text: "Inicio", href: "#" },
-        { icon: <Users size={20} />, text: "Clientes", href: "#" },
-        { icon: <BarChart size={20} />, text: "Analytics", href: "#" },
-        { icon: <Settings size={20} />, text: "Configuración", href: "#" },
-        { icon: <HelpCircle size={20} />, text: "Ayuda", href: "#" },
+        { icon: <BarChart size={20} />, text: "Dashboard", href: "#" },
+        { icon: <Home size={20} />, text: "Accommodations", href: "#" },
+        { icon: <HelpCircle size={20} />, text: "Services", href: "#" },
+        { icon: <HelpCircle size={20} />, text: "Plains", href: "#" },
+        { icon: <Users size={20} />, text: "Clients", href: "#" },
+        { icon: <HelpCircle size={20} />, text: "Reservations", href: "#" },
+        { icon: <Users size={20} />, text: "Users", href: "#" },
+        { icon: <Settings size={20} />, text: "Config", href: "#" },
+
     ];
 
     return (
@@ -56,8 +60,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
                 {/* Header con botón de cierre */}
                 <div className="flex justify-between items-center mb-8 mt-4">
                     <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-primary" />
-                        <span className="text-xl font-bold">ACME</span>
+                        <span className="text-xl font-bold">ADMIN</span>
                     </div>
                     <Button
                         onClick={onToggle}
