@@ -2,7 +2,7 @@ import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, DropdownItem, Dro
 
 export default function NavbarComponent() {
   return (
-    <Navbar className="fixed top-0 w-full z-40">
+    <Navbar className="fixed top-0 z-40 w-full">
       <NavbarContent>
         <NavbarBrand>
           <p className="font-bold text-inherit">BOOKEDGE</p>
@@ -23,7 +23,7 @@ export default function NavbarComponent() {
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="h-14 gap-2">
+            <DropdownItem key="profile" className="gap-2 h-14">
               <p className="font-semibold">Admin</p>
             </DropdownItem>
             <DropdownItem key="settings">My Settings</DropdownItem>

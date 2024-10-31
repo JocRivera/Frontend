@@ -1,23 +1,19 @@
 import { useState } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import Navbar from './layouts/Navbar.jsx'
-import Sidebar from './layouts/Sidebar.jsx'
-import AdminRoutes from './routes/Admin.routes.jsx';
-
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import UserRoutes from './routes/user.routes.jsx';
+import AdminLayout from './layouts/Admin.jsx';
+import AdminRoutes from './routes/admin.routes.jsx';
 function App() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
   return (
     <Router>
       <div className="min-h-screen">
-        <Navbar />
-        <Sidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
         <main className="p-4 pt-16">
-          <AdminRoutes />
+          <Routes>
+            <Route path="/" element={<UserRoutes />} />
+            <Route path="/*" element={<AdminLayout />}>
+              <Route path="*" element={<AdminRoutes />} />
+            </Route>
+          </Routes>
         </main>
       </div>
     </Router>
