@@ -9,7 +9,6 @@ const AdminRoutes = () => {
             <Route path="dashboard" element={<DashboardManagement />} />
             <Route path="settings" element={<SettingsManagement />} />
             <Route path="services" element={<ServicesManagement />} />
-            <Route path="*" element={<Navigate to="dashboard" replace />} />
         </Routes>
     );
 };
