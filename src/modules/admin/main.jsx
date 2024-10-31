@@ -6,7 +6,7 @@ import DoughnutsChart from './Doughnut.jsx';
 
 const DashboardManagement = () => {
     return (
-        <div className="dashboard-container">
+        <div>
             <Card className="py-4">
                 <CardBody className="py-2 overflow-visible">
                     <BarsChart />
