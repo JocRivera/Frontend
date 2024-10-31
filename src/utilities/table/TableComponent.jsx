@@ -1,9 +1,9 @@
 import React from "react";
-import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip, getKeyValue} from "@nextui-org/react";
-import {EditIcon} from "./EditIcon";
-import {DeleteIcon} from "./DeleteIcon";
-import {EyeIcon} from "./EyeIcon";
-import {columns, users} from "./data";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip, getKeyValue } from "@nextui-org/react";
+import { EditIcon } from "./EditIcon";
+import { DeleteIcon } from "./DeleteIcon";
+import { EyeIcon } from "./EyeIcon";
+import { columns, users } from "./data";
 
 const statusColorMap = {
   active: "success",
@@ -11,28 +11,11 @@ const statusColorMap = {
   vacation: "warning",
 };
 
-export default function TableComponent() {
+export default function TableComponent({ columns }) {
   const renderCell = React.useCallback((user, columnKey) => {
     const cellValue = user[columnKey];
 
     switch (columnKey) {
-      case "name":
-        return (
-          <User
-            avatarProps={{radius: "lg", src: user.avatar}}
-            description={user.email}
-            name={cellValue}
-          >
-            {user.email}
-          </User>
-        );
-      case "role":
-        return (
-          <div className="flex flex-col">
-            <p className="text-sm capitalize text-bold">{cellValue}</p>
-            <p className="text-sm capitalize text-bold text-default-400">{user.team}</p>
-          </div>
-        );
       case "status":
         return (
           <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
@@ -41,7 +24,7 @@ export default function TableComponent() {
         );
       case "actions":
         return (
-          <div className="relative flex items-center gap-2">
+          <div className="relative flex items-center gap-2 ">
             <Tooltip content="Details">
               <span className="text-lg cursor-pointer text-default-400 active:opacity-50">
                 <EyeIcon />
@@ -65,7 +48,7 @@ export default function TableComponent() {
   }, []);
 
   return (
-  <Table aria-label="Example table with custom cells">
+    <Table aria-label="Example table with custom cells">
       <TableHeader columns={columns}>
         {(column) => (
           <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"}>

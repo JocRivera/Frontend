@@ -1,15 +1,17 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, Avatar } from "@nextui-org/react";
-
+import Notification from "../utilities/notification/Notification";
 export default function NavbarComponent() {
   return (
     <Navbar className="fixed top-0 z-40 w-full">
       <NavbarContent>
-        <NavbarBrand>
+        <NavbarBrand className="justify-center">
           <p className="font-bold text-inherit">BOOKEDGE</p>
         </NavbarBrand>
       </NavbarContent>
-
       <NavbarContent as="div" justify="end">
+        <NavbarItem>
+          <Notification />
+        </NavbarItem>
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
             <Avatar

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import UserRoutes from './routes/user.routes.jsx';
 import AdminLayout from './layouts/Admin.jsx';
-import AdminRoutes from './routes/admin.routes.jsx';
+import AdminRoutes from './routes/Admin.routes.jsx';
 function App() {
   return (
     <Router>
