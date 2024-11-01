@@ -13,7 +13,6 @@ import {
   DropdownMenu,
   DropdownItem,
   Chip,
-  User,
   Pagination,
   Tooltip,
 } from "@nextui-org/react";
@@ -23,18 +22,15 @@ import { EyeIcon } from "./EyeIcon";
 import { PlusIcon } from "./PlusIcon.jsx";
 import { SearchIcon } from "./SearchIcon";
 import { ChevronDownIcon } from "./ChevronDownIcon.jsx";
-import { columns, users, statusOptions } from "./data";
 import { capitalize } from "./utils.jsx";
 
 const statusColorMap = {
   active: "success",
-  paused: "danger",
-  vacation: "warning",
+  inactive: "danger",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
 
-export default function TableComponent() {
+export default function TableComponent({ columns, users, INITIAL_VISIBLE_COLUMNS, statusOptions }) {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState(new Set(INITIAL_VISIBLE_COLUMNS));
@@ -52,14 +48,16 @@ export default function TableComponent() {
     if (visibleColumns === "all") return columns;
 
     return columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
-  }, [visibleColumns]);
+  }, [visibleColumns, columns]);
 
   const filteredItems = React.useMemo(() => {
     let filteredUsers = [...users];
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
-        user.name.toLowerCase().includes(filterValue.toLowerCase()),
+        Object.values(user).some((value) =>
+          String(value).toLowerCase().includes(filterValue.toLowerCase()),
+        ),
       );
     }
     if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
@@ -94,23 +92,6 @@ export default function TableComponent() {
     const cellValue = user[columnKey];
 
     switch (columnKey) {
-      case "name":
-        return (
-          <User
-            avatarProps={{ radius: "lg", src: user.avatar }}
-            description={user.email}
-            name={cellValue}
-          >
-            {user.email}
-          </User>
-        );
-      case "role":
-        return (
-          <div className="flex flex-col">
-            <p className="capitalize text-bold text-small">{cellValue}</p>
-            <p className="capitalize text-bold text-tiny text-default-400">{user.team}</p>
-          </div>
-        );
       case "status":
         return (
           <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
@@ -264,9 +245,7 @@ export default function TableComponent() {
     return (
       <div className="flex items-center justify-between px-2 py-2">
         <span className="w-[30%] text-small text-default-400">
-          {selectedKeys === "all"
-            ? "All items selected"
-            : `${selectedKeys.size} of ${filteredItems.length} selected`}
+          Hosteria Los lagos
         </span>
         <Pagination
           isCompact
@@ -298,8 +277,6 @@ export default function TableComponent() {
       classNames={{
         wrapper: "max-h-[382px]",
       }}
-      selectedKeys={selectedKeys}
-      selectionMode="multiple"
       sortDescriptor={sortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
