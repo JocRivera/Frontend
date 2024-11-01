@@ -1,5 +1,3 @@
-import SearchBar from '../../utilities/search/SearchBar';
-import { Button } from '@nextui-org/react';
 import TableComponent from '../../utilities/table/TableComponent';
 export default function ServicesManagement() {
     const serviceColumns = [
@@ -21,12 +19,6 @@ export default function ServicesManagement() {
     // const displayedServices = filteredServices.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
     return (
         <div>
-            <div className="flex items-center justify-between mb-4"> {/* Align search bar and button */}
-                <SearchBar /* Implement your SearchBar component functionality here */ />
-                <Button radius="full" className="text-white shadow-lg bg-gradient-to-tr from-pink-500 to-yellow-500">
-                    Button
-                </Button>
-            </div>
             <TableComponent columns={serviceColumns} />
         </div>
     );
