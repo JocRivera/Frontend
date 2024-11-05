@@ -100,7 +100,7 @@ export default function TableComponent({ columns, users, INITIAL_VISIBLE_COLUMNS
         );
       case "actions":
         return (
-          <div className="relative flex items-center gap-2">
+          <div className="relative flex items-center justify-center gap-2">
             <Tooltip content="Details">
               <span className="text-lg cursor-pointer text-default-400 active:opacity-50">
                 <EyeIcon />
