@@ -1,7 +1,7 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, Avatar } from "@nextui-org/react";
 export default function NavbarComponent() {
   return (
-    <Navbar className="fixed top-0 z-40 w-full">
+    <Navbar isBordered className="fixed top-0 z-40 w-full">
       <NavbarContent>
         <NavbarBrand className="justify-center">
           <p className="font-bold text-inherit">BOOKEDGE</p>
