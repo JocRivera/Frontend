@@ -23,6 +23,7 @@ import { PlusIcon } from "./PlusIcon.jsx";
 import { SearchIcon } from "./SearchIcon";
 import { ChevronDownIcon } from "./ChevronDownIcon.jsx";
 import { capitalize } from "./utils.jsx";
+import ModalView from "./OpenModal.jsx"
 
 const statusColorMap = {
   active: "success",
@@ -210,9 +211,7 @@ export default function TableComponent({ columns, users, INITIAL_VISIBLE_COLUMNS
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button className="text-white shadow-lg bg-gradient-to-tr from-pink-500 to-yellow-500" color="primary" endContent={<PlusIcon />}>
-              Add New
-            </Button>
+            <ModalView />
           </div>
         </div>
         <div className="flex items-center justify-between">
