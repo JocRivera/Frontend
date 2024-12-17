@@ -7,6 +7,25 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 
 export default function Home() {
+    const responsive = {
+        superLargeDesktop: {
+            // the naming can be any, depends on you.
+            breakpoint: { max: 4000, min: 3000 },
+            items: 5
+        },
+        desktop: {
+            breakpoint: { max: 3000, min: 1024 },
+            items: 3
+        },
+        tablet: {
+            breakpoint: { max: 1024, min: 464 },
+            items: 2
+        },
+        mobile: {
+            breakpoint: { max: 464, min: 0 },
+            items: 1
+        }
+    };
     return (
         <div className="settings-container ">
             <Card className="py-4">
@@ -14,17 +33,14 @@ export default function Home() {
                     <div className="mb-10">
                         <Video />
                     </div>
-                    <div className="grid grid-cols-3 gap-6 mx-auto">
+                    <Carousel responsive={responsive}
+                        infinite={true}
+                    >
                         <Cardcomponent />
                         <Cardcomponent />
                         <Cardcomponent />
                         <Cardcomponent />
-                        <Cardcomponent />
-                        <Cardcomponent />
-                        <Cardcomponent />
-                        <Cardcomponent />
-                        <Cardcomponent />
-                    </div>
+                    </Carousel>
 
                 </CardBody>
             </Card>

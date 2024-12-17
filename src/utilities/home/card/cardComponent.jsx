@@ -2,7 +2,7 @@
 import { Card, CardHeader, CardFooter, Image, Button } from "@nextui-org/react";
 const Cardcomponent = ({ data }) => {
     return (
-        <Card isFooterBlurred className=" h-[474px]">
+        <Card isFooterBlurred className=" h-[474px] py-4 mx-2">
             <Image
                 removeWrapper
                 alt="Card example background"

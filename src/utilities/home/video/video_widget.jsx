@@ -8,7 +8,7 @@ const Video = () => {
 
     const videoJsOptions = {
         autoplay: true,
-        controls: true,
+        controls: false,    // Desactiva los controles completos, incluyendo la barra de duración
         responsive: true,
         fluid: true,
         sources: [{
