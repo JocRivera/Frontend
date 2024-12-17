@@ -7,6 +7,14 @@ export default function App() {
   const handleAdminRedirect = () => {
     navigate('/dashboard');
   };
+  const handleClientRedirect = () => {
+    navigate('/client/MyBookings');
+  };
+  const handleUserRedirect = () => {
+    navigate('/');
+  }
+  
+  
   return (
     <Navbar isBordered className="fixed top-0 z-40 w-full"
       classNames={{
@@ -30,19 +38,24 @@ export default function App() {
         <LagosLogo />
       </NavbarBrand>
       <NavbarContent className="hidden gap-4 sm:flex" justify="center">
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Features
-          </Link>
-        </NavbarItem>
         <NavbarItem isActive>
           <Link href="#" aria-current="page">
-            Customers
+            Contacto
           </Link>
         </NavbarItem>
         <NavbarItem>
           <Link color="foreground" href="#">
-            Integrations
+            Alojamientos
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="#">
+            Planes
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="#" onClick={handleClientRedirect}>
+            Reservas
           </Link>
         </NavbarItem>
       </NavbarContent>

@@ -1,15 +1,12 @@
 import React from "react";
 import { Card, CardBody } from "@nextui-org/react";
-import { Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import Video from "../../utilities/home/video/video_widget";
 import Cardcomponent from "../../utilities/home/card/cardComponent";
-export default function Home() {
-    const navigate = useNavigate();
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 
-    const handleAdminRedirect = () => {
-        navigate('/dashboard');
-    };
+export default function Home() {
     return (
         <div className="settings-container ">
             <Card className="py-4">
@@ -21,7 +18,14 @@ export default function Home() {
                         <Cardcomponent />
                         <Cardcomponent />
                         <Cardcomponent />
+                        <Cardcomponent />
+                        <Cardcomponent />
+                        <Cardcomponent />
+                        <Cardcomponent />
+                        <Cardcomponent />
+                        <Cardcomponent />
                     </div>
+
                 </CardBody>
             </Card>
         </div>

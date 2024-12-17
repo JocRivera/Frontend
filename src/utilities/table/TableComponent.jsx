@@ -216,7 +216,7 @@ export default function TableComponent({ columns, users, INITIAL_VISIBLE_COLUMNS
           </div>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-default-400 text-small">Total {users.length} users</span>
+          <span className="text-default-400 text-small"> {users.length} </span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
             <select

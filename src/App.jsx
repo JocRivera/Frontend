@@ -4,6 +4,8 @@ import UserRoutes from './routes/user.routes.jsx';
 import AdminLayout from './layouts/Admin.jsx';
 import AdminRoutes from './routes/Admin.routes.jsx';
 import HomeLayout from './layouts/Home.jsx';
+import ClientLayout from './client/layouts/Client.jsx';
+import ClientRoutes from './routes/Client.routes.jsx';
 function App() {
   return (
     <Router>
@@ -15,6 +17,9 @@ function App() {
             </Route>
             <Route path="/*" element={<AdminLayout />}>
               <Route path="*" element={<AdminRoutes />} />
+            </Route>
+            <Route path="/client/*" element={<ClientLayout />}>
+              <Route path="*" element={<ClientRoutes />} />
             </Route>
           </Routes>
         </main>
