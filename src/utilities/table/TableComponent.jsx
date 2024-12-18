@@ -31,7 +31,7 @@ const statusColorMap = {
 };
 
 
-export default function TableComponent({ columns, data, INITIAL_VISIBLE_COLUMNS, statusOptions }) {
+export default function TableComponent({ columns, data, INITIAL_VISIBLE_COLUMNS, statusOptions, Dynamic }) {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState(new Set(INITIAL_VISIBLE_COLUMNS));
@@ -211,7 +211,7 @@ export default function TableComponent({ columns, data, INITIAL_VISIBLE_COLUMNS,
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <ModalView />
+            <ModalView FormComponent={Dynamic} />
           </div>
         </div>
         <div className="flex items-center justify-between">

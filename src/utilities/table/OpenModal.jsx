@@ -11,7 +11,7 @@ import {
 import { PlusIcon } from "./PlusIcon.jsx";
 import BookForm from "../forms/reservation/client/ReservationForm.jsx";
 
-export default function ModalView() {
+export default function ModalView({ FormComponent }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const targetRef = React.useRef(null);
     const [scrollBehavior, setScrollBehavior] = React.useState("inside");
@@ -24,17 +24,19 @@ export default function ModalView() {
                     {(onClose) => (
                         <>
                             <ModalHeader className="flex flex-col gap-1">
-                                Añadir reserva
+                                Añadir
                             </ModalHeader>
                             <ModalBody>
-                                <BookForm />
+                                {FormComponent ? <FormComponent /> : <p>No form available</p>}
                             </ModalBody>
                             <ModalFooter>
                                 <Button color="danger" variant="flat" onPress={onClose}>
                                     Close
                                 </Button>
                                 <Button form="reservation-form" // Vincula al formulario
-                                    type="submit" color="primary">
+                                    type="submit" color="primary"
+                                    onPress={onClose}
+                                >
                                     Confirmar
                                 </Button>
                             </ModalFooter>

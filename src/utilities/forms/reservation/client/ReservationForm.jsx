@@ -283,9 +283,7 @@ export default function BookForm() {
                 </Button>
             </div>
             {submitted && (
-                <div className="mt-4 text-small text-default-500">
-                    Submitted data: <pre>{JSON.stringify(submitted, null, 2)}</pre>
-                </div>
+                console.log(JSON.stringify(submitted, null, 2))
             )}
         </form>
     );
