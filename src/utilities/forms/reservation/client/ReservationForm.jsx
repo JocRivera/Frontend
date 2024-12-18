@@ -317,7 +317,7 @@ export default function BookForm() {
                             ))}
                         </div>
                     )}
-                    <h2 className="text-xl font-semibold">pagos</h2>
+                    <h2 className="text-xl font-semibold">Pago</h2>
                 </div>
             </div>
             {errors.terms && <span className="text-danger text-small">{errors.terms}</span>}
