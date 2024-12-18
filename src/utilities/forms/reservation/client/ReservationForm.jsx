@@ -271,14 +271,27 @@ export default function BookForm() {
                             {accompanists.map((accompanist, index) => (
                                 <Card key={accompanist.id} className="p-4 shadow-none">
                                     <div className="flex flex-col gap-4">
-                                        <Input
-                                            isRequired
-                                            label="Name"
-                                            labelPlacement="outside"
-                                            value={accompanist.name}
-                                            onChange={(e) => updateAccompanist(accompanist.id, 'name', e.target.value)}
-                                            placeholder="Enter accompanist name"
-                                        />
+                                        <div className="flex items-start justify-between">
+                                            <Input
+                                                isRequired
+                                                label="Name"
+                                                labelPlacement="outside"
+                                                value={accompanist.name}
+                                                onChange={(e) => updateAccompanist(accompanist.id, 'name', e.target.value)}
+                                                placeholder="Enter accompanist name"
+                                            />
+                                            <div className="flex items-center justify-between mb-2">
+                                                <Button
+                                                    isIconOnly
+                                                    color="danger"
+                                                    size="sm"
+                                                    onPress={() => removeAccompanist(accompanist.id)}
+                                                >
+                                                    <Trash2 size={16} />
+                                                </Button>
+                                            </div>
+                                        </div>
+
                                         <div className="flex gap-4">
                                             <Select
                                                 isRequired
@@ -302,16 +315,7 @@ export default function BookForm() {
                                                 placeholder="Enter document number"
                                             />
                                         </div>
-                                        <div className="flex items-center justify-between mb-2">
-                                            <Button
-                                                isIconOnly
-                                                color="danger"
-                                                size="sm"
-                                                onPress={() => removeAccompanist(accompanist.id)}
-                                            >
-                                                <Trash2 size={16} />
-                                            </Button>
-                                        </div>
+
                                     </div>
                                 </Card>
                             ))}
