@@ -3,30 +3,15 @@ import { DatePicker, Input, Select, SelectItem, Checkbox, Button, Card } from "@
 import { Trash2 } from "lucide-react";
 
 export default function BookForm() {
-    const [password, setPassword] = React.useState("");
     const [submitted, setSubmitted] = React.useState(null);
     const [errors, setErrors] = React.useState({});
     const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(null);
     const [isEndDateDisabled, setIsEndDateDisabled] = useState(false);
     const [hasAccompanists, setHasAccompanists] = useState(false);
     const [accompanists, setAccompanists] = useState([]);
     const [numAccompanists, setNumAccompanists] = useState(1);
 
-    // Real-time password validation
-    const getPasswordError = (value) => {
-        if (value.length < 4) {
-            return "Password must be 4 characters or more";
-        }
-        if ((value.match(/[A-Z]/g) || []).length < 1) {
-            return "Password needs at least 1 uppercase letter";
-        }
-        if ((value.match(/[^a-z]/gi) || []).length < 1) {
-            return "Password needs at least 1 symbol";
-        }
-
-        return null;
-    };
     useEffect(() => {
         if (hasAccompanists) {
             const currentCount = accompanists.length;
@@ -84,31 +69,16 @@ export default function BookForm() {
 
         // Custom validation checks
         const newErrors = {};
-
-        // Password validation
-        const passwordError = getPasswordError(data.password);
-
-        if (passwordError) {
-            newErrors.password = passwordError;
-        }
-
-        // Username validation
-        if (data.name === "admin") {
-            newErrors.name = "Nice try! Choose a different username";
-        }
-
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
 
             return;
         }
-
         if (data.terms !== "true") {
             setErrors({ terms: "Please accept the terms" });
 
             return;
         }
-
         // Clear errors and submit
         setErrors({});
         setSubmitted(data);
@@ -118,7 +88,6 @@ export default function BookForm() {
         <form
             id="reservation-form"
             className="w-full "
-            validationBehavior="native"
             validationErrors={errors}
             onReset={() => setSubmitted(null)}
             onSubmit={onSubmit}
@@ -154,23 +123,19 @@ export default function BookForm() {
                             label="Fecha de inicio"
                             onChange={(date) => setStartDate(date)}
                             placeholder="mm/dd/yyyy"
+                            name="startDate"
                         />
                         <DatePicker
                             label="Fecha de Fin"
                             onChange={(date) => setEndDate(date)}
                             placeholder="mm/dd/yyyy"
                             isDisabled={isEndDateDisabled}
+                            name="endDate"
+                            value={isEndDateDisabled ? startDate : endDate}
                         />
                     </div>
                     <Input
                         isRequired
-                        errorMessage={({ validationDetails }) => {
-                            if (validationDetails.valueMissing) {
-                                return "Please enter your name";
-                            }
-
-                            return errors.name;
-                        }}
                         label="Name"
                         labelPlacement="outside"
                         name="name"
@@ -179,14 +144,7 @@ export default function BookForm() {
 
                     <Input
                         isRequired
-                        errorMessage={({ validationDetails }) => {
-                            if (validationDetails.valueMissing) {
-                                return "Please enter your email";
-                            }
-                            if (validationDetails.typeMismatch) {
-                                return "Please enter a valid email address";
-                            }
-                        }}
+                        errorMessage="Please enter a valid email"
                         label="Email"
                         labelPlacement="outside"
                         name="email"
@@ -250,9 +208,6 @@ export default function BookForm() {
                     <div className="mb-4">
                         <Checkbox
                             isRequired
-                            classNames={{
-                                label: "text-small",
-                            }}
                             isInvalid={!!errors.terms}
                             name="terms"
                             validationBehavior="aria"
@@ -261,8 +216,6 @@ export default function BookForm() {
                         >
                             I agree to the terms and conditions
                         </Checkbox></div>
-
-
                 </div>
                 <div className="flex flex-col max-w-md gap-4">
                     {hasAccompanists && (
