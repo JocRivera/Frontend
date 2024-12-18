@@ -31,7 +31,7 @@ const statusColorMap = {
 };
 
 
-export default function TableComponent({ columns, users, INITIAL_VISIBLE_COLUMNS, statusOptions }) {
+export default function TableComponent({ columns, data, INITIAL_VISIBLE_COLUMNS, statusOptions }) {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState(new Set(INITIAL_VISIBLE_COLUMNS));
@@ -52,7 +52,7 @@ export default function TableComponent({ columns, users, INITIAL_VISIBLE_COLUMNS
   }, [visibleColumns, columns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...users];
+    let filteredUsers = [...data];
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
@@ -68,7 +68,7 @@ export default function TableComponent({ columns, users, INITIAL_VISIBLE_COLUMNS
     }
 
     return filteredUsers;
-  }, [users, filterValue, statusFilter]);
+  }, [data, filterValue, statusFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -215,7 +215,7 @@ export default function TableComponent({ columns, users, INITIAL_VISIBLE_COLUMNS
           </div>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-default-400 text-small"> {users.length} </span>
+          <span className="text-default-400 text-small"> {data.length} </span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
             <select
@@ -235,7 +235,7 @@ export default function TableComponent({ columns, users, INITIAL_VISIBLE_COLUMNS
     statusFilter,
     visibleColumns,
     onRowsPerPageChange,
-    users.length,
+    data.length,
     onSearchChange,
     hasSearchFilter,
   ]);
@@ -293,7 +293,7 @@ export default function TableComponent({ columns, users, INITIAL_VISIBLE_COLUMNS
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"No users found"} items={sortedItems}>
+      <TableBody emptyContent={"No data found"} items={sortedItems}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}

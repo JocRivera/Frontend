@@ -1,9 +1,10 @@
+import React, { useState } from "react";
 import TableComponent from "../../../utilities/table/TableComponent";
-
 export default function ReservationsManagement() {
     const reservationColumns = [
         { uid: "id", name: "ID" },
         { uid: "client", name: "Client" },
+        { uid: "plan", name: "Plan" },
         { uid: "room", name: "Room" },
         { uid: "checkIn", name: "Check In" },
         { uid: "checkOut", name: "Check Out" },
@@ -16,47 +17,26 @@ export default function ReservationsManagement() {
         {
             id: 1,
             client: "John Doe",
-            room: "Room 1",
+            plan: "All Inclusive",
+            room: "101",
             checkIn: "2022-01-01",
-            checkOut: "2022-01-03",
+            checkOut: "2022-01-07",
             status: "active",
         },
         {
             id: 2,
             client: "Jane Doe",
-            room: "Room 2",
+            plan: "Bed & Breakfast",
+            room: "102",
             checkIn: "2022-01-01",
-            checkOut: "2022-01-03",
+            checkOut: "2022-01-07",
             status: "active",
-        },
-        {
-            id: 3,
-            client: "John Doe",
-            room: "Room 3",
-            checkIn: "2022-01-01",
-            checkOut: "2022-01-03",
-            status: "active",
-        },
-        {
-            id: 4,
-            client: "Jane Doe",
-            room: "Room 4",
-            checkIn: "2022-01-01",
-            checkOut: "2022-01-03",
-            status: "active",
-        },
-        {
-            id: 5,
-            client: "John Doe",
-            room: "Room 5",
-            checkIn: "2022-01-01",
-            checkOut: "2022-01-03",
-            status: "inactive",
         },
     ];
+
     return (
         <div>
-            <TableComponent columns={reservationColumns} users={reservations} INITIAL_VISIBLE_COLUMNS={initialVisibleColumns} statusOptions={statusOptions} />
+            <TableComponent columns={reservationColumns} data={reservations} INITIAL_VISIBLE_COLUMNS={initialVisibleColumns} statusOptions={statusOptions} />
         </div>
     );
 }

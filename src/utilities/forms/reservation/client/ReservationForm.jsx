@@ -131,7 +131,6 @@ export default function BookForm() {
                             placeholder="mm/dd/yyyy"
                             isDisabled={isEndDateDisabled}
                             name="endDate"
-                            value={isEndDateDisabled ? startDate : endDate}
                         />
                     </div>
                     <Input

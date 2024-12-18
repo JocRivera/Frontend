@@ -16,14 +16,6 @@ export default function ModalView() {
     const targetRef = React.useRef(null);
     const [scrollBehavior, setScrollBehavior] = React.useState("inside");
     const [size, setSize] = React.useState("5xl");
-    const [submitted, setSubmitted] = React.useState(null);
-
-    const handleFormSubmit = (data) => {
-        setSubmitted(data);
-        onOpenChange(false); // Cierra el modal automáticamente
-        console.log("Submitted data:", data);
-    };
-
     return (
         <>
             <Button className="text-white shadow-lg bg-gradient-to-tr from-pink-500 to-yellow-500" color="primary" endContent={<PlusIcon />} onPress={onOpen}>Add New</Button>
@@ -35,7 +27,7 @@ export default function ModalView() {
                                 Añadir reserva
                             </ModalHeader>
                             <ModalBody>
-                                <BookForm onSubmit={handleFormSubmit} />
+                                <BookForm />
                             </ModalBody>
                             <ModalFooter>
                                 <Button color="danger" variant="flat" onPress={onClose}>
