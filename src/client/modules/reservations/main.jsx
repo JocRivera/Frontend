@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import TableComponent from "../../../utilities/table/TableComponent";
+import BookForm from "../../../utilities/forms/reservation/client/ReservationForm";
 export default function ReservationsManagement() {
     const reservationColumns = [
         { uid: "id", name: "ID" },
@@ -36,7 +37,7 @@ export default function ReservationsManagement() {
 
     return (
         <div>
-            <TableComponent columns={reservationColumns} data={reservations} INITIAL_VISIBLE_COLUMNS={initialVisibleColumns} statusOptions={statusOptions} />
+            <TableComponent columns={reservationColumns} data={reservations} initialVisibleColumns={initialVisibleColumns} statusOptions={statusOptions} Dynamic={BookForm}/>
         </div>
     );
 }

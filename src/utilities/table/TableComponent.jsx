@@ -31,10 +31,10 @@ const statusColorMap = {
 };
 
 
-export default function TableComponent({ columns, data, INITIAL_VISIBLE_COLUMNS, statusOptions, Dynamic }) {
+export default function TableComponent({ columns, data, initialVisibleColumns, statusOptions, Dynamic }) {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
-  const [visibleColumns, setVisibleColumns] = React.useState(new Set(INITIAL_VISIBLE_COLUMNS));
+  const [visibleColumns, setVisibleColumns] = React.useState(new Set(initialVisibleColumns));
   const [statusFilter, setStatusFilter] = React.useState("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [sortDescriptor, setSortDescriptor] = React.useState({
