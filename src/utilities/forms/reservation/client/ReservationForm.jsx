@@ -67,7 +67,7 @@ export default function BookForm({ onSubmit }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         localStorage.setItem("reservation", JSON.stringify(newData));
-        
+
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData);
 
@@ -85,6 +85,7 @@ export default function BookForm({ onSubmit }) {
         // Clear errors and submit
         setErrors({});
         onSubmit(data);
+
     };
 
     return (
@@ -142,7 +143,6 @@ export default function BookForm({ onSubmit }) {
                         labelPlacement="outside"
                         name="name"
                         placeholder="Enter your name"
-                        onChange={(e) => setNewData(e.target.value)}
                     />
 
                     <Input

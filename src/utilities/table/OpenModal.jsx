@@ -9,14 +9,12 @@ import {
     ModalFooter,
 } from "@nextui-org/react";
 import { PlusIcon } from "./PlusIcon.jsx";
-import BookForm from "../forms/reservation/client/ReservationForm.jsx";
 
 export default function ModalView({ FormComponent }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const targetRef = React.useRef(null);
     const [scrollBehavior, setScrollBehavior] = React.useState("inside");
     const [size, setSize] = React.useState("5xl");
-
 
     return (
         <>
@@ -35,8 +33,10 @@ export default function ModalView({ FormComponent }) {
                                 <Button color="danger" variant="flat" onPress={onClose}>
                                     Close
                                 </Button>
+
                                 <Button form="reservation-form"
-                                    type="submit" color="primary"
+                                    type="submit"
+                                    color="primary"
                                 >
                                     Confirmar
                                 </Button>
