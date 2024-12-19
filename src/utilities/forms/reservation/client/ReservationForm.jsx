@@ -11,7 +11,6 @@ export default function BookForm({ onSubmit }) {
     const [hasAccompanists, setHasAccompanists] = useState(false);
     const [accompanists, setAccompanists] = useState([]);
     const [numAccompanists, setNumAccompanists] = useState(1);
-    const [newData, setNewData] = useState([]);
 
     useEffect(() => {
         if (hasAccompanists) {
@@ -66,7 +65,6 @@ export default function BookForm({ onSubmit }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        localStorage.setItem("reservation", JSON.stringify(newData));
 
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData);
