@@ -23,6 +23,7 @@ import { PlusIcon } from "./PlusIcon.jsx";
 import { SearchIcon } from "./SearchIcon";
 import { ChevronDownIcon } from "./ChevronDownIcon.jsx";
 import { capitalize } from "./utils.jsx";
+import ModalView from "./OpenModal.jsx"
 
 const statusColorMap = {
   active: "success",
@@ -30,10 +31,10 @@ const statusColorMap = {
 };
 
 
-export default function TableComponent({ columns, users, INITIAL_VISIBLE_COLUMNS, statusOptions }) {
+export default function TableComponent({ columns, data, initialVisibleColumns, statusOptions, Dynamic }) {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
-  const [visibleColumns, setVisibleColumns] = React.useState(new Set(INITIAL_VISIBLE_COLUMNS));
+  const [visibleColumns, setVisibleColumns] = React.useState(new Set(initialVisibleColumns));
   const [statusFilter, setStatusFilter] = React.useState("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [sortDescriptor, setSortDescriptor] = React.useState({
@@ -51,7 +52,7 @@ export default function TableComponent({ columns, users, INITIAL_VISIBLE_COLUMNS
   }, [visibleColumns, columns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...users];
+    let filteredUsers = [...data];
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
@@ -67,7 +68,7 @@ export default function TableComponent({ columns, users, INITIAL_VISIBLE_COLUMNS
     }
 
     return filteredUsers;
-  }, [users, filterValue, statusFilter]);
+  }, [data, filterValue, statusFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -210,13 +211,11 @@ export default function TableComponent({ columns, users, INITIAL_VISIBLE_COLUMNS
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button className="text-white shadow-lg bg-gradient-to-tr from-pink-500 to-yellow-500" color="primary" endContent={<PlusIcon />}>
-              Add New
-            </Button>
+            <ModalView FormComponent={Dynamic} />
           </div>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-default-400 text-small">Total {users.length} users</span>
+          <span className="text-default-400 text-small"> {data.length} </span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
             <select
@@ -236,7 +235,7 @@ export default function TableComponent({ columns, users, INITIAL_VISIBLE_COLUMNS
     statusFilter,
     visibleColumns,
     onRowsPerPageChange,
-    users.length,
+    data.length,
     onSearchChange,
     hasSearchFilter,
   ]);
@@ -294,7 +293,7 @@ export default function TableComponent({ columns, users, INITIAL_VISIBLE_COLUMNS
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"No users found"} items={sortedItems}>
+      <TableBody emptyContent={"No data found"} items={sortedItems}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}

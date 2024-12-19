@@ -48,7 +48,7 @@ export default function ServicesManagement() {
     ]
     return (
         <div>
-            <TableComponent columns={serviceColumns} users={services} INITIAL_VISIBLE_COLUMNS={initialVisibleColumns} statusOptions={statusOptions} />
+            <TableComponent columns={serviceColumns} data={services} initialVisibleColumns={initialVisibleColumns} statusOptions={statusOptions} />
         </div>
     );
 }
