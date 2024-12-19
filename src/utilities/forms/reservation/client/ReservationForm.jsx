@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { DatePicker, Input, Select, SelectItem, Checkbox, Button, Card } from "@nextui-org/react";
 import { Trash2 } from "lucide-react";
 
-export default function BookForm() {
+export default function BookForm({ onSubmit }) {
     const [submitted, setSubmitted] = React.useState(null);
     const [errors, setErrors] = React.useState({});
     const [startDate, setStartDate] = useState(new Date());
@@ -11,6 +11,7 @@ export default function BookForm() {
     const [hasAccompanists, setHasAccompanists] = useState(false);
     const [accompanists, setAccompanists] = useState([]);
     const [numAccompanists, setNumAccompanists] = useState(1);
+    const [newData, setNewData] = useState([]);
 
     useEffect(() => {
         if (hasAccompanists) {
@@ -63,25 +64,27 @@ export default function BookForm() {
         setAccompanists(accompanists.filter(acc => acc.id !== id));
     };
 
-    const onSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        const data = Object.fromEntries(new FormData(e.currentTarget));
+        localStorage.setItem("reservation", JSON.stringify(newData));
+        
+        const formData = new FormData(e.currentTarget);
+        const data = Object.fromEntries(formData);
 
         // Custom validation checks
         const newErrors = {};
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
-
             return;
         }
         if (data.terms !== "true") {
             setErrors({ terms: "Please accept the terms" });
-
             return;
         }
+
         // Clear errors and submit
         setErrors({});
-        setSubmitted(data);
+        onSubmit(data);
     };
 
     return (
@@ -90,7 +93,7 @@ export default function BookForm() {
             className="w-full "
             validationErrors={errors}
             onReset={() => setSubmitted(null)}
-            onSubmit={onSubmit}
+            onSubmit={handleSubmit}
         >
             <div className="grid grid-cols-2 gap-6 ">
                 <div className="flex flex-col max-w-md gap-4">
@@ -139,6 +142,7 @@ export default function BookForm() {
                         labelPlacement="outside"
                         name="name"
                         placeholder="Enter your name"
+                        onChange={(e) => setNewData(e.target.value)}
                     />
 
                     <Input

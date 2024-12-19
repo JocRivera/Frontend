@@ -16,6 +16,8 @@ export default function ModalView({ FormComponent }) {
     const targetRef = React.useRef(null);
     const [scrollBehavior, setScrollBehavior] = React.useState("inside");
     const [size, setSize] = React.useState("5xl");
+
+
     return (
         <>
             <Button className="text-white shadow-lg bg-gradient-to-tr from-pink-500 to-yellow-500" color="primary" endContent={<PlusIcon />} onPress={onOpen}>Add New</Button>
@@ -33,9 +35,8 @@ export default function ModalView({ FormComponent }) {
                                 <Button color="danger" variant="flat" onPress={onClose}>
                                     Close
                                 </Button>
-                                <Button form="reservation-form" // Vincula al formulario
+                                <Button form="reservation-form"
                                     type="submit" color="primary"
-                                    onPress={onClose}
                                 >
                                     Confirmar
                                 </Button>
