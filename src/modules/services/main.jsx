@@ -1,4 +1,5 @@
 import TableComponent from '../../utilities/table/TableComponent';
+import ServiceForm from '../../utilities/forms/services/ServiceForm';
 export default function ServicesManagement() {
     const serviceColumns = [
         { uid: "service", name: "Service Name" },
@@ -48,7 +49,7 @@ export default function ServicesManagement() {
     ]
     return (
         <div>
-            <TableComponent columns={serviceColumns} data={services} initialVisibleColumns={initialVisibleColumns} statusOptions={statusOptions} />
+            <TableComponent columns={serviceColumns} data={services} initialVisibleColumns={initialVisibleColumns} statusOptions={statusOptions} Dynamic={() => <ServiceForm />} />
         </div>
     );
 }

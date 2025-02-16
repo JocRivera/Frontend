@@ -19,7 +19,7 @@ export default function ModalView({ FormComponent }) {
     return (
         <>
             <Button className="text-white shadow-lg bg-gradient-to-tr from-pink-500 to-yellow-500" color="primary" endContent={<PlusIcon />} onPress={onOpen}>Add New</Button>
-            <Modal ref={targetRef} isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior={scrollBehavior} size={size}>
+            <Modal ref={targetRef} isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior={scrollBehavior} size={size} >
                 <ModalContent>
                     {(onClose) => (
                         <>
@@ -27,7 +27,7 @@ export default function ModalView({ FormComponent }) {
                                 Añadir
                             </ModalHeader>
                             <ModalBody>
-                                {FormComponent ? <FormComponent /> : <p>No form available</p>}
+                                {FormComponent && FormComponent(onClose)}
                             </ModalBody>
                             <ModalFooter>
                                 <Button color="danger" variant="flat" onPress={onClose}>
@@ -37,6 +37,8 @@ export default function ModalView({ FormComponent }) {
                                 <Button form="reservation-form"
                                     type="submit"
                                     color="primary"
+
+
                                 >
                                     Confirmar
                                 </Button>

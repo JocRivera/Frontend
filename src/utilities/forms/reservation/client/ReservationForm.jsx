@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { DatePicker, Input, Select, SelectItem, Checkbox, Button, Card } from "@nextui-org/react";
+import { Form } from "@nextui-org/form";
+
 import { Trash2 } from "lucide-react";
 
-export default function BookForm({ onSubmit }) {
+export default function BookForm({ onSubmit, onClose }) {
     const [submitted, setSubmitted] = React.useState(null);
     const [errors, setErrors] = React.useState({});
     const [startDate, setStartDate] = useState(new Date());
@@ -83,11 +85,13 @@ export default function BookForm({ onSubmit }) {
         // Clear errors and submit
         setErrors({});
         onSubmit(data);
-
+        if (onClose) {
+            onClose();
+        }
     };
 
     return (
-        <form
+        <Form
             id="reservation-form"
             className="w-full "
             validationErrors={errors}
@@ -287,7 +291,7 @@ export default function BookForm({ onSubmit }) {
             {submitted && (
                 console.log(JSON.stringify(submitted, null, 2))
             )}
-        </form>
+        </Form>
     );
 }
 
