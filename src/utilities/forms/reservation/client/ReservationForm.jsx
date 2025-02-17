@@ -91,7 +91,7 @@ export default function BookForm({ onSubmit, onClose }) {
     };
 
     return (
-        <Form
+        <form
             id="reservation-form"
             className="w-full "
             validationErrors={errors}
@@ -291,7 +291,7 @@ export default function BookForm({ onSubmit, onClose }) {
             {submitted && (
                 console.log(JSON.stringify(submitted, null, 2))
             )}
-        </Form>
+        </form>
     );
 }
 

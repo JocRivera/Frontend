@@ -10,7 +10,7 @@ import {
 } from "@nextui-org/react";
 import { PlusIcon } from "./PlusIcon.jsx";
 
-export default function ModalView({ FormComponent }) {
+export default function ModalView({ FormComponent, formId }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const targetRef = React.useRef(null);
     const [scrollBehavior, setScrollBehavior] = React.useState("inside");
@@ -34,11 +34,10 @@ export default function ModalView({ FormComponent }) {
                                     Close
                                 </Button>
 
-                                <Button form="reservation-form"
+                                <Button
+                                    form={formId}
                                     type="submit"
                                     color="primary"
-
-
                                 >
                                     Confirmar
                                 </Button>

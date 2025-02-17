@@ -1,23 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Input, } from "@nextui-org/react";
 import { Form } from "@nextui-org/form";
-export default function ServiceForm() {
-    const [service, setService] = React.useState("");
+export default function ServiceForm({ onSubmit, onClose }) {
     const [submitted, setSubmitted] = React.useState(false);
     const [errors, setErrors] = React.useState({});
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const data = Object.fromEntries(new FormData(e.target));
-        const newErrors = {};
+        const formData = new FormData(e.currentTarget);
+        const data = Object.fromEntries(formData);
 
-        setErrors(newErrors);
-        setSubmitted(data);
+        onSubmit(data);
+        if (onClose) {
+            onClose();
+        }
 
     }
 
     return (
         <Form
+            id="service-form"
             className="items-center justify-center w-full space-y-4"
             validationBehavior="native"
             validationErrors={errors}
@@ -38,8 +40,39 @@ export default function ServiceForm() {
                     labelPlacement="outside"
                     placeholder="Enter service name"
                 />
+                <Input
+                    isRequired
+                    errorMessage={({ validationDetails }) => {
+                        if (validationDetails.valueMissing) {
+                            return "This field is required";
+                        }
+                        return errors.service;
+                    }
+                    }
+                    label="Description"
+                    name="description"
+                    labelPlacement="outside"
+                    placeholder="Enter service description"
+                />
+                <Input
+                    isRequired
+                    errorMessage={({ validationDetails }) => {
+                        if (validationDetails.valueMissing) {
+                            return "This field is required";
+                        }
+                        return errors.service;
+                    }
+                    }
+                    label="Price"
+                    name="price"
+                    labelPlacement="outside"
+                    placeholder="Enter service price"
+                />
 
             </div>
+
+
+
         </Form>
     )
 }
