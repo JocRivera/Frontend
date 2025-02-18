@@ -233,58 +233,60 @@ export default function BookForm({ onSubmit, onClose }) {
                 <div className="flex flex-col max-w-md gap-4">
                     {hasAccompanists && (
                         <div className="flex flex-col gap-4 max-h-[500px] overflow-y-auto">
-                            <h2 className="text-xl font-semibold">Acompañantes</h2>
-                            {accompanists.map((accompanist, index) => (
-                                <Card key={accompanist.id} className="p-4 shadow-none">
-                                    <div className="flex flex-col gap-4">
-                                        <div className="flex items-start justify-between">
-                                            <Input
-                                                isRequired
-                                                label="Name"
-                                                labelPlacement="outside"
-                                                value={accompanist.name}
-                                                onChange={(e) => updateAccompanist(accompanist.id, 'name', e.target.value)}
-                                                placeholder="Enter accompanist name"
-                                            />
-                                            <div className="flex items-center justify-between mb-2">
-                                                <Button
-                                                    isIconOnly
-                                                    color="danger"
-                                                    size="sm"
-                                                    onPress={() => removeAccompanist(accompanist.id)}
-                                                >
-                                                    <Trash2 size={16} />
-                                                </Button>
+                            <div>
+                                <h2 className="text-xl font-semibold">Acompañantes</h2>
+                                {accompanists.map((accompanist, index) => (
+                                    <Card key={accompanist.id} className="p-4 shadow-none">
+                                        <div className="flex flex-col gap-4">
+                                            <div className="flex items-start justify-between">
+                                                <Input
+                                                    isRequired
+                                                    label="Name"
+                                                    labelPlacement="outside"
+                                                    value={accompanist.name}
+                                                    onChange={(e) => updateAccompanist(accompanist.id, 'name', e.target.value)}
+                                                    placeholder="Enter accompanist name"
+                                                />
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <Button
+                                                        isIconOnly
+                                                        color="danger"
+                                                        size="sm"
+                                                        onPress={() => removeAccompanist(accompanist.id)}
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </Button>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div className="flex gap-4">
-                                            <Select
-                                                isRequired
-                                                label="Tipo de documento"
-                                                labelPlacement="outside"
-                                                name="type"
-                                                placeholder="Select a type"
-                                                value={accompanist.documentType}
-                                                onChange={(e) => updateAccompanist(accompanist.id, 'documentType', e.target.value)}
-                                            >
-                                                <SelectItem key="cc" value="cc">Cedula de Ciudadania</SelectItem>
-                                                <SelectItem key="ce" value="ce">Cedula de Extranjeria</SelectItem>
-                                                <SelectItem key="pp" value="pp">Pasaporte</SelectItem>
-                                            </Select>
-                                            <Input
-                                                labelPlacement="outside"
-                                                isRequired
-                                                label="Document Number"
-                                                value={accompanist.documentNumber}
-                                                onChange={(e) => updateAccompanist(accompanist.id, 'documentNumber', e.target.value)}
-                                                placeholder="Enter document number"
-                                            />
-                                        </div>
+                                            <div className="flex gap-4">
+                                                <Select
+                                                    isRequired
+                                                    label="Tipo de documento"
+                                                    labelPlacement="outside"
+                                                    name="type"
+                                                    placeholder="Select a type"
+                                                    value={accompanist.documentType}
+                                                    onChange={(e) => updateAccompanist(accompanist.id, 'documentType', e.target.value)}
+                                                >
+                                                    <SelectItem key="cc" value="cc">Cedula de Ciudadania</SelectItem>
+                                                    <SelectItem key="ce" value="ce">Cedula de Extranjeria</SelectItem>
+                                                    <SelectItem key="pp" value="pp">Pasaporte</SelectItem>
+                                                </Select>
+                                                <Input
+                                                    labelPlacement="outside"
+                                                    isRequired
+                                                    label="Document Number"
+                                                    value={accompanist.documentNumber}
+                                                    onChange={(e) => updateAccompanist(accompanist.id, 'documentNumber', e.target.value)}
+                                                    placeholder="Enter document number"
+                                                />
+                                            </div>
 
-                                    </div>
-                                </Card>
-                            ))}
+                                        </div>
+                                    </Card>
+                                ))}
+                            </div>
                         </div>
                     )}
                     <h2 className="text-xl font-semibold">Pago</h2>
