@@ -7,12 +7,26 @@ import { Trash2 } from "lucide-react";
 export default function BookForm({ onSubmit, onClose }) {
     const [submitted, setSubmitted] = React.useState(null);
     const [errors, setErrors] = React.useState({});
-    const [startDate, setStartDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const [selectedPlan, setSelectedPlan] = useState("");
     const [isEndDateDisabled, setIsEndDateDisabled] = useState(false);
     const [hasAccompanists, setHasAccompanists] = useState(false);
     const [accompanists, setAccompanists] = useState([]);
     const [numAccompanists, setNumAccompanists] = useState(1);
+
+    useEffect(() => {
+        if (selectedPlan === "ca") {
+            setIsEndDateDisabled(true);
+            setEndDate(startDate); // Establece la fecha de fin igual a la de inicio cuando se selecciona el plan
+        } else {
+            setIsEndDateDisabled(false);
+            // Solo reseteamos la fecha de fin si ya teníamos un plan seleccionado anteriormente
+            if (selectedPlan !== "") {
+                setEndDate(null);
+            }
+        }
+    }, [selectedPlan, startDate]);
 
     useEffect(() => {
         if (hasAccompanists) {
@@ -46,15 +60,7 @@ export default function BookForm({ onSubmit, onClose }) {
         }
     }, [hasAccompanists]);
 
-    const handlePlanChange = (e) => {
-        const selectedPlan = e.target.value;
-        if (selectedPlan === "ca") {
-            setIsEndDateDisabled(true);
-            setEndDate(startDate);
-        } else {
-            setIsEndDateDisabled(false);
-        }
-    };
+    ;
 
     const updateAccompanist = (id, field, value) => {
         setAccompanists(accompanists.map(acc =>
@@ -101,12 +107,12 @@ export default function BookForm({ onSubmit, onClose }) {
             <div className="grid grid-cols-2 gap-6 ">
                 <div className="flex flex-col max-w-md gap-4">
                     <Select
+                        onChange={(e) => setSelectedPlan(e.target.value)}
                         isRequired
                         label="Plan"
                         labelPlacement="outside"
                         name="plan"
                         placeholder="Select a plan"
-                        onChange={handlePlanChange}
                     >
                         <SelectItem key="ar" value="ar">
                             Romantico
@@ -127,16 +133,18 @@ export default function BookForm({ onSubmit, onClose }) {
                     <div className="flex space-x-4">
                         <DatePicker
                             label="Fecha de inicio"
-                            onChange={(date) => setStartDate(date)}
+                            onChange={setStartDate}
                             placeholder="mm/dd/yyyy"
                             name="startDate"
+                            value={startDate}
                         />
                         <DatePicker
                             label="Fecha de Fin"
-                            onChange={(date) => setEndDate(date)}
+                            onChange={setEndDate}
                             placeholder="mm/dd/yyyy"
                             isDisabled={isEndDateDisabled}
                             name="endDate"
+                            value={endDate}
                         />
                     </div>
                     <Input
