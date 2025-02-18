@@ -45,12 +45,23 @@ export default function ReservationsManagement() {
             status: "active",
         };
         setReservations([...reservations, newReservation]);
+
     };
 
 
     return (
         <div>
-            <TableComponent columns={reservationColumns} data={reservations} initialVisibleColumns={initialVisibleColumns} statusOptions={statusOptions} Dynamic={() => <BookForm onSubmit={handleAddReservation} />} />
+            <TableComponent columns={reservationColumns} data={reservations} initialVisibleColumns={initialVisibleColumns} statusOptions={statusOptions} Dynamic={(onClose) => (
+                <BookForm
+                    onSubmit={(data) => {
+                        handleAddReservation(data);
+                    }}
+                    onClose={onClose}
+                    formId="reservation-form"
+                />
+            )}
+                formId="reservation-form"
+            />
         </div>
     );
 }

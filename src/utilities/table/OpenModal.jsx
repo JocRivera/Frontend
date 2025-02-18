@@ -10,7 +10,7 @@ import {
 } from "@nextui-org/react";
 import { PlusIcon } from "./PlusIcon.jsx";
 
-export default function ModalView({ FormComponent }) {
+export default function ModalView({ FormComponent, formId }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const targetRef = React.useRef(null);
     const [scrollBehavior, setScrollBehavior] = React.useState("inside");
@@ -19,7 +19,7 @@ export default function ModalView({ FormComponent }) {
     return (
         <>
             <Button className="text-white shadow-lg bg-gradient-to-tr from-pink-500 to-yellow-500" color="primary" endContent={<PlusIcon />} onPress={onOpen}>Add New</Button>
-            <Modal ref={targetRef} isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior={scrollBehavior} size={size}>
+            <Modal ref={targetRef} isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior={scrollBehavior} size={size} >
                 <ModalContent>
                     {(onClose) => (
                         <>
@@ -27,14 +27,15 @@ export default function ModalView({ FormComponent }) {
                                 Añadir
                             </ModalHeader>
                             <ModalBody>
-                                {FormComponent ? <FormComponent /> : <p>No form available</p>}
+                                {FormComponent && FormComponent(onClose)}
                             </ModalBody>
                             <ModalFooter>
                                 <Button color="danger" variant="flat" onPress={onClose}>
                                     Close
                                 </Button>
 
-                                <Button form="reservation-form"
+                                <Button
+                                    form={formId}
                                     type="submit"
                                     color="primary"
                                 >

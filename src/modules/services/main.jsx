@@ -1,4 +1,6 @@
+import React, { useState } from 'react';
 import TableComponent from '../../utilities/table/TableComponent';
+import ServiceForm from '../../utilities/forms/services/ServiceForm';
 export default function ServicesManagement() {
     const serviceColumns = [
         { uid: "service", name: "Service Name" },
@@ -9,46 +11,46 @@ export default function ServicesManagement() {
     ];
     const initialVisibleColumns = ["service", "status", "actions"];
     const statusOptions = [{ name: "Active", uid: "active" }, { name: "Inactive", uid: "inactive" }];
-    const services = [
+    const [services, setServices] = useState([
         {
             id: 1,
-            service: "Cena",
-            description: "Alimentacion completa",
-            price: 20,
+            service: "Room Service",
+            description: "Room service description",
+            price: "50",
             status: "active",
         },
         {
             id: 2,
-            service: "Almuezo",
-            description: "Aliemntacion completa",
-            price: 20,
+            service: "Laundry Service",
+            description: "Laundry service description",
+            price: "25",
             status: "active",
         },
-        {
-            id: 3,
-            service: "Desayuno",
-            description: "Aliemntacion completa",
-            price: 20,
+    ]);
+    const handleAddService = (formData) => {
+        const newService = {
+            id: services.length + 1,
+            service: formData.service,
+            description: formData.description,
+            price: formData.price,
             status: "active",
-        },
-        {
-            id: 4,
-            service: "Spa",
-            description: "Masaje completo",
-            price: 20,
-            status: "active",
-        },
-        {
-            id: 5,
-            service: "Refrigerio",
-            description: "Helado de chocolate",
-            price: 20,
-            status: "inactive",
-        },
-    ]
+        };
+        setServices([...services, newService]);
+    }
     return (
         <div>
-            <TableComponent columns={serviceColumns} data={services} initialVisibleColumns={initialVisibleColumns} statusOptions={statusOptions} />
+            <TableComponent columns={serviceColumns} data={services} initialVisibleColumns={initialVisibleColumns} statusOptions={statusOptions} Dynamic={(onClose) => (
+                <ServiceForm
+                    onSubmit={(data) => {
+                        handleAddService(data);
+                    }}
+                    onClose={onClose}
+                    formId="service-form"
+                />
+            )}
+                formId="service-form"
+            />
+
         </div>
     );
 }
