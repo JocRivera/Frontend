@@ -57,10 +57,12 @@ export default function ReservationsManagement() {
                         handleAddReservation(data);
                     }}
                     onClose={onClose}
-                    formId="reservation-form"
+
                 />
             )}
                 formId="reservation-form"
+                size="5xl"
+
             />
         </div>
     );

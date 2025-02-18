@@ -45,10 +45,10 @@ export default function ServicesManagement() {
                         handleAddService(data);
                     }}
                     onClose={onClose}
-                    formId="service-form"
                 />
             )}
                 formId="service-form"
+                size="sm"
             />
 
         </div>

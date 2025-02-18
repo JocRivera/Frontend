@@ -10,11 +10,10 @@ import {
 } from "@nextui-org/react";
 import { PlusIcon } from "./PlusIcon.jsx";
 
-export default function ModalView({ FormComponent, formId }) {
+export default function ModalView({ FormComponent, formId, size }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const targetRef = React.useRef(null);
     const [scrollBehavior, setScrollBehavior] = React.useState("inside");
-    const [size, setSize] = React.useState("5xl");
 
     return (
         <>
