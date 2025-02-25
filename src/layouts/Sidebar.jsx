@@ -14,7 +14,8 @@ import { Link } from "react-router-dom";
 const Sidebar = ({ isOpen, onToggle }) => {
     const menuItems = [
         { icon: <BarChart size={20} />, text: "Dashboard", to: "/dashboard" },
-        { icon: <Home size={20} />, text: "Accommodations", href: "#" },
+        { icon: <Home size={20} />, text: "Cabins", to: "/cabins" },
+        { icon: <Home size={20} />, text: "Rooms", to: "/rooms" },
         { icon: <HelpCircle size={20} />, text: "Services", to: "/services" },
         { icon: <HelpCircle size={20} />, text: "Plains", href: "#" },
         { icon: <Users size={20} />, text: "Clients", href: "#" },
