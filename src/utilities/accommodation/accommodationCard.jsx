@@ -5,7 +5,7 @@ import React from "react";
 import Carousel from "react-multi-carousel";
 import 'react-multi-carousel/lib/styles.css';
 
-export default function AccommodationCard({ data, Dynamic, formId, size }) {
+export default function AccommodationCard({ data, Dynamic, formId, size, deleteAccommodation, editAccommodation }) {
     const [filterValue, setFilterValue] = React.useState("");
     const responsive = {
         superLargeDesktop: {
@@ -40,6 +40,7 @@ export default function AccommodationCard({ data, Dynamic, formId, size }) {
         setFilterValue("")
         setPage(1)
     }, [])
+
     return (
         <div className="flex flex-col gap-4">
             <div className="flex items-end justify-between gap-3">
@@ -86,10 +87,13 @@ export default function AccommodationCard({ data, Dynamic, formId, size }) {
                                 >
                                     Detalles
                                 </Button>
-                                <Button className="text-tiny" color="primary" radius="full" size="sm">
+                                <Button className="text-tiny" color="primary" radius="full" size="sm"
+                                    onClick={() => editAccommodation(data)}
+                                >
                                     Editar
                                 </Button>
-                                <Button className="text-tiny" color="danger" radius="full" size="sm">
+                                <Button className="text-tiny" color="danger" radius="full" size="sm"
+                                    onClick={() => deleteAccommodation(data.id)}>
                                     Eliminar
                                 </Button>
                             </div>

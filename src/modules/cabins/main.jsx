@@ -52,9 +52,18 @@ export default function CabinsManagement() {
         setCabins([...cabins, newCabin]);
     }
 
+    const handleDeleteCabin = (id) => {
+        setCabins(cabins.filter(cabin => cabin.id !== id));
+    }
+
+    const handleUpdateCabin = (data) => {
+        setCabins(cabins.map(cabin => cabin.id === data.id ? data : cabin));
+        console.log(data);
+    }
+
     return (
         <div>
-            <AccommodationCard data={cabins} size="3xl" formId="cabin-form" Dynamic={(onClose) => (
+            <AccommodationCard deleteAccommodation={handleDeleteCabin} editAccommodation={handleUpdateCabin} data={cabins} size="3xl" formId="cabin-form" Dynamic={(onClose) => (
                 <CabinForm onSubmit={(data) => {
                     handleAddCabin(data);
                 }}
