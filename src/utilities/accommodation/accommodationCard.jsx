@@ -46,7 +46,7 @@ export default function AccommodationCard({ data, Dynamic, formId, size }) {
                 <Input
                     isClearable
                     className="w-full sm:max-w-[44%]"
-                    placeholder="Search by name..."
+                    placeholder="Search"
                     startContent={<SearchIcon />}
                     value={filterValue}
                     onClear={() => onClear()}
@@ -66,14 +66,14 @@ export default function AccommodationCard({ data, Dynamic, formId, size }) {
                             removeWrapper
                             alt="Card example background"
                             className="z-0 object-cover w-full h-full scale-125 -translate-y-6"
-                            src="https://hosterialoslagos.com/wp-content/uploads/2024/09/IMG_5384-768x541.jpg"
+                            src={data.image || "https://hosterialoslagos.com/wp-content/uploads/2024/09/IMG_5384-768x541.jpg"}
                         />
                         <CardFooter className="absolute bottom-0 z-10 justify-between bg-white/30 border-t-1 border-zinc-100/50">
                             <div>
-                                <p className="font-bold text-black uppercase text-large ">Nombre cabaña</p>
-                                <p className="text-black uppercase text-tiny">$299.99</p>
+                                <p className="font-bold text-black uppercase text-large ">{data.name}</p>
+                                <p className="text-black uppercase text-tiny">{data.price}</p>
                                 <p>
-                                    <span className="text-black text-tiny">Descripcion del plan, servicios que incluye</span>
+                                    <span className="text-black text-tiny">{data.description}</span>
                                 </p>
                             </div>
                             <div className="flex gap-2 mt-2">
