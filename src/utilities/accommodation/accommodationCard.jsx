@@ -1,9 +1,9 @@
 import { Card, CardHeader, CardFooter, Image, Button, Input } from "@nextui-org/react";
 import { SearchIcon } from "../table/SearchIcon";
 import ModalView from "../table/OpenModal";
+import OpenEditModal from "../accommodation/OpenEditModal";
 import React from "react";
 import Carousel from "react-multi-carousel";
-import 'react-multi-carousel/lib/styles.css';
 
 export default function AccommodationCard({ data, Dynamic, formId, size, deleteAccommodation, editAccommodation }) {
     const [filterValue, setFilterValue] = React.useState("");
@@ -41,6 +41,7 @@ export default function AccommodationCard({ data, Dynamic, formId, size, deleteA
         setPage(1)
     }, [])
 
+
     return (
         <div className="flex flex-col gap-4">
             <div className="flex items-end justify-between gap-3">
@@ -57,6 +58,7 @@ export default function AccommodationCard({ data, Dynamic, formId, size, deleteA
             </div>
             <Carousel responsive={responsive}
                 infinite={true}
+                className="z-0"
             >
                 {data.map((data) => (
                     < Card
@@ -87,11 +89,7 @@ export default function AccommodationCard({ data, Dynamic, formId, size, deleteA
                                 >
                                     Detalles
                                 </Button>
-                                <Button className="text-tiny" color="primary" radius="full" size="sm"
-                                    onClick={() => editAccommodation(data)}
-                                >
-                                    Editar
-                                </Button>
+                                <OpenEditModal FormComponent={Dynamic} formId={formId} data={data} onEdit={editAccommodation} />
                                 <Button className="text-tiny" color="danger" radius="full" size="sm"
                                     onClick={() => deleteAccommodation(data.id)}>
                                     Eliminar

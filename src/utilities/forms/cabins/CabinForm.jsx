@@ -8,16 +8,26 @@ export const cabinStatus = [
     { key: 'inactive', label: 'Inactive' },
 ]
 
-export default function CabinForm({ onSubmit, onClose }) {
+export default function CabinForm({ onSubmit, onClose, initialData, onEdit }) {
     const [submitted, setSubmitted] = useState(null);
     const [errors, setErrors] = useState({});
-
+    const isEditMode = !!initialData;
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData);
-
-        onSubmit(data);
+        if (isEditMode) {
+            const updatedData = {
+                ...data,
+                id: initialData.id,
+                image: data.image.size > 0
+                    ? URL.createObjectURL(data.image)
+                    : initialData.image
+            };
+            onEdit(updatedData);
+        } else {
+            onSubmit(data);
+        }
         if (onClose) {
             onClose();
         }
@@ -39,6 +49,7 @@ export default function CabinForm({ onSubmit, onClose }) {
                         placeholder="Cabin name"
                         labelPlacement='outside'
                         label='Cabin name'
+                        defaultValue={initialData?.name || ''}
                     />
                     <Input
                         type='number'
@@ -47,6 +58,7 @@ export default function CabinForm({ onSubmit, onClose }) {
                         placeholder="Cabin capacity"
                         labelPlacement='outside'
                         label='Cabin capacity'
+                        defaultValue={initialData?.capacity || ''}
                     />
                     <Textarea
                         name="description"
@@ -54,6 +66,7 @@ export default function CabinForm({ onSubmit, onClose }) {
                         placeholder="Enter your description"
                         labelPlacement='outside'
                         isRequired
+                        defaultValue={initialData?.description || ''}
                     />
                 </div>
                 <div className='flex flex-col max-w-md gap-4'>
@@ -64,6 +77,7 @@ export default function CabinForm({ onSubmit, onClose }) {
                         placeholder="Cabin price"
                         labelPlacement='outside'
                         label='Cabin price'
+                        defaultValue={initialData?.price || ''}
                     />
                     <Select
                         isRequired
@@ -71,6 +85,7 @@ export default function CabinForm({ onSubmit, onClose }) {
                         placeholder="Cabin status"
                         labelPlacement='outside'
                         label='Cabin status'
+                        defaultSelectedKeys={initialData?.status ? [initialData.status] : undefined}
                     >
                         {cabinStatus.map((status) => (
                             <SelectItem key={status.key} value={status.key}>{status.label}</SelectItem>
@@ -84,6 +99,11 @@ export default function CabinForm({ onSubmit, onClose }) {
                         labelPlacement='outside'
                         label='Cabin image'
                     />
+                    {isEditMode && (
+                        <p className="text-sm text-gray-500">
+                            {initialData.image ? 'Current image will be kept if no new image is selected' : 'No image currently set'}
+                        </p>
+                    )}
                 </div>
             </div>
         </Form>

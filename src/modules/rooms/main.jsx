@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import AccommodationCard from "../../utilities/accommodation/accommodationCard";
 import CabinForm from '../../utilities/forms/cabins/CabinForm';
 
-export default function CabinsManagement() {
+export default function RoomsManagement() {
     const [cabins, setCabins] = useState([
         {
             id: 1,
-            name: "Cabin 1",
+            name: "Room 1",
             capacity: 5,
             description: "Cabin 1 description",
             price: "50",
@@ -15,7 +15,7 @@ export default function CabinsManagement() {
         },
         {
             id: 2,
-            name: "Cabin 2",
+            name: "Room 2",
             capacity: 5,
             description: "Cabin 2 description",
             price: "25",
@@ -24,7 +24,7 @@ export default function CabinsManagement() {
         },
         {
             id: 3,
-            name: "Cabin 3",
+            name: "Room 3",
             capacity: 5,
             description: "Cabin 3 description",
             price: "25",
@@ -33,7 +33,7 @@ export default function CabinsManagement() {
         },
         {
             id: 4,
-            name: "Cabin 4",
+            name: "Room 4",
             capacity: 5,
             description: "Cabin 4 description",
             price: "25",

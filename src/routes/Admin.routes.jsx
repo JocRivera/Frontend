@@ -3,6 +3,7 @@ import DashboardManagement from '../../src/modules/admin/main.jsx';
 import SettingsManagement from '../modules/settings/main.jsx';
 import ServicesManagement from '../modules/services/main.jsx';
 import CabinsManagement from '../modules/cabins/main.jsx';
+import RoomsManagement from '../modules/rooms/main.jsx';
 
 const AdminRoutes = () => {
     return (
@@ -11,6 +12,7 @@ const AdminRoutes = () => {
             <Route path="settings" element={<SettingsManagement />} />
             <Route path="services" element={<ServicesManagement />} />
             <Route path="cabins" element={<CabinsManagement />} />
+            <Route path="rooms" element={<RoomsManagement />} />
         </Routes>
     );
 };
