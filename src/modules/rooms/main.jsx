@@ -10,7 +10,7 @@ export default function RoomsManagement() {
             capacity: 5,
             description: "Cabin 1 description",
             price: "50",
-            image: "https://hosterialoslagos.com/wp-content/uploads/2024/09/IMG_5384-768x541.jpg",
+            image: "https://hosterialoslagos.com/wp-content/uploads/2024/09/IMG_4055-scaled.jpg",
             status: "active",
         },
         {
@@ -19,7 +19,7 @@ export default function RoomsManagement() {
             capacity: 5,
             description: "Cabin 2 description",
             price: "25",
-            image: "https://hosterialoslagos.com/wp-content/uploads/elementor/thumbs/IMG_5388-scaled-qucg8be0s886i3twvywubxb11be90jqk2sabc4tf34.jpg",
+            image: "https://hosterialoslagos.com/wp-content/uploads/2025/02/DSC00509-scaled.jpg",
             status: "active",
         },
         {
@@ -28,7 +28,7 @@ export default function RoomsManagement() {
             capacity: 5,
             description: "Cabin 3 description",
             price: "25",
-            image: "https://hosterialoslagos.com/wp-content/uploads/2024/09/IMG_5391-scaled.jpg",
+            image: "https://hosterialoslagos.com/wp-content/uploads/elementor/thumbs/WhatsApp-Image-2025-02-25-at-12.13.23-PM-scaled-r21bhhcfd6xjb2dx4pv6rb88mpyuhebji8y7901zsg.jpeg",
             status: "active",
         },
         {
@@ -37,7 +37,7 @@ export default function RoomsManagement() {
             capacity: 5,
             description: "Cabin 4 description",
             price: "25",
-            image: "https://hosterialoslagos.com/wp-content/uploads/2024/10/WhatsApp-Image-2024-10-22-at-10.51.07-AM-2-scaled.jpeg",
+            image: "https://hosterialoslagos.com/wp-content/uploads/2025/02/WhatsApp-Image-2025-02-25-at-12.13.23-PM-1-2048x1062.jpeg",
             status: "active",
         }
     ]);
