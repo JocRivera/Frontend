@@ -13,8 +13,8 @@ export default function ServiceForm({ onSubmit, onClose, onEdit, initialData }) 
 
         if (isEditMode) {
             const updatedData = {
-                ...data,
-                id: initialData.id
+                ...initialData,
+                service: data.service,
             };
             onEdit(updatedData);
         } else {

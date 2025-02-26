@@ -42,7 +42,6 @@ export default function ReservationsManagement() {
         const newReservation = {
             id: reservations.length + 1,
             client: formData.name,
-
             plan: formData.plan,
             room: "Pending", // You might want to add room selection to your form
             startDate: formData.startDate,
@@ -64,14 +63,14 @@ export default function ReservationsManagement() {
 
     return (
         <div>
-            <TableComponent editData={handleEditReservation}
+            <TableComponent
                 deleteData={handleDeleteReservation}
-                columns={reservationColumns}
+                editData={handleEditReservation}
                 data={reservations}
-                initialVisibleColumns={initialVisibleColumns}
                 formId="reservation-form"
                 size="5xl"
-                statusOptions={statusOptions} Dynamic={(onClose, data, onEdit) => (
+                columns={reservationColumns} initialVisibleColumns={initialVisibleColumns} statusOptions={statusOptions}
+                Dynamic={(onClose, data, onEdit) => (
                     <BookForm
                         onSubmit={(data) => {
                             handleAddReservation(data);
