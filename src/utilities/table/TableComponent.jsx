@@ -16,7 +16,7 @@ import {
   Pagination,
   Tooltip,
 } from "@nextui-org/react";
-import { EditIcon } from "./EditIcon";
+import OpenEditModal from "./OpenEditModal.jsx";
 import { DeleteIcon } from "./DeleteIcon";
 import { EyeIcon } from "./EyeIcon";
 import { PlusIcon } from "./PlusIcon.jsx";
@@ -31,7 +31,7 @@ const statusColorMap = {
 };
 
 
-export default function TableComponent({ columns, data, initialVisibleColumns, statusOptions, Dynamic, formId, size }) {
+export default function TableComponent({ columns, data, initialVisibleColumns, statusOptions, Dynamic, formId, size, onEdit }) {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState(new Set(initialVisibleColumns));
@@ -109,7 +109,7 @@ export default function TableComponent({ columns, data, initialVisibleColumns, s
             </Tooltip>
             <Tooltip content="Edit user">
               <span className="text-lg cursor-pointer text-default-400 active:opacity-50">
-                <EditIcon />
+                <OpenEditModal FormComponent={Dynamic} formId={formId} data={data} onEdit={onEdit} />
               </span>
             </Tooltip>
             <Tooltip color="danger" content="Delete user">
