@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import TableComponent from "../../../utilities/table/TableComponent";
-import BookForm from "../../../utilities/forms/reservation/client/ReservationForm";
+import TableComponent from "../../utilities/table/TableComponent";
+import BookForm from "../../utilities/forms/reservation/admin/ReservationForm";
 export default function ReservationsManagement() {
     const [reservations, setReservations] = useState([
         {

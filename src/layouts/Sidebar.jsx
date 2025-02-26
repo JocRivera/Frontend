@@ -6,7 +6,9 @@ import {
     HelpCircle,
     BarChart,
     Menu,
-    X
+    X,
+    BookCheck,
+    HotelIcon
 } from "lucide-react";
 import { Button } from "@nextui-org/react";
 import { Link } from "react-router-dom";
@@ -16,10 +18,10 @@ const Sidebar = ({ isOpen, onToggle }) => {
         { icon: <BarChart size={20} />, text: "Dashboard", to: "/dashboard" },
         { icon: <Home size={20} />, text: "Cabins", to: "/cabins" },
         { icon: <Home size={20} />, text: "Rooms", to: "/rooms" },
-        { icon: <HelpCircle size={20} />, text: "Services", to: "/services" },
+        { icon: <HotelIcon size={20} />, text: "Services", to: "/services" },
         { icon: <HelpCircle size={20} />, text: "Plains", href: "#" },
         { icon: <Users size={20} />, text: "Clients", href: "#" },
-        { icon: <HelpCircle size={20} />, text: "Reservations", href: "#" },
+        { icon: <BookCheck size={20} />, text: "Reservations", to: "/reservations" },
         { icon: <Users size={20} />, text: "Users", href: "#" },
         { icon: <Settings size={20} />, text: "Config", to: "/settings" },
 
