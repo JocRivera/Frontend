@@ -31,7 +31,7 @@ const statusColorMap = {
 };
 
 
-export default function TableComponent({ columns, data, initialVisibleColumns, statusOptions, Dynamic, formId, size, onEdit }) {
+export default function TableComponent({ columns, data, initialVisibleColumns, statusOptions, Dynamic, formId, size, editData, deleteData }) {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState(new Set(initialVisibleColumns));
@@ -52,22 +52,22 @@ export default function TableComponent({ columns, data, initialVisibleColumns, s
   }, [visibleColumns, columns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...data];
+    let filteredData = [...data];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Object.values(user).some((value) =>
+      filteredData = filteredData.filter((data) =>
+        Object.values(data).some((value) =>
           String(value).toLowerCase().includes(filterValue.toLowerCase()),
         ),
       );
     }
     if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.status),
+      filteredData = filteredData.filter((data) =>
+        Array.from(statusFilter).includes(data.status),
       );
     }
 
-    return filteredUsers;
+    return filteredData;
   }, [data, filterValue, statusFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
@@ -89,13 +89,13 @@ export default function TableComponent({ columns, data, initialVisibleColumns, s
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((user, columnKey) => {
-    const cellValue = user[columnKey];
+  const renderCell = React.useCallback((data, columnKey) => {
+    const cellValue = data[columnKey];
 
     switch (columnKey) {
       case "status":
         return (
-          <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
+          <Chip className="capitalize" color={statusColorMap[data.status]} size="sm" variant="flat">
             {cellValue}
           </Chip>
         );
@@ -107,14 +107,16 @@ export default function TableComponent({ columns, data, initialVisibleColumns, s
                 <EyeIcon />
               </span>
             </Tooltip>
-            <Tooltip content="Edit user">
+            <Tooltip content="Edit data">
               <span className="text-lg cursor-pointer text-default-400 active:opacity-50">
-                <OpenEditModal FormComponent={Dynamic} formId={formId} data={data} onEdit={onEdit} />
+                <OpenEditModal FormComponent={Dynamic} formId={formId} data={data} onEdit={editData} />
               </span>
             </Tooltip>
-            <Tooltip color="danger" content="Delete user">
+            <Tooltip color="danger" content="Delete data">
               <span className="text-lg cursor-pointer text-danger active:opacity-50">
-                <DeleteIcon />
+                <DeleteIcon
+                  onClick={() => deleteData(data.id)}
+                />
               </span>
             </Tooltip>
           </div>

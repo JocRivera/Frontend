@@ -9,7 +9,6 @@ import {
     useDisclosure,
     ModalFooter,
 } from "@nextui-org/react";
-import { s } from "framer-motion/client";
 
 export default function OpenEditModal({ formId, data, onEdit, FormComponent, size }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();

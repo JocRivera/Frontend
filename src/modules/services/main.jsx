@@ -37,16 +37,30 @@ export default function ServicesManagement() {
         };
         setServices([...services, newService]);
     }
+
+    const handleUpdateService = (formData) => {
+    }
+
+    const handleDeleteService = (id) => {
+        setServices(services.filter(service => service.id !== id));
+    }
+
     return (
         <div>
-            <TableComponent columns={serviceColumns} data={services} initialVisibleColumns={initialVisibleColumns} statusOptions={statusOptions} Dynamic={(onClose) => (
-                <ServiceForm
-                    onSubmit={(data) => {
-                        handleAddService(data);
-                    }}
-                    onClose={onClose}
-                />
-            )}
+            <TableComponent
+                deleteData={handleDeleteService}
+                updateData={handleUpdateService}
+                columns={serviceColumns} data={services} initialVisibleColumns={initialVisibleColumns} statusOptions={statusOptions}
+                Dynamic={(onClose, onEdit, data) => (
+                    <ServiceForm
+                        onSubmit={(data) => {
+                            handleAddService(data);
+                        }}
+                        onClose={onClose}
+                        initialData={data}
+                        onEdit={onEdit}
+                    />
+                )}
                 formId="service-form"
                 size="sm"
             />
