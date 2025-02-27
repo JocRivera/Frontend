@@ -1,16 +1,26 @@
 import React from "react";
 import { Input, } from "@nextui-org/react";
 import { Form } from "@nextui-org/form";
-export default function ServiceForm({ onSubmit, onClose }) {
+export default function ServiceForm({ onSubmit, onClose, onEdit, initialData }) {
     const [submitted, setSubmitted] = React.useState(false);
     const [errors, setErrors] = React.useState({});
+    const isEditMode = !!initialData;
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData);
 
-        onSubmit(data);
+        if (isEditMode) {
+            const updatedData = {
+                ...initialData,
+                service: data.service,
+            };
+            onEdit(updatedData);
+        } else {
+
+            onSubmit(data);
+        }
         if (onClose) {
             onClose();
         }
@@ -39,6 +49,7 @@ export default function ServiceForm({ onSubmit, onClose }) {
                     name="service"
                     labelPlacement="outside"
                     placeholder="Enter service name"
+                    defaultValue={initialData?.service || ""}
                 />
                 <Input
                     isRequired
@@ -53,6 +64,7 @@ export default function ServiceForm({ onSubmit, onClose }) {
                     name="description"
                     labelPlacement="outside"
                     placeholder="Enter service description"
+                    defaultValue={initialData?.description || ""}
                 />
                 <Input
                     isRequired
@@ -67,6 +79,7 @@ export default function ServiceForm({ onSubmit, onClose }) {
                     name="price"
                     labelPlacement="outside"
                     placeholder="Enter service price"
+                    defaultValue={initialData?.price || ""}
                 />
 
             </div>

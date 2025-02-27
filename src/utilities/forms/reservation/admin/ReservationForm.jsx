@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { DatePicker, Input, Select, SelectItem, Checkbox, Button, Card } from "@nextui-org/react";
 import { Form } from "@nextui-org/form";
-
+import { parseDate } from "@internationalized/date";
 import { Trash2 } from "lucide-react";
 
-export default function BookForm({ onSubmit, onClose }) {
+export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     const [submitted, setSubmitted] = React.useState(null);
     const [errors, setErrors] = React.useState({});
     const [startDate, setStartDate] = useState(null);
@@ -14,7 +14,7 @@ export default function BookForm({ onSubmit, onClose }) {
     const [hasAccompanists, setHasAccompanists] = useState(false);
     const [accompanists, setAccompanists] = useState([]);
     const [numAccompanists, setNumAccompanists] = useState(1);
-
+    const isEditMode = !!initialData;
     useEffect(() => {
         if (selectedPlan === "ca") {
             setIsEndDateDisabled(true);
@@ -27,7 +27,6 @@ export default function BookForm({ onSubmit, onClose }) {
             }
         }
     }, [selectedPlan, startDate]);
-
     useEffect(() => {
         if (hasAccompanists) {
             const currentCount = accompanists.length;
@@ -51,7 +50,6 @@ export default function BookForm({ onSubmit, onClose }) {
             }
         }
     }, [numAccompanists, hasAccompanists]);
-
     // Reset accompanists when checkbox is unchecked
     useEffect(() => {
         if (!hasAccompanists) {
@@ -59,24 +57,18 @@ export default function BookForm({ onSubmit, onClose }) {
             setNumAccompanists(1);
         }
     }, [hasAccompanists]);
-
-    ;
-
-    const updateAccompanist = (id, field, value) => {
-        setAccompanists(accompanists.map(acc =>
-            acc.id === id ? { ...acc, [field]: value } : acc
-        ));
-    };
-    const removeAccompanist = (id) => {
-        setAccompanists(accompanists.filter(acc => acc.id !== id));
-    };
-
+    useEffect(() => {
+        if (initialData?.startDate) {
+            setStartDate(parseDate(initialData.startDate));
+        }
+        if (initialData?.endDate) {
+            setEndDate(parseDate(initialData.endDate));
+        }
+    }, []);
     const handleSubmit = (e) => {
         e.preventDefault();
-
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData);
-
         // Custom validation checks
         const newErrors = {};
         if (Object.keys(newErrors).length > 0) {
@@ -87,14 +79,43 @@ export default function BookForm({ onSubmit, onClose }) {
             setErrors({ terms: "Please accept the terms" });
             return;
         }
-
-        // Clear errors and submit
-        setErrors({});
-        onSubmit(data);
+        if (isEditMode) {
+            // Aquí está el problema - necesitamos mantener todos los datos originales
+            // y solo actualizar los que cambiaron
+            const updatedData = {
+                ...initialData,  // Mantener todos los datos originales
+                client: data.name,
+                plan: data.plan,
+                startDate: data.startDate,
+                endDate: data.endDate,
+                email: data.email,
+                documentType: data.documentType,
+                status: initialData.status,
+                room: initialData.room,
+                id: initialData.id
+            };
+            onEdit(updatedData);
+        } else {
+            onSubmit(data);
+        }
         if (onClose) {
             onClose();
         }
+        // Clear errors and submit
+        setErrors({});
+
     };
+    ;
+    const updateAccompanist = (id, field, value) => {
+        setAccompanists(accompanists.map(acc =>
+            acc.id === id ? { ...acc, [field]: value } : acc
+        ));
+    };
+    const removeAccompanist = (id) => {
+        setAccompanists(accompanists.filter(acc => acc.id !== id));
+    };
+
+
 
     return (
         <form
@@ -113,6 +134,7 @@ export default function BookForm({ onSubmit, onClose }) {
                         labelPlacement="outside"
                         name="plan"
                         placeholder="Select a plan"
+                        defaultSelectedKeys={initialData?.plan ? [initialData.plan] : undefined}
                     >
                         <SelectItem key="ar" value="ar">
                             Romantico
@@ -134,14 +156,15 @@ export default function BookForm({ onSubmit, onClose }) {
                         <DatePicker
                             label="Fecha de inicio"
                             onChange={setStartDate}
-                            placeholder="mm/dd/yyyy"
+                            placeholder="yyyy-mm-dd"
                             name="startDate"
                             value={startDate}
+
                         />
                         <DatePicker
                             label="Fecha de Fin"
                             onChange={setEndDate}
-                            placeholder="mm/dd/yyyy"
+                            placeholder="yyyy-mm-dd"
                             isDisabled={isEndDateDisabled}
                             name="endDate"
                             value={endDate}
@@ -153,6 +176,7 @@ export default function BookForm({ onSubmit, onClose }) {
                         labelPlacement="outside"
                         name="name"
                         placeholder="Enter your name"
+                        defaultValue={initialData?.client || ""}
                     />
 
                     <Input
@@ -163,6 +187,7 @@ export default function BookForm({ onSubmit, onClose }) {
                         name="email"
                         placeholder="Enter your email"
                         type="email"
+                        defaultValue={initialData?.email || ""}
                     />
 
                     <div className="flex space-x-4">
@@ -170,8 +195,9 @@ export default function BookForm({ onSubmit, onClose }) {
                             isRequired
                             label="Tipo de documento"
                             labelPlacement="outside"
-                            name="type"
+                            name="documentType"
                             placeholder="Select a type"
+                            defaultSelectedKeys={initialData?.documentType ? [initialData.documentType] : undefined}
                         >
                             <SelectItem key="cc" value="cc">
                                 Cedula de Ciudadania
@@ -298,10 +324,12 @@ export default function BookForm({ onSubmit, onClose }) {
                     Reset
                 </Button>
             </div>
-            {submitted && (
-                console.log(JSON.stringify(submitted, null, 2))
-            )}
-        </form>
+            {
+                submitted && (
+                    console.log(JSON.stringify(submitted, null, 2))
+                )
+            }
+        </form >
     );
 }
 

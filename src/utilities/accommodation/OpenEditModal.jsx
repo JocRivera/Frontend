@@ -8,31 +8,39 @@ import {
     useDisclosure,
     ModalFooter,
 } from "@nextui-org/react";
-import { PlusIcon } from "./PlusIcon.jsx";
 
-export default function ModalView({ FormComponent, formId, size }) {
+export default function OpenEditModal({ FormComponent, formId, data, onEdit }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const targetRef = React.useRef(null);
     const [scrollBehavior, setScrollBehavior] = React.useState("inside");
 
     return (
         <>
-            <Button className="text-white shadow-lg bg-gradient-to-tr from-pink-500 to-yellow-500" color="primary" endContent={<PlusIcon />} onPress={onOpen}>Add New</Button>
-            <Modal ref={targetRef} isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior={scrollBehavior} size={size} >
+            <Button className="text-tiny" color="primary" radius="full" size="sm"
+                onPress={onOpen}
+            >
+                Editar
+            </Button>
+            <Modal
+                ref={targetRef}
+                isOpen={isOpen}
+                onOpenChange={onOpenChange}
+                scrollBehavior={scrollBehavior}
+                size={"3xl"}
+            >
                 <ModalContent>
                     {(onClose) => (
                         <>
                             <ModalHeader className="flex flex-col gap-1">
-                                Añadir
+                                Editar
                             </ModalHeader>
                             <ModalBody>
-                                {FormComponent && FormComponent(onClose)}
+                                {FormComponent && FormComponent(onClose, data, onEdit)}
                             </ModalBody>
                             <ModalFooter>
                                 <Button color="danger" variant="flat" onPress={onClose}>
-                                    Close
+                                    Cerrar
                                 </Button>
-
                                 <Button
                                     form={formId}
                                     type="submit"
@@ -44,8 +52,7 @@ export default function ModalView({ FormComponent, formId, size }) {
                         </>
                     )}
                 </ModalContent>
-            </Modal >
+            </Modal>
         </>
     );
 }
-

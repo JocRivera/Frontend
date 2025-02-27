@@ -1,4 +1,3 @@
-
 import { Card, CardHeader, CardFooter, Image, Button } from "@nextui-org/react";
 const Cardcomponent = ({ data }) => {
     return (
