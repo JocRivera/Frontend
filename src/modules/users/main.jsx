@@ -4,7 +4,7 @@ import UserForm from "../../utilities/forms/users/UserForm";
 
 export default function UsersManagement() {
     const userColumns = [
-        { uid: "user", name: "User Name" },
+        { uid: "name", name: "User Name" },
         { uid: "email", name: "Email" },
         { uid: "phone", name: "Phone" },
         { uid: "status", name: "Status" },

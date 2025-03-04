@@ -20,7 +20,7 @@ export default function CabinsManagement() {
             description: "Cabin 2 description",
             price: "25",
             image: "https://hosterialoslagos.com/wp-content/uploads/elementor/thumbs/IMG_5388-scaled-qucg8be0s886i3twvywubxb11be90jqk2sabc4tf34.jpg",
-            status: "active",
+            status: "inactive",
         },
         {
             id: 3,
@@ -41,6 +41,8 @@ export default function CabinsManagement() {
             status: "active",
         }
     ]);
+    const statusOptions = [{ name: "Active", uid: "active" }, { name: "Inactive", uid: "inactive" }];
+
 
     const handleAddCabin = (data) => {
         const newCabin = {
@@ -63,16 +65,17 @@ export default function CabinsManagement() {
 
     return (
         <div>
-            <AccommodationCard deleteAccommodation={handleDeleteCabin} editAccommodation={handleUpdateCabin} data={cabins} size="3xl" formId="cabin-form" Dynamic={(onClose, data, onEdit) => (
-                <CabinForm
-                    onSubmit={(data) => {
-                        handleAddCabin(data);
-                    }}
-                    onClose={onClose}
-                    initialData={data}
-                    onEdit={onEdit}
-                />
-            )} />
+            <AccommodationCard statusOptions={statusOptions}
+                deleteAccommodation={handleDeleteCabin} editAccommodation={handleUpdateCabin} data={cabins} size="3xl" formId="cabin-form" Dynamic={(onClose, data, onEdit) => (
+                    <CabinForm
+                        onSubmit={(data) => {
+                            handleAddCabin(data);
+                        }}
+                        onClose={onClose}
+                        initialData={data}
+                        onEdit={onEdit}
+                    />
+                )} />
         </div>
     );
 
