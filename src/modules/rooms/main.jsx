@@ -41,6 +41,7 @@ export default function RoomsManagement() {
             status: "active",
         }
     ]);
+    const statusOptions = [{ name: "Active", uid: "active" }, { name: "Inactive", uid: "inactive" }];
 
     const handleAddCabin = (data) => {
         const newCabin = {
@@ -63,16 +64,17 @@ export default function RoomsManagement() {
 
     return (
         <div>
-            <AccommodationCard deleteAccommodation={handleDeleteCabin} editAccommodation={handleUpdateCabin} data={cabins} size="3xl" formId="cabin-form" Dynamic={(onClose, data, onEdit) => (
-                <CabinForm
-                    onSubmit={(data) => {
-                        handleAddCabin(data);
-                    }}
-                    onClose={onClose}
-                    initialData={data}
-                    onEdit={onEdit}
-                />
-            )} />
+            <AccommodationCard statusOptions={statusOptions}
+                deleteAccommodation={handleDeleteCabin} editAccommodation={handleUpdateCabin} data={cabins} size="3xl" formId="cabin-form" Dynamic={(onClose, data, onEdit) => (
+                    <CabinForm
+                        onSubmit={(data) => {
+                            handleAddCabin(data);
+                        }}
+                        onClose={onClose}
+                        initialData={data}
+                        onEdit={onEdit}
+                    />
+                )} />
         </div>
     );
 
