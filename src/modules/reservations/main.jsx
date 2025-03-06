@@ -11,7 +11,7 @@ export default function ReservationsManagement() {
             plan: "ar",
             room: "101",
             startDate: "2025-02-26",
-            endDate: "2025-02-26",
+            endDate: "2025-02-27",
             status: "active",
         },
         {

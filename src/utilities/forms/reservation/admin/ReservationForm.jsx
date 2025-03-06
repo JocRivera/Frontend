@@ -102,12 +102,12 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                     { id: "101", type: "room", name: "Room 101", capacity: 3, available: true },
                     { id: "102", type: "room", name: "Room 102", capacity: 3, available: true },
                     { id: "C1", type: "cabin", name: "Cabin 1", capacity: 9, available: true },
-                    { id: "C2", type: "cabin", name: "Cabin 2", capacity: 9, available: false }, // Already booked
+                    { id: "C2", type: "cabin", name: "Cabin 2", capacity: 9, available: true }, // Already booked
                 ];
             } else if (selectedPlan === "ar") { // Romantico plan - only rooms
                 mockAccommodations = [
                     { id: "101", type: "room", name: "Room 101", capacity: 3, available: true },
-                    { id: "102", type: "room", name: "Room 102", capacity: 3, available: false },
+                    { id: "102", type: "room", name: "Room 102", capacity: 3, available: true },
                     { id: "103", type: "room", name: "Room 103", capacity: 3, available: true },
                 ];
             } else {
@@ -546,9 +546,6 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             <div className="flex gap-4">
                 <Button type="reset" variant="bordered">
                     Reset
-                </Button>
-                <Button type="button" color="primary" onClick={fetchAvailableAccommodations}>
-                    Disponibilidad
                 </Button>
             </div>
             {
