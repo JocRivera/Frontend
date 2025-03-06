@@ -1,6 +1,6 @@
 export class Reservation {
     constructor() {
-        this.idReserva = null;
+        this.id = null;
         this.idCliente = null;
         this.idPlan = null;
         this.idAlojamineto = null;

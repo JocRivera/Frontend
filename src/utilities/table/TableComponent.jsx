@@ -28,6 +28,7 @@ import ModalView from "./OpenModal.jsx"
 const statusColorMap = {
   active: "success",
   inactive: "danger",
+  pendiente: "warning",
 };
 
 
@@ -297,7 +298,7 @@ export default function TableComponent({ columns, data, initialVisibleColumns, s
       </TableHeader>
       <TableBody emptyContent={"No data found"} items={sortedItems}>
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow key={item._id}>
             {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
           </TableRow>
         )}
