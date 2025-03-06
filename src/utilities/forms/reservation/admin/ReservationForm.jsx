@@ -3,6 +3,7 @@ import { DatePicker, Input, Select, SelectItem, Checkbox, Button, Card } from "@
 import { Form } from "@nextui-org/form";
 import { parseDate } from "@internationalized/date";
 import { Trash2 } from "lucide-react";
+import { div } from "framer-motion/client";
 
 export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     const [submitted, setSubmitted] = React.useState(null);
@@ -14,7 +15,15 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     const [hasAccompanists, setHasAccompanists] = useState(false);
     const [accompanists, setAccompanists] = useState([]);
     const [numAccompanists, setNumAccompanists] = useState(1);
+    const [availableAccommodations, setAvailableAccommodations] = useState([]);
+    const [isLoadingAccommodations, setIsLoadingAccommodations] = useState(false);
+    const [selectedAccommodation, setSelectedAccommodation] = useState("");
+    const [totalGuests, setTotalGuests] = useState(1);
     const isEditMode = !!initialData;
+
+    useEffect(() => {
+        setTotalGuests(1 + (hasAccompanists ? parseInt(numAccompanists) : 0));
+    }, [numAccompanists, hasAccompanists]);
     useEffect(() => {
         if (selectedPlan === "ca") {
             setIsEndDateDisabled(true);
@@ -65,6 +74,77 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             setEndDate(parseDate(initialData.endDate));
         }
     }, []);
+
+    // Check availability when dates and plan are selected
+    useEffect(() => {
+        if (startDate && (endDate || isEndDateDisabled) && selectedPlan && selectedPlan !== "") {
+            fetchAvailableAccommodations();
+        }
+    }, [startDate, endDate, selectedPlan, totalGuests]);
+
+    const fetchAvailableAccommodations = async () => {
+        if (!startDate || (!endDate && !isEndDateDisabled) || !selectedPlan) {
+            return;
+        }
+
+        setIsLoadingAccommodations(true);
+
+        try {
+            // In a real application, this would be an API call to your backend
+            // For now, we'll simulate it with mock data
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API delay
+
+            // Mock data - in a real app, this would come from your API
+            let mockAccommodations = [];
+
+            if (selectedPlan === "us") { // Alojamiento plan - both rooms and cabins
+                mockAccommodations = [
+                    { id: "101", type: "room", name: "Room 101", capacity: 3, available: true },
+                    { id: "102", type: "room", name: "Room 102", capacity: 3, available: true },
+                    { id: "C1", type: "cabin", name: "Cabin 1", capacity: 9, available: true },
+                    { id: "C2", type: "cabin", name: "Cabin 2", capacity: 9, available: false }, // Already booked
+                ];
+            } else if (selectedPlan === "ar") { // Romantico plan - only rooms
+                mockAccommodations = [
+                    { id: "101", type: "room", name: "Room 101", capacity: 3, available: true },
+                    { id: "102", type: "room", name: "Room 102", capacity: 3, available: false },
+                    { id: "103", type: "room", name: "Room 103", capacity: 3, available: true },
+                ];
+            } else {
+                // For other plans, no accommodation needed
+                mockAccommodations = [];
+            }
+
+            // Filter by capacity
+            const accommodationsWithSufficientCapacity = mockAccommodations.filter(
+                acc => acc.available && acc.capacity >= totalGuests
+            );
+
+            setAvailableAccommodations(accommodationsWithSufficientCapacity);
+
+            // For non-admin users, auto-select accommodation if possible
+            if (!isAdmin && accommodationsWithSufficientCapacity.length > 0) {
+                // Use "AI" logic to find the best fit (just a simple algorithm for now)
+                const bestFit = findBestAccommodation(accommodationsWithSufficientCapacity, totalGuests);
+                setSelectedAccommodation(bestFit.id);
+            }
+        } catch (error) {
+            console.error("Error fetching accommodations:", error);
+            // Handle error appropriately
+        } finally {
+            setIsLoadingAccommodations(false);
+        }
+    };
+
+    // Simple algorithm to find best accommodation (simulating AI decision)
+    const findBestAccommodation = (accommodations, guestCount) => {
+        // Sort by how efficiently the space is used (minimum wasted capacity)
+        return accommodations.sort((a, b) => {
+            const aWaste = a.capacity - guestCount;
+            const bWaste = b.capacity - guestCount;
+            return aWaste - bWaste;
+        })[0];
+    };
 
     const validateForm = (data) => {
         const newErrors = {};
@@ -190,6 +270,30 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     const removeAccompanist = (id) => {
         setAccompanists(accompanists.filter(acc => acc.id !== id));
     };
+    const renderAccommodationSection = () => {
+        // Only show accommodation section for relevant plans
+        if (selectedPlan !== "us" && selectedPlan !== "ar") {
+            return null;
+        }
+
+        // If dates or plan not selected, show message
+        if (!startDate || (!endDate && !isEndDateDisabled)) {
+            return (
+                <div className="p-4 bg-gray-100 rounded-md">
+                    <p className="text-gray-700">Please select dates to see available accommodations</p>
+                </div>
+            );
+        }
+
+        if (isLoadingAccommodations) {
+            return (
+                <div className="flex items-center justify-center p-4">
+                    <Spinner size="sm" color="primary" />
+                    <span className="ml-2">Loading available accommodations...</span>
+                </div>
+            );
+        }
+    }
 
 
 
@@ -408,6 +512,33 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                             </div>
                         </div>
                     )}
+                    {availableAccommodations.length > 0 && (
+                        <div className="flex flex-col gap-4">
+                            <h2 className="text-xl font-semibold">Alojamiento</h2>
+                            <div className="grid gap-4">
+                                {availableAccommodations.map((acc) => (
+                                    <Card key={acc.id} className="p-4 shadow-none">
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <h3 className="text-lg font-semibold">{acc.name}</h3>
+                                                <p className="text-sm text-gray-500">{acc.type === "room" ? "Room" : "Cabin"}</p>
+                                            </div>
+                                            <div>
+                                                <span className="flex flex-col text-sm text-gray">Capacity: {acc.capacity}</span>
+                                                <Checkbox
+                                                    isSelected={selectedAccommodation === acc.id}
+                                                    onValueChange={() => setSelectedAccommodation(acc.id)}
+                                                >
+                                                    Select
+                                                </Checkbox>
+                                            </div>
+                                        </div>
+                                    </Card>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
                     <h2 className="text-xl font-semibold">Pago</h2>
                 </div>
             </div>
@@ -415,6 +546,9 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             <div className="flex gap-4">
                 <Button type="reset" variant="bordered">
                     Reset
+                </Button>
+                <Button type="button" color="primary" onClick={fetchAvailableAccommodations}>
+                    Disponibilidad
                 </Button>
             </div>
             {
