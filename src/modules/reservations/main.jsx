@@ -43,6 +43,7 @@ export default function ReservationsManagement() {
             id: reservations.length + 1,
             client: formData.name,
             plan: formData.plan,
+            email: formData.email,
             room: "Pending", // You might want to add room selection to your form
             startDate: formData.startDate,
             endDate: formData.endDate,

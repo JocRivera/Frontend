@@ -65,18 +65,94 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             setEndDate(parseDate(initialData.endDate));
         }
     }, []);
+
+    const validateForm = (data) => {
+        const newErrors = {};
+
+        // Validate plan selection
+        if (!data.plan) {
+            newErrors.plan = "Please select a plan";
+        }
+
+        // Validate dates
+        if (!startDate) {
+            newErrors.startDate = "Start date is required";
+        }
+
+        if (!isEndDateDisabled && !endDate) {
+            newErrors.endDate = "End date is required";
+        }
+
+        if (startDate && endDate && !isEndDateDisabled && startDate > endDate) {
+            newErrors.endDate = "End date must be after start date";
+        }
+
+        // Validate client information
+        if (!data.name || data.name.trim() === "") {
+            newErrors.name = "Name is required";
+        }
+        else if (!/^[a-zA-Z\s]+$/.test(data.name)) {
+            newErrors.name = "Please enter a valid name";
+        }
+
+        if (!data.email || data.email.trim() === "") {
+            newErrors.email = "Email is required";
+        }
+
+        // Validate document information
+        if (!data.documentType) {
+            newErrors.documentType = "Document type is required";
+        }
+
+        if (!data.number || data.number.trim() === "") {
+            newErrors.number = "Document number is required";
+        } else if (!/^[0-9]+$/.test(data.number)) {
+            newErrors.number = "Please enter a valid document number";
+        }
+
+        // Validate accompanists if applicable
+        if (hasAccompanists) {
+            let hasAccompanistErrors = false;
+
+            accompanists.forEach((acc, index) => {
+                if (!acc.name || acc.name.trim() === "") {
+                    newErrors[`accompanist_${index}_name`] = "Name is required";
+                    hasAccompanistErrors = true;
+                }
+
+                if (!acc.documentType) {
+                    newErrors[`accompanist_${index}_documentType`] = "Document type is required";
+                    hasAccompanistErrors = true;
+                }
+
+                if (!acc.documentNumber || acc.documentNumber.trim() === "") {
+                    newErrors[`accompanist_${index}_documentNumber`] = "Document number is required";
+                    hasAccompanistErrors = true;
+                }
+            });
+
+            if (hasAccompanistErrors) {
+                newErrors.accompanists = "Please complete all accompanist information";
+            }
+        }
+
+        // Validate terms
+        if (data.terms !== "true") {
+            newErrors.terms = "Please accept the terms and conditions";
+        }
+
+        return newErrors;
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData);
         // Custom validation checks
-        const newErrors = {};
+        const newErrors = validateForm(data);
+
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
-            return;
-        }
-        if (data.terms !== "true") {
-            setErrors({ terms: "Please accept the terms" });
             return;
         }
         if (isEditMode) {
@@ -122,14 +198,19 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             id="reservation-form"
             className="w-full "
             validationErrors={errors}
-            onReset={() => setSubmitted(null)}
+            onReset={() => {
+                setSubmitted(null);
+                setErrors({});
+            }}
             onSubmit={handleSubmit}
         >
             <div className="grid grid-cols-2 gap-6 ">
                 <div className="flex flex-col max-w-md gap-4">
                     <Select
-                        onChange={(e) => setSelectedPlan(e.target.value)}
                         isRequired
+                        isInvalid={!!errors.plan}
+                        errorMessage={errors.plan}
+                        onChange={(e) => setSelectedPlan(e.target.value)}
                         label="Plan"
                         labelPlacement="outside"
                         name="plan"
@@ -154,20 +235,26 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                     </Select>
                     <div className="flex space-x-4">
                         <DatePicker
+                            isRequired
                             label="Fecha de inicio"
                             onChange={setStartDate}
                             placeholder="yyyy-mm-dd"
                             name="startDate"
                             value={startDate}
+                            isInvalid={!!errors.startDate}
+                            errorMessage={errors.startDate}
 
                         />
                         <DatePicker
+                            isRequired
                             label="Fecha de Fin"
                             onChange={setEndDate}
                             placeholder="yyyy-mm-dd"
                             isDisabled={isEndDateDisabled}
                             name="endDate"
                             value={endDate}
+                            isInvalid={!!errors.endDate}
+                            errorMessage={errors.endDate}
                         />
                     </div>
                     <Input
@@ -177,22 +264,27 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                         name="name"
                         placeholder="Enter your name"
                         defaultValue={initialData?.client || ""}
+                        isInvalid={!!errors.name}
+                        errorMessage={errors.name}
                     />
 
                     <Input
                         isRequired
-                        errorMessage="Please enter a valid email"
                         label="Email"
                         labelPlacement="outside"
                         name="email"
                         placeholder="Enter your email"
                         type="email"
                         defaultValue={initialData?.email || ""}
+                        isInvalid={!!errors.email}
+                        errorMessage={errors.email}
                     />
 
                     <div className="flex space-x-4">
                         <Select
                             isRequired
+                            isInvalid={!!errors.documentType}
+                            errorMessage={errors.documentType}
                             label="Tipo de documento"
                             labelPlacement="outside"
                             name="documentType"
@@ -211,13 +303,8 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                         </Select>
                         <Input
                             isRequired
-                            errorMessage={({ validationDetails }) => {
-                                if (validationDetails.valueMissing) {
-                                    return "Please enter your number";
-                                }
-
-                                return errors.name;
-                            }}
+                            isInvalid={!!errors.number}
+                            errorMessage={errors.number}
                             label="Numero de documento"
                             labelPlacement="outside"
                             name="number"
@@ -272,6 +359,8 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                                                     value={accompanist.name}
                                                     onChange={(e) => updateAccompanist(accompanist.id, 'name', e.target.value)}
                                                     placeholder="Enter accompanist name"
+                                                    isInvalid={!!errors[`accompanist_${index}_name`]}
+                                                    errorMessage={errors[`accompanist_${index}_name`]}
                                                 />
                                                 <div className="flex items-center justify-between mb-2">
                                                     <Button
@@ -287,6 +376,8 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
 
                                             <div className="flex gap-4">
                                                 <Select
+                                                    isInvalid={!!errors[`accompanist_${index}_documentType`]}
+                                                    errorMessage={errors[`accompanist_${index}_documentType`]}
                                                     isRequired
                                                     label="Tipo de documento"
                                                     labelPlacement="outside"
@@ -300,6 +391,8 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                                                     <SelectItem key="pp" value="pp">Pasaporte</SelectItem>
                                                 </Select>
                                                 <Input
+                                                    isInvalid={!!errors[`accompanist_${index}_documentNumber`]}
+                                                    errorMessage={errors[`accompanist_${index}_documentNumber`]}
                                                     labelPlacement="outside"
                                                     isRequired
                                                     label="Document Number"
