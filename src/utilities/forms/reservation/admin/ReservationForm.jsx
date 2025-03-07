@@ -4,7 +4,6 @@ import { Form } from "@nextui-org/form";
 import { parseDate } from '@internationalized/date';
 import { Trash2 } from "lucide-react";
 
-
 export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     const [submitted, setSubmitted] = React.useState(null);
     const [errors, setErrors] = React.useState({});
@@ -21,9 +20,11 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     const [totalGuests, setTotalGuests] = useState(1);
     const isEditMode = !!initialData;
 
+    //actualizar el conteo de huespedes
     useEffect(() => {
         setTotalGuests(1 + (hasAccompanists ? parseInt(numAccompanists) : 0));
     }, [numAccompanists, hasAccompanists]);
+    //manejar cambios en el plan seleccionado
     useEffect(() => {
         if (selectedPlan === "ca") {
             setIsEndDateDisabled(true);
@@ -36,13 +37,14 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             }
         }
     }, [selectedPlan, startDate]);
+    // manejar cambios en el número de acompañantes
     useEffect(() => {
         if (hasAccompanists) {
             const currentCount = accompanists.length;
             const targetCount = parseInt(numAccompanists);
 
             if (currentCount < targetCount) {
-                // Add new accompanists
+                // añadir acompañantes
                 const newAccompanists = [...accompanists];
                 for (let i = currentCount; i < targetCount; i++) {
                     newAccompanists.push({
@@ -54,18 +56,19 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                 }
                 setAccompanists(newAccompanists);
             } else if (currentCount > targetCount) {
-                // Remove excess accompanists
+                // eliminar excendentes
                 setAccompanists(accompanists.slice(0, targetCount));
             }
         }
     }, [numAccompanists, hasAccompanists]);
-    // Reset accompanists when checkbox is unchecked
+    // resetear acompañantes si se desactiva la opción
     useEffect(() => {
         if (!hasAccompanists) {
             setAccompanists([]);
             setNumAccompanists(1);
         }
     }, [hasAccompanists]);
+    // cargar datos iniciales en edicion
     useEffect(() => {
         if (initialData?.startDate) {
             setStartDate(parseDate(initialData.startDate));
@@ -74,11 +77,13 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             setEndDate(parseDate(initialData.endDate));
         }
     }, []);
-
-    // Check availability when dates and plan are selected
+    // verificar disponibilidad
     useEffect(() => {
         if (startDate && (endDate || isEndDateDisabled) && selectedPlan && selectedPlan !== "") {
             fetchAvailableAccommodations();
+        } else {
+            setAvailableAccommodations([]);
+            setSelectedAccommodation("");
         }
     }, [startDate, endDate, selectedPlan, totalGuests]);
 
@@ -86,65 +91,40 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
         if (!startDate || (!endDate && !isEndDateDisabled) || !selectedPlan) {
             return;
         }
-
+        if (selectedPlan !== "us" && selectedPlan !== "ar") {
+            setAvailableAccommodations([]);
+            return;
+        }
         setIsLoadingAccommodations(true);
 
         try {
-            // In a real application, this would be an API call to your backend
-            // For now, we'll simulate it with mock data
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API delay
-
-            // Mock data - in a real app, this would come from your API
-            let mockAccommodations = [];
-
-            if (selectedPlan === "us") { // Alojamiento plan - both rooms and cabins
-                mockAccommodations = [
-                    { id: "101", type: "room", name: "Room 101", capacity: 3, available: true },
-                    { id: "102", type: "room", name: "Room 102", capacity: 3, available: true },
-                    { id: "C1", type: "cabin", name: "Cabin 1", capacity: 9, available: true },
-                    { id: "C2", type: "cabin", name: "Cabin 2", capacity: 9, available: true }, // Already booked
-                ];
-            } else if (selectedPlan === "ar") { // Romantico plan - only rooms
-                mockAccommodations = [
-                    { id: "101", type: "room", name: "Room 101", capacity: 3, available: true },
-                    { id: "102", type: "room", name: "Room 102", capacity: 3, available: true },
-                    { id: "103", type: "room", name: "Room 103", capacity: 3, available: true },
-                ];
-            } else {
-                // For other plans, no accommodation needed
-                mockAccommodations = [];
+            const formattedStartDate = startDate.toString();
+            const formattedEndDate = endDate ? endDate.toString() : formattedStartDate;
+            const apiUrl = `http://localhost:3000/disponibilidad?startDate=${formattedStartDate}&endDate=${formattedEndDate}&guests=${totalGuests}&plan=${selectedPlan}`;
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                throw new Error(`Error ${response.status}: ${response.statusText}`);
             }
 
-            // Filter by capacity
-            const accommodationsWithSufficientCapacity = mockAccommodations.filter(
-                acc => acc.available && acc.capacity >= totalGuests
+            const data = await response.json();
+
+            // Procesar y filtrar los datos según la capacidad
+            const accommodationsWithSufficientCapacity = data.filter(
+                acc => acc.estado && acc.capacidad >= totalGuests
             );
 
             setAvailableAccommodations(accommodationsWithSufficientCapacity);
-
-            // For non-admin users, auto-select accommodation if possible
-            if (!isAdmin && accommodationsWithSufficientCapacity.length > 0) {
-                // Use "AI" logic to find the best fit (just a simple algorithm for now)
-                const bestFit = findBestAccommodation(accommodationsWithSufficientCapacity, totalGuests);
-                setSelectedAccommodation(bestFit.id);
-            }
+            console.log(accommodationsWithSufficientCapacity)
+            console.log(apiUrl)
         } catch (error) {
-            console.error("Error fetching accommodations:", error);
-            // Handle error appropriately
+            console.error("Error al buscar alojamientos disponibles:", error);
+            // Aquí podrías mostrar un mensaje de error al usuario
         } finally {
             setIsLoadingAccommodations(false);
         }
     };
 
-    // Simple algorithm to find best accommodation (simulating AI decision)
-    const findBestAccommodation = (accommodations, guestCount) => {
-        // Sort by how efficiently the space is used (minimum wasted capacity)
-        return accommodations.sort((a, b) => {
-            const aWaste = a.capacity - guestCount;
-            const bWaste = b.capacity - guestCount;
-            return aWaste - bWaste;
-        })[0];
-    };
+
 
     const validateForm = (data) => {
         const newErrors = {};
@@ -290,6 +270,13 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                 <div className="flex items-center justify-center p-4">
                     <Spinner size="sm" color="primary" />
                     <span className="ml-2">Loading available accommodations...</span>
+                </div>
+            );
+        }
+        if (availableAccommodations.length === 0) {
+            return (
+                <div className="p-4 bg-gray-100 rounded-md">
+                    <p className="text-gray-700">No accommodations available for the selected dates</p>
                 </div>
             );
         }
