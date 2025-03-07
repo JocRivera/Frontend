@@ -114,8 +114,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             );
 
             setAvailableAccommodations(accommodationsWithSufficientCapacity);
-            console.log(accommodationsWithSufficientCapacity)
-            console.log(apiUrl)
+
         } catch (error) {
             console.error("Error al buscar alojamientos disponibles:", error);
             // Aquí podrías mostrar un mensaje de error al usuario
@@ -500,28 +499,30 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                         </div>
                     )}
                     {availableAccommodations.length > 0 && (
-                        <div className="flex flex-col gap-4">
-                            <h2 className="text-xl font-semibold">Alojamiento</h2>
-                            <div className="grid gap-4">
-                                {availableAccommodations.map((acc) => (
-                                    <Card key={acc.id} className="p-4 shadow-none">
-                                        <div className="flex items-center justify-between">
-                                            <div>
-                                                <h3 className="text-lg font-semibold">{acc.name}</h3>
-                                                <p className="text-sm text-gray-500">{acc.type === "room" ? "Room" : "Cabin"}</p>
+                        <div className="flex flex-col gap-4 max-h-[500px] overflow-y-auto">
+                            <div className="flex flex-col gap-4">
+                                <h2 className="text-xl font-semibold">Alojamiento</h2>
+                                <div className="grid gap-4">
+                                    {availableAccommodations.map((acc) => (
+                                        <Card key={acc.id} className="p-4 shadow-none">
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <h3 className="text-lg font-semibold">{acc.idAlojamiento}</h3>
+                                                    <p className="text-sm text-gray-500">{acc.tipo}</p>
+                                                </div>
+                                                <div>
+                                                    <span className="flex flex-col text-sm text-gray">Capacity: {acc.capacidad}</span>
+                                                    <Checkbox
+                                                        isSelected={selectedAccommodation === acc.id}
+                                                        onValueChange={() => setSelectedAccommodation(acc.id)}
+                                                    >
+                                                        Select
+                                                    </Checkbox>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <span className="flex flex-col text-sm text-gray">Capacity: {acc.capacity}</span>
-                                                <Checkbox
-                                                    isSelected={selectedAccommodation === acc.id}
-                                                    onValueChange={() => setSelectedAccommodation(acc.id)}
-                                                >
-                                                    Select
-                                                </Checkbox>
-                                            </div>
-                                        </div>
-                                    </Card>
-                                ))}
+                                        </Card>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     )}
