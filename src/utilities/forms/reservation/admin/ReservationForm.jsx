@@ -250,37 +250,6 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     const removeAccompanist = (id) => {
         setAccompanists(accompanists.filter(acc => acc.id !== id));
     };
-    const renderAccommodationSection = () => {
-        // Only show accommodation section for relevant plans
-        if (selectedPlan !== "us" && selectedPlan !== "ar") {
-            return null;
-        }
-
-        // If dates or plan not selected, show message
-        if (!startDate || (!endDate && !isEndDateDisabled)) {
-            return (
-                <div className="p-4 bg-gray-100 rounded-md">
-                    <p className="text-gray-700">Please select dates to see available accommodations</p>
-                </div>
-            );
-        }
-
-        if (isLoadingAccommodations) {
-            return (
-                <div className="flex items-center justify-center p-4">
-                    <Spinner size="sm" color="primary" />
-                    <span className="ml-2">Loading available accommodations...</span>
-                </div>
-            );
-        }
-        if (availableAccommodations.length === 0) {
-            return (
-                <div className="p-4 bg-gray-100 rounded-md">
-                    <p className="text-gray-700">No accommodations available for the selected dates</p>
-                </div>
-            );
-        }
-    }
 
 
 
