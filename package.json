@@ -12,8 +12,10 @@
   "dependencies": {
     "@nextui-org/form": "^2.1.6",
     "@nextui-org/react": "^2.4.8",
+    "axios": "^1.8.1",
     "bookedge": "file:",
     "chart.js": "^4.4.6",
+    "date-fns": "^4.1.0",
     "framer-motion": "^11.11.10",
     "lucide-react": "^0.454.0",
     "react": "^18.3.1",

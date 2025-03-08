@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { DatePicker, Input, Select, SelectItem, Checkbox, Button, Card } from "@nextui-org/react";
 import { Form } from "@nextui-org/form";
-import { parseDate } from "@internationalized/date";
+import { parseDate } from '@internationalized/date';
 import { Trash2 } from "lucide-react";
 
 export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
@@ -14,26 +14,36 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     const [hasAccompanists, setHasAccompanists] = useState(false);
     const [accompanists, setAccompanists] = useState([]);
     const [numAccompanists, setNumAccompanists] = useState(1);
+    const [availableAccommodations, setAvailableAccommodations] = useState([]);
+    const [isLoadingAccommodations, setIsLoadingAccommodations] = useState(false);
+    const [selectedAccommodation, setSelectedAccommodation] = useState("");
+    const [totalGuests, setTotalGuests] = useState(1);
     const isEditMode = !!initialData;
+
+    //actualizar el conteo de huespedes
     useEffect(() => {
-        if (selectedPlan === "ca") {
+        setTotalGuests(1 + (hasAccompanists ? parseInt(numAccompanists) : 0));
+    }, [numAccompanists, hasAccompanists]);
+    //manejar cambios en el plan seleccionado
+    useEffect(() => {
+        if (selectedPlan === "Dia de sol") {
             setIsEndDateDisabled(true);
             setEndDate(startDate); // Establece la fecha de fin igual a la de inicio cuando se selecciona el plan
         } else {
             setIsEndDateDisabled(false);
             // Solo reseteamos la fecha de fin si ya teníamos un plan seleccionado anteriormente
             if (selectedPlan !== "") {
-                setEndDate(null);
             }
         }
     }, [selectedPlan, startDate]);
+    // manejar cambios en el número de acompañantes
     useEffect(() => {
         if (hasAccompanists) {
             const currentCount = accompanists.length;
             const targetCount = parseInt(numAccompanists);
 
             if (currentCount < targetCount) {
-                // Add new accompanists
+                // añadir acompañantes
                 const newAccompanists = [...accompanists];
                 for (let i = currentCount; i < targetCount; i++) {
                     newAccompanists.push({
@@ -45,18 +55,19 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                 }
                 setAccompanists(newAccompanists);
             } else if (currentCount > targetCount) {
-                // Remove excess accompanists
+                // eliminar excendentes
                 setAccompanists(accompanists.slice(0, targetCount));
             }
         }
     }, [numAccompanists, hasAccompanists]);
-    // Reset accompanists when checkbox is unchecked
+    // resetear acompañantes si se desactiva la opción
     useEffect(() => {
         if (!hasAccompanists) {
             setAccompanists([]);
             setNumAccompanists(1);
         }
     }, [hasAccompanists]);
+    // cargar datos iniciales en edicion
     useEffect(() => {
         if (initialData?.startDate) {
             setStartDate(parseDate(initialData.startDate));
@@ -64,19 +75,144 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
         if (initialData?.endDate) {
             setEndDate(parseDate(initialData.endDate));
         }
+        if (initialData?.idPlan) {
+            setSelectedPlan(initialData.idPlan.name);
+        }
+
     }, []);
+    // verificar disponibilidad
+    useEffect(() => {
+        if (startDate && (endDate || isEndDateDisabled) && selectedPlan && selectedPlan !== "") {
+            fetchAvailableAccommodations();
+        } else {
+            setAvailableAccommodations([]);
+            setSelectedAccommodation("");
+        }
+    }, [startDate, endDate, selectedPlan, totalGuests]);
+
+    const fetchAvailableAccommodations = async () => {
+        if (!startDate || (!endDate && !isEndDateDisabled) || !selectedPlan) {
+            return;
+        }
+        if (selectedPlan !== "Alojamiento" && selectedPlan !== "Romantico") {
+            setAvailableAccommodations([]);
+            return;
+        }
+        setIsLoadingAccommodations(true);
+
+        try {
+            const formattedStartDate = startDate.toString();
+            const formattedEndDate = endDate ? endDate.toString() : formattedStartDate;
+            const apiUrl = `http://localhost:3000/disponibilidad?startDate=${formattedStartDate}&endDate=${formattedEndDate}&guests=${totalGuests}&plan=${selectedPlan}`;
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                throw new Error(`Error ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            // Procesar y filtrar los datos según la capacidad
+            const accommodationsWithSufficientCapacity = data.filter(
+                acc => acc.estado && acc.capacidad >= totalGuests
+            );
+
+            setAvailableAccommodations(accommodationsWithSufficientCapacity);
+
+        } catch (error) {
+            console.error("Error al buscar alojamientos disponibles:", error);
+            // Aquí podrías mostrar un mensaje de error al usuario
+        } finally {
+            setIsLoadingAccommodations(false);
+        }
+    };
+
+    const validateForm = (data) => {
+        const newErrors = {};
+
+        // Validate plan selection
+        if (!data.plan) {
+            newErrors.plan = "Please select a plan";
+        }
+
+        // Validate dates
+        if (!startDate) {
+            newErrors.startDate = "Start date is required";
+        }
+
+        if (!isEndDateDisabled && !endDate) {
+            newErrors.endDate = "End date is required";
+        }
+
+        if (startDate && endDate && !isEndDateDisabled && startDate > endDate) {
+            newErrors.endDate = "End date must be after start date";
+        }
+
+        // Validate client information
+        if (!data.name || data.name.trim() === "") {
+            newErrors.name = "Name is required";
+        }
+        else if (!/^[a-zA-Z\s]+$/.test(data.name)) {
+            newErrors.name = "Please enter a valid name";
+        }
+
+        if (!data.email || data.email.trim() === "") {
+            newErrors.email = "Email is required";
+        }
+
+        // Validate document information
+        if (!data.documentType) {
+            newErrors.documentType = "Document type is required";
+        }
+
+        if (!data.number || data.number.trim() === "") {
+            newErrors.number = "Document number is required";
+        } else if (!/^[0-9]+$/.test(data.number)) {
+            newErrors.number = "Please enter a valid document number";
+        }
+
+        // Validate accompanists if applicable
+        if (hasAccompanists) {
+            let hasAccompanistErrors = false;
+
+            accompanists.forEach((acc, index) => {
+                if (!acc.name || acc.name.trim() === "") {
+                    newErrors[`accompanist_${index}_name`] = "Name is required";
+                    hasAccompanistErrors = true;
+                }
+
+                if (!acc.documentType) {
+                    newErrors[`accompanist_${index}_documentType`] = "Document type is required";
+                    hasAccompanistErrors = true;
+                }
+
+                if (!acc.documentNumber || acc.documentNumber.trim() === "") {
+                    newErrors[`accompanist_${index}_documentNumber`] = "Document number is required";
+                    hasAccompanistErrors = true;
+                }
+            });
+
+            if (hasAccompanistErrors) {
+                newErrors.accompanists = "Please complete all accompanist information";
+            }
+        }
+
+        // Validate terms
+        if (data.terms !== "true") {
+            newErrors.terms = "Please accept the terms and conditions";
+        }
+
+        return newErrors;
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData);
         // Custom validation checks
-        const newErrors = {};
+        const newErrors = validateForm(data);
+
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
-            return;
-        }
-        if (data.terms !== "true") {
-            setErrors({ terms: "Please accept the terms" });
             return;
         }
         if (isEditMode) {
@@ -122,52 +258,63 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             id="reservation-form"
             className="w-full "
             validationErrors={errors}
-            onReset={() => setSubmitted(null)}
+            onReset={() => {
+                setSubmitted(null);
+                setErrors({});
+            }}
             onSubmit={handleSubmit}
         >
             <div className="grid grid-cols-2 gap-6 ">
                 <div className="flex flex-col max-w-md gap-4">
                     <Select
-                        onChange={(e) => setSelectedPlan(e.target.value)}
                         isRequired
+                        isInvalid={!!errors.plan}
+                        errorMessage={errors.plan}
+                        onChange={(e) => setSelectedPlan(e.target.value)}
                         label="Plan"
                         labelPlacement="outside"
                         name="plan"
                         placeholder="Select a plan"
-                        defaultSelectedKeys={initialData?.plan ? [initialData.plan] : undefined}
+                        defaultSelectedKeys={initialData?.idPlan.name ? [initialData.idPlan.name] : undefined}
                     >
-                        <SelectItem key="ar" value="ar">
+                        <SelectItem key="Romantico" value="Romantico">
                             Romantico
                         </SelectItem>
-                        <SelectItem key="us" value="us">
+                        <SelectItem key="Alojamiento" value="Alojamiento">
                             Alojamiento
                         </SelectItem>
-                        <SelectItem key="ca" value="ca">
+                        <SelectItem key="Dia de sol" value="Dia de sol">
                             Dia de sol
                         </SelectItem>
-                        <SelectItem key="uk" value="uk">
+                        <SelectItem key="Empresarial" value="Empresarial">
                             Empresarial
                         </SelectItem>
-                        <SelectItem key="au" value="au">
+                        <SelectItem key="Masaje" value="Masaje">
                             Masaje
                         </SelectItem>
                     </Select>
                     <div className="flex space-x-4">
                         <DatePicker
+                            isRequired
                             label="Fecha de inicio"
                             onChange={setStartDate}
                             placeholder="yyyy-mm-dd"
                             name="startDate"
                             value={startDate}
+                            isInvalid={!!errors.startDate}
+                            errorMessage={errors.startDate}
 
                         />
                         <DatePicker
+                            isRequired
                             label="Fecha de Fin"
                             onChange={setEndDate}
                             placeholder="yyyy-mm-dd"
                             isDisabled={isEndDateDisabled}
                             name="endDate"
                             value={endDate}
+                            isInvalid={!!errors.endDate}
+                            errorMessage={errors.endDate}
                         />
                     </div>
                     <Input
@@ -176,28 +323,33 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                         labelPlacement="outside"
                         name="name"
                         placeholder="Enter your name"
-                        defaultValue={initialData?.client || ""}
+                        defaultValue={initialData?.cliente || ""}
+                        isInvalid={!!errors.name}
+                        errorMessage={errors.name}
                     />
 
                     <Input
                         isRequired
-                        errorMessage="Please enter a valid email"
                         label="Email"
                         labelPlacement="outside"
                         name="email"
                         placeholder="Enter your email"
                         type="email"
                         defaultValue={initialData?.email || ""}
+                        isInvalid={!!errors.email}
+                        errorMessage={errors.email}
                     />
 
                     <div className="flex space-x-4">
                         <Select
                             isRequired
+                            isInvalid={!!errors.documentType}
+                            errorMessage={errors.documentType}
                             label="Tipo de documento"
                             labelPlacement="outside"
                             name="documentType"
                             placeholder="Select a type"
-                            defaultSelectedKeys={initialData?.documentType ? [initialData.documentType] : undefined}
+                            defaultSelectedKeys={initialData?.tipoDocumento ? [initialData.tipoDocumento] : undefined}
                         >
                             <SelectItem key="cc" value="cc">
                                 Cedula de Ciudadania
@@ -211,13 +363,8 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                         </Select>
                         <Input
                             isRequired
-                            errorMessage={({ validationDetails }) => {
-                                if (validationDetails.valueMissing) {
-                                    return "Please enter your number";
-                                }
-
-                                return errors.name;
-                            }}
+                            isInvalid={!!errors.number}
+                            errorMessage={errors.number}
                             label="Numero de documento"
                             labelPlacement="outside"
                             name="number"
@@ -272,6 +419,8 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                                                     value={accompanist.name}
                                                     onChange={(e) => updateAccompanist(accompanist.id, 'name', e.target.value)}
                                                     placeholder="Enter accompanist name"
+                                                    isInvalid={!!errors[`accompanist_${index}_name`]}
+                                                    errorMessage={errors[`accompanist_${index}_name`]}
                                                 />
                                                 <div className="flex items-center justify-between mb-2">
                                                     <Button
@@ -287,6 +436,8 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
 
                                             <div className="flex gap-4">
                                                 <Select
+                                                    isInvalid={!!errors[`accompanist_${index}_documentType`]}
+                                                    errorMessage={errors[`accompanist_${index}_documentType`]}
                                                     isRequired
                                                     label="Tipo de documento"
                                                     labelPlacement="outside"
@@ -300,6 +451,8 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                                                     <SelectItem key="pp" value="pp">Pasaporte</SelectItem>
                                                 </Select>
                                                 <Input
+                                                    isInvalid={!!errors[`accompanist_${index}_documentNumber`]}
+                                                    errorMessage={errors[`accompanist_${index}_documentNumber`]}
                                                     labelPlacement="outside"
                                                     isRequired
                                                     label="Document Number"
@@ -315,6 +468,35 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                             </div>
                         </div>
                     )}
+                    {availableAccommodations.length > 0 && (
+                        <div className="flex flex-col gap-4 max-h-[500px] overflow-y-auto">
+                            <div className="flex flex-col gap-4">
+                                <h2 className="text-xl font-semibold">Alojamiento</h2>
+                                <div className="grid gap-4">
+                                    {availableAccommodations.map((acc) => (
+                                        <Card key={acc.id} className="p-4 shadow-none">
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <h3 className="text-lg font-semibold">{acc.idAlojamiento}</h3>
+                                                    <p className="text-sm text-gray-500">{acc.tipo}</p>
+                                                </div>
+                                                <div>
+                                                    <span className="flex flex-col text-sm text-gray">Capacity: {acc.capacidad}</span>
+                                                    <Checkbox
+                                                        isSelected={selectedAccommodation === acc._id}
+                                                        onValueChange={() => setSelectedAccommodation(acc._id)}
+                                                    >
+                                                        Select
+                                                    </Checkbox>
+                                                </div>
+                                            </div>
+                                        </Card>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     <h2 className="text-xl font-semibold">Pago</h2>
                 </div>
             </div>
