@@ -23,7 +23,7 @@ export default function OpenEditModal({ formId, data, onEdit, FormComponent, siz
                 ref={targetRef}
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
-                size={"3xl"}
+                size={size}
                 scrollBehavior={scrollBehavior}
             >
                 <ModalContent>

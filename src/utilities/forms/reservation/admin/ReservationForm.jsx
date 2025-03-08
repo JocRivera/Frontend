@@ -26,14 +26,13 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     }, [numAccompanists, hasAccompanists]);
     //manejar cambios en el plan seleccionado
     useEffect(() => {
-        if (selectedPlan === "ca") {
+        if (selectedPlan === "Dia de sol") {
             setIsEndDateDisabled(true);
             setEndDate(startDate); // Establece la fecha de fin igual a la de inicio cuando se selecciona el plan
         } else {
             setIsEndDateDisabled(false);
             // Solo reseteamos la fecha de fin si ya teníamos un plan seleccionado anteriormente
             if (selectedPlan !== "") {
-                setEndDate(null);
             }
         }
     }, [selectedPlan, startDate]);
@@ -76,6 +75,10 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
         if (initialData?.endDate) {
             setEndDate(parseDate(initialData.endDate));
         }
+        if (initialData?.idPlan) {
+            setSelectedPlan(initialData.idPlan.name);
+        }
+
     }, []);
     // verificar disponibilidad
     useEffect(() => {
@@ -91,7 +94,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
         if (!startDate || (!endDate && !isEndDateDisabled) || !selectedPlan) {
             return;
         }
-        if (selectedPlan !== "us" && selectedPlan !== "ar") {
+        if (selectedPlan !== "Alojamiento" && selectedPlan !== "Romantico") {
             setAvailableAccommodations([]);
             return;
         }
@@ -122,8 +125,6 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             setIsLoadingAccommodations(false);
         }
     };
-
-
 
     const validateForm = (data) => {
         const newErrors = {};
@@ -305,21 +306,21 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                         labelPlacement="outside"
                         name="plan"
                         placeholder="Select a plan"
-                        defaultSelectedKeys={initialData?.plan ? [initialData.plan] : undefined}
+                        defaultSelectedKeys={initialData?.idPlan.name ? [initialData.idPlan.name] : undefined}
                     >
-                        <SelectItem key="ar" value="ar">
+                        <SelectItem key="Romantico" value="Romantico">
                             Romantico
                         </SelectItem>
-                        <SelectItem key="us" value="us">
+                        <SelectItem key="Alojamiento" value="Alojamiento">
                             Alojamiento
                         </SelectItem>
-                        <SelectItem key="ca" value="ca">
+                        <SelectItem key="Dia de sol" value="Dia de sol">
                             Dia de sol
                         </SelectItem>
-                        <SelectItem key="uk" value="uk">
+                        <SelectItem key="Empresarial" value="Empresarial">
                             Empresarial
                         </SelectItem>
-                        <SelectItem key="au" value="au">
+                        <SelectItem key="Masaje" value="Masaje">
                             Masaje
                         </SelectItem>
                     </Select>
@@ -353,7 +354,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                         labelPlacement="outside"
                         name="name"
                         placeholder="Enter your name"
-                        defaultValue={initialData?.client || ""}
+                        defaultValue={initialData?.cliente || ""}
                         isInvalid={!!errors.name}
                         errorMessage={errors.name}
                     />
@@ -379,7 +380,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                             labelPlacement="outside"
                             name="documentType"
                             placeholder="Select a type"
-                            defaultSelectedKeys={initialData?.documentType ? [initialData.documentType] : undefined}
+                            defaultSelectedKeys={initialData?.tipoDocumento ? [initialData.tipoDocumento] : undefined}
                         >
                             <SelectItem key="cc" value="cc">
                                 Cedula de Ciudadania
@@ -513,8 +514,8 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                                                 <div>
                                                     <span className="flex flex-col text-sm text-gray">Capacity: {acc.capacidad}</span>
                                                     <Checkbox
-                                                        isSelected={selectedAccommodation === acc.id}
-                                                        onValueChange={() => setSelectedAccommodation(acc.id)}
+                                                        isSelected={selectedAccommodation === acc._id}
+                                                        onValueChange={() => setSelectedAccommodation(acc._id)}
                                                     >
                                                         Select
                                                     </Checkbox>

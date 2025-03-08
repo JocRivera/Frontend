@@ -110,7 +110,7 @@ export default function TableComponent({ columns, data, initialVisibleColumns, s
             </Tooltip>
             <Tooltip content="Edit data">
               <span className="text-lg cursor-pointer text-default-400 active:opacity-50">
-                <OpenEditModal FormComponent={Dynamic} formId={formId} data={data} onEdit={editData} />
+                <OpenEditModal FormComponent={Dynamic} formId={formId} data={data} onEdit={editData} size={size}/>
               </span>
             </Tooltip>
             <Tooltip color="danger" content="Delete data">

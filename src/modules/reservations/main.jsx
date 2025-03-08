@@ -12,9 +12,16 @@ export default function ReservationsManagement() {
                 const data = await fetchReservations();
                 const formattedData = data.map(reservation => ({
                     ...reservation,
+                    plan: reservation.idPlan ? (typeof reservation.idPlan === "object" ? reservation.idPlan.nombre || reservation.idPlan.name : reservation.idPlan) : "N/A",
+                    cliente: reservation.client ? (typeof reservation.client === "object" ? reservation.client.nombre || reservation.client.name : reservation.client) : "N/A",
+                    email: reservation.client ? (typeof reservation.client === "object" ? reservation.client.email || reservation.client.email : reservation.client) : "N/A",
+                    documento: reservation.client ? (typeof reservation.client === "object" ? reservation.client.documento || reservation.client.documento : reservation.client) : "N/A",
+                    tipoDocumento: reservation.client ? (typeof reservation.client === "object" ? reservation.client.tipoDocumento || reservation.client.tipoDocumento : reservation.client) : "N/A",
                     idAccommodation: reservation.idAccommodation ? reservation.idAccommodation.idAlojamiento : "N/A",
                     startDate: reservation.startDate ? new Date(reservation.startDate).toISOString().split("T")[0] : "N/A",
                     endDate: reservation.endDate ? new Date(reservation.endDate).toISOString().split("T")[0] : "N/A",
+                    _originalClientData: reservation.client,
+                    _originalAccommodationData: reservation.idAccommodation,
                 }))
                 setReservations(formattedData);
             } catch (err) {
@@ -27,8 +34,8 @@ export default function ReservationsManagement() {
         loadReservations();
     }, []);
     const reservationColumns = [
-        { uid: "id", name: "ID" },
-        { uid: "client", name: "Client" },
+        { uid: "_id", name: "ID" },
+        { uid: "cliente", name: "Client" },
         { uid: "plan", name: "Plan" },
         { uid: "idAccommodation", name: "Room" },
         { uid: "startDate", name: "Check In" },
@@ -36,7 +43,7 @@ export default function ReservationsManagement() {
         { uid: "status", name: "Status" },
         { uid: "actions", name: "Actions" },
     ];
-    const initialVisibleColumns = ["id", "client", "idAccommodation", "startDate", "endDate", "status", "actions"];
+    const initialVisibleColumns = ["_id", "cliente", "idAccommodation", "startDate", "endDate", "status", "actions"];
     const statusOptions = [{ name: "Active", uid: "active" }, { name: "Inactive", uid: "inactive" }];
     const handleAddReservation = (formData) => {
         const newReservation = {
@@ -79,6 +86,7 @@ export default function ReservationsManagement() {
                         onClose={onClose}
                         initialData={data}
                         onEdit={onEdit}
+                        size="5xl"
                     />
                 )}
 
