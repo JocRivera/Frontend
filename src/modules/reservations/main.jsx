@@ -47,11 +47,11 @@ export default function ReservationsManagement() {
     const statusOptions = [{ name: "Active", uid: "active" }, { name: "Inactive", uid: "inactive" }];
     const handleAddReservation = (formData) => {
         const newReservation = {
-            id: reservations.length + 1,
-            client: formData.name,
-            plan: formData.plan,
+            _id: reservations.length + 1,
+            cliente: formData.cliente,
+            idPlan: formData.idPlan,
             email: formData.email,
-            room: "Pending", // You might want to add room selection to your form
+            idAccommodation: "Pending", // You might want to add room selection to your form
             startDate: formData.startDate,
             endDate: formData.endDate,
             status: "active",
