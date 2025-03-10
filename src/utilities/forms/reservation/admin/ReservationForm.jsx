@@ -85,7 +85,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
         try {
             const formattedStartDate = startDate.toString();
             const formattedEndDate = endDate ? endDate.toString() : formattedStartDate;
-            const apiUrl = `http://localhost:3000/disponibilidad?startDate=${formattedStartDate}&endDate=${formattedEndDate}&guests=${totalGuests}&plan=${selectedPlan}`;
+            const apiUrl = `http://localhost:3000/disponibilidad?startDate=${formattedStartDate}&endDate=${formattedEndDate}&guests=${totalGuests}&plan=${selectedPlan}&id=${initialData?._id || ""}`;
             const response = await fetch(apiUrl);
             if (!response.ok) {
                 throw new Error(`Error ${response.status}: ${response.statusText}`);
