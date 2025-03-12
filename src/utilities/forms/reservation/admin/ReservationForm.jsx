@@ -219,6 +219,14 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             setErrors(newErrors);
             return;
         }
+        if (hasAccompanists && accompanists.length > 0) {
+            data.accompanists = JSON.stringify(accompanists);
+        }
+
+        // Agregar el alojamiento seleccionado
+        if (selectedAccommodation) {
+            data.accommodation = selectedAccommodation;
+        }
         if (isEditMode) {
             const updatedData = {
                 ...initialData,  // Mantener todos los datos originales
@@ -227,10 +235,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                 startDate: data.startDate,
                 endDate: data.endDate,
                 email: data.email,
-                documentType: data.documentType,
-                status: initialData.status,
-                room: initialData.room,
-                id: initialData.id
+                documentType: data.documentType, s
             };
             onEdit(updatedData);
         } else {
@@ -486,8 +491,8 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                                                 <div>
                                                     <span className="flex flex-col text-sm text-gray">Capacity: {acc.capacidad}</span>
                                                     <Checkbox
-                                                        isSelected={selectedAccommodation === acc.idAlojamiento}
-                                                        onValueChange={() => setSelectedAccommodation(acc.idAlojamiento)}                                                  >
+                                                        isSelected={selectedAccommodation === acc._id}
+                                                        onValueChange={() => setSelectedAccommodation(acc._id)}                                                  >
                                                         Select
                                                     </Checkbox>
                                                 </div>
