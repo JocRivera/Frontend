@@ -15,11 +15,9 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     const [accompanists, setAccompanists] = useState([]);
     const [numAccompanists, setNumAccompanists] = useState(1);
     const [availableAccommodations, setAvailableAccommodations] = useState([]);
-    const [isLoadingAccommodations, setIsLoadingAccommodations] = useState(false);
     const [selectedAccommodation, setSelectedAccommodation] = useState("");
     const [totalGuests, setTotalGuests] = useState(1);
     const isEditMode = !!initialData;
-
     //actualizar el conteo de huespedes
     useEffect(() => {
         setTotalGuests(1 + (hasAccompanists ? parseInt(numAccompanists) : 0));
@@ -67,6 +65,45 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             setNumAccompanists(1);
         }
     }, [hasAccompanists]);
+    // verificar disponibilidad
+    useEffect(() => {
+        if (startDate && (endDate || isEndDateDisabled) && selectedPlan && selectedPlan !== "") {
+            fetchAvailableAccommodations();
+        } else {
+            setAvailableAccommodations([]);
+        }
+    }, [startDate, endDate, selectedPlan, totalGuests]);
+    const fetchAvailableAccommodations = async () => {
+        if (!startDate || (!endDate && !isEndDateDisabled) || !selectedPlan) {
+            return;
+        }
+        if (selectedPlan !== "Alojamiento" && selectedPlan !== "Romantico") {
+            setAvailableAccommodations([]);
+            return;
+        }
+
+        try {
+            const formattedStartDate = startDate.toString();
+            const formattedEndDate = endDate ? endDate.toString() : formattedStartDate;
+            const apiUrl = `http://localhost:3000/disponibilidad?startDate=${formattedStartDate}&endDate=${formattedEndDate}&guests=${totalGuests}&plan=${selectedPlan}&id=${initialData?._id || ""}`;
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                throw new Error(`Error ${response.status}: ${response.statusText}`);
+            }
+            console.log(apiUrl)
+            const data = await response.json();
+
+            //filtrar los datos según la capacidad
+            const accommodationsWithSufficientCapacity = data.filter(
+                acc => acc.estado && acc.capacidad >= totalGuests
+            );
+            setAvailableAccommodations(accommodationsWithSufficientCapacity);
+
+        } catch (error) {
+            console.error("Error al buscar alojamientos disponibles:", error);
+            // Aquí podrías mostrar un mensaje de error al usuario
+        }
+    };
     // cargar datos iniciales en edicion
     useEffect(() => {
         if (initialData?.startDate) {
@@ -78,54 +115,21 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
         if (initialData?.idPlan) {
             setSelectedPlan(initialData.idPlan.name);
         }
+        if (initialData?.idAccommodation) {
+            setSelectedAccommodation(initialData.idAccommodation);
+        }
+        if (initialData?.companion) {
+            setHasAccompanists(true);
+            setNumAccompanists(initialData.companion.length);
+            setAccompanists(initialData.companion.map((acc, index) => ({
+                id: acc._id,
+                name: acc.nombre,
+                documentType: acc.tipoDocumento,
+                documentNumber: acc.documento
+            })));
+        }
 
     }, []);
-    // verificar disponibilidad
-    useEffect(() => {
-        if (startDate && (endDate || isEndDateDisabled) && selectedPlan && selectedPlan !== "") {
-            fetchAvailableAccommodations();
-        } else {
-            setAvailableAccommodations([]);
-            setSelectedAccommodation("");
-        }
-    }, [startDate, endDate, selectedPlan, totalGuests]);
-
-    const fetchAvailableAccommodations = async () => {
-        if (!startDate || (!endDate && !isEndDateDisabled) || !selectedPlan) {
-            return;
-        }
-        if (selectedPlan !== "Alojamiento" && selectedPlan !== "Romantico") {
-            setAvailableAccommodations([]);
-            return;
-        }
-        setIsLoadingAccommodations(true);
-
-        try {
-            const formattedStartDate = startDate.toString();
-            const formattedEndDate = endDate ? endDate.toString() : formattedStartDate;
-            const apiUrl = `http://localhost:3000/disponibilidad?startDate=${formattedStartDate}&endDate=${formattedEndDate}&guests=${totalGuests}&plan=${selectedPlan}`;
-            const response = await fetch(apiUrl);
-            if (!response.ok) {
-                throw new Error(`Error ${response.status}: ${response.statusText}`);
-            }
-
-            const data = await response.json();
-
-            // Procesar y filtrar los datos según la capacidad
-            const accommodationsWithSufficientCapacity = data.filter(
-                acc => acc.estado && acc.capacidad >= totalGuests
-            );
-
-            setAvailableAccommodations(accommodationsWithSufficientCapacity);
-
-        } catch (error) {
-            console.error("Error al buscar alojamientos disponibles:", error);
-            // Aquí podrías mostrar un mensaje de error al usuario
-        } finally {
-            setIsLoadingAccommodations(false);
-        }
-    };
-
     const validateForm = (data) => {
         const newErrors = {};
 
@@ -215,9 +219,15 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             setErrors(newErrors);
             return;
         }
+        if (hasAccompanists && accompanists.length > 0) {
+            data.accompanists = JSON.stringify(accompanists);
+        }
+
+        // Agregar el alojamiento seleccionado
+        if (selectedAccommodation) {
+            data.accommodation = selectedAccommodation;
+        }
         if (isEditMode) {
-            // Aquí está el problema - necesitamos mantener todos los datos originales
-            // y solo actualizar los que cambiaron
             const updatedData = {
                 ...initialData,  // Mantener todos los datos originales
                 client: data.name,
@@ -225,10 +235,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                 startDate: data.startDate,
                 endDate: data.endDate,
                 email: data.email,
-                documentType: data.documentType,
-                status: initialData.status,
-                room: initialData.room,
-                id: initialData.id
+                documentType: data.documentType, s
             };
             onEdit(updatedData);
         } else {
@@ -250,6 +257,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     const removeAccompanist = (id) => {
         setAccompanists(accompanists.filter(acc => acc.id !== id));
     };
+
 
 
 
@@ -436,6 +444,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
 
                                             <div className="flex gap-4">
                                                 <Select
+                                                    defaultSelectedKeys={accompanist.documentType ? [accompanist.documentType] : undefined}
                                                     isInvalid={!!errors[`accompanist_${index}_documentType`]}
                                                     errorMessage={errors[`accompanist_${index}_documentType`]}
                                                     isRequired
@@ -456,7 +465,6 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                                                     labelPlacement="outside"
                                                     isRequired
                                                     label="Document Number"
-                                                    value={accompanist.documentNumber}
                                                     onChange={(e) => updateAccompanist(accompanist.id, 'documentNumber', e.target.value)}
                                                     placeholder="Enter document number"
                                                 />
@@ -484,8 +492,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                                                     <span className="flex flex-col text-sm text-gray">Capacity: {acc.capacidad}</span>
                                                     <Checkbox
                                                         isSelected={selectedAccommodation === acc._id}
-                                                        onValueChange={() => setSelectedAccommodation(acc._id)}
-                                                    >
+                                                        onValueChange={() => setSelectedAccommodation(acc._id)}                                                  >
                                                         Select
                                                     </Checkbox>
                                                 </div>
