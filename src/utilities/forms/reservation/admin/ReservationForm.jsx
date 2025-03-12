@@ -118,6 +118,16 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
         if (initialData?.idAccommodation) {
             setSelectedAccommodation(initialData.idAccommodation);
         }
+        if (initialData?.companion) {
+            setHasAccompanists(true);
+            setNumAccompanists(initialData.companion.length);
+            setAccompanists(initialData.companion.map((acc, index) => ({
+                id: acc._id,
+                name: acc.nombre,
+                documentType: acc.tipoDocumento,
+                documentNumber: acc.documento
+            })));
+        }
 
     }, []);
     const validateForm = (data) => {
@@ -429,6 +439,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
 
                                             <div className="flex gap-4">
                                                 <Select
+                                                    defaultSelectedKeys={accompanist.documentType ? [accompanist.documentType] : undefined}
                                                     isInvalid={!!errors[`accompanist_${index}_documentType`]}
                                                     errorMessage={errors[`accompanist_${index}_documentType`]}
                                                     isRequired
@@ -449,7 +460,6 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                                                     labelPlacement="outside"
                                                     isRequired
                                                     label="Document Number"
-                                                    value={accompanist.documentNumber}
                                                     onChange={(e) => updateAccompanist(accompanist.id, 'documentNumber', e.target.value)}
                                                     placeholder="Enter document number"
                                                 />
