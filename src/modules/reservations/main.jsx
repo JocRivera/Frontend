@@ -31,10 +31,12 @@ export default function ReservationsManagement() {
                 ...reservation,
                 plan: reservation.idPlan ? (typeof reservation.idPlan === "object" ? reservation.idPlan.nombre || reservation.idPlan.name : reservation.idPlan) : "N/A",
                 cliente: reservation.client ? (typeof reservation.client === "object" ? reservation.client.nombre || reservation.client.name : reservation.client) : "N/A",
+                telefono: reservation.client ? (typeof reservation.client === "object" ? reservation.client.telefono || reservation.client.telefono : reservation.client) : "N/A",
+                eps: reservation.client ? (typeof reservation.client === "object" ? reservation.client.eps || reservation.client.eps : reservation.client) : "N/A",
                 email: reservation.client ? (typeof reservation.client === "object" ? reservation.client.email || reservation.client.email : reservation.client) : "N/A",
                 documento: reservation.client ? (typeof reservation.client === "object" ? reservation.client.documento || reservation.client.documento : reservation.client) : "N/A",
                 tipoDocumento: reservation.client ? (typeof reservation.client === "object" ? reservation.client.tipoDocumento || reservation.client.tipoDocumento : reservation.client) : "N/A",
-                idAccommodation: reservation.idAccommodation ? reservation.idAccommodation.idAlojamiento : "N/A",
+                idAccommodation: reservation.idAccommodation ? reservation.idAccommodation._id : "N/A",
                 startDate: reservation.startDate ? new Date(reservation.startDate).toISOString().split("T")[0] : "N/A",
                 endDate: reservation.endDate ? new Date(reservation.endDate).toISOString().split("T")[0] : "N/A",
                 _originalClientData: reservation.client,
@@ -55,8 +57,8 @@ export default function ReservationsManagement() {
                 documento: formData.number,
                 tipoDocumento: formData.documentType,
                 email: formData.email,
-                telefono: formData.phone || "123",
-                eps: formData.eps || "sura",
+                telefono: formData.phone,
+                eps: formData.eps,
                 status: "activo"
             };
             const companions = formData.accompanists ?
@@ -64,14 +66,14 @@ export default function ReservationsManagement() {
                     nombre: acc.name,
                     documento: acc.documentNumber,
                     tipoDocumento: acc.documentType,
-                    email: acc.email || "default@gmail.com",
-                    telefono: acc.phone || "123",
-                    eps: acc.eps || "sura",
+                    email: acc.email,
+                    telefono: acc.phone,
+                    eps: acc.eps,
                     status: "activo"
                 })) : [];
             const reservationData = {
                 client: client,
-                idPlan: "67cb9ce3ed658211aca1955f", // Asumiendo que formData.plan contiene el ID del plan
+                idPlan: formData.plan, // Asumiendo que formData.plan contiene el ID del plan
                 idAccommodation: formData.accommodation || null, // Asumiendo que formData.accommodation contiene el ID del alojamiento
                 startDate: new Date(formData.startDate).toISOString(),
                 endDate: new Date(formData.endDate).toISOString(),

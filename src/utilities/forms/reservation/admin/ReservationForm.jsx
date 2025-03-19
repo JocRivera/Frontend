@@ -17,6 +17,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     const [availableAccommodations, setAvailableAccommodations] = useState([]);
     const [selectedAccommodation, setSelectedAccommodation] = useState("");
     const [totalGuests, setTotalGuests] = useState(1);
+    const [plan, setPlan] = useState([]);
     const isEditMode = !!initialData;
     //actualizar el conteo de huespedes
     useEffect(() => {
@@ -24,7 +25,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     }, [numAccompanists, hasAccompanists]);
     //manejar cambios en el plan seleccionado
     useEffect(() => {
-        if (selectedPlan === "Dia de sol") {
+        if (selectedPlan === "67cb9c3bed658211aca19559") {
             setIsEndDateDisabled(true);
             setEndDate(startDate); // Establece la fecha de fin igual a la de inicio cuando se selecciona el plan
         } else {
@@ -66,18 +67,12 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
         }
     }, [hasAccompanists]);
     // verificar disponibilidad
-    useEffect(() => {
-        if (startDate && (endDate || isEndDateDisabled) && selectedPlan && selectedPlan !== "") {
-            fetchAvailableAccommodations();
-        } else {
-            setAvailableAccommodations([]);
-        }
-    }, [startDate, endDate, selectedPlan, totalGuests]);
     const fetchAvailableAccommodations = async () => {
         if (!startDate || (!endDate && !isEndDateDisabled) || !selectedPlan) {
             return;
         }
-        if (selectedPlan !== "Alojamiento" && selectedPlan !== "Romantico") {
+
+        if (selectedPlan !== "67cb9c91ed658211aca1955d" && selectedPlan !== "67cb9ce3ed658211aca1955f") {
             setAvailableAccommodations([]);
             return;
         }
@@ -104,6 +99,32 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             // Aquí podrías mostrar un mensaje de error al usuario
         }
     };
+    useEffect(() => {
+        if (startDate && (endDate || isEndDateDisabled) && selectedPlan && selectedPlan !== "") {
+            fetchAvailableAccommodations();
+        } else {
+            setAvailableAccommodations([]);
+        }
+    }, [startDate, endDate, selectedPlan, totalGuests]);
+    //
+    const fecthPlan = async () => {
+        try {
+            const apiUrl = 'http://localhost:3000/plan'
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                throw new Error(`Error ${response.status}: ${response.statusText}`);
+            }
+            console.log(apiUrl)
+            const data = await response.json();
+            setPlan(data)
+
+        } catch (error) {
+            console.error(error)
+        }
+    }
+    useEffect(() => {
+        fecthPlan();
+    }, [])
     // cargar datos iniciales en edicion
     useEffect(() => {
         if (initialData?.startDate) {
@@ -113,7 +134,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             setEndDate(parseDate(initialData.endDate));
         }
         if (initialData?.idPlan) {
-            setSelectedPlan(initialData.idPlan.name);
+            setSelectedPlan(initialData.idPlan._id);
         }
         if (initialData?.idAccommodation) {
             setSelectedAccommodation(initialData.idAccommodation);
@@ -124,6 +145,9 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             setAccompanists(initialData.companion.map((acc, index) => ({
                 id: acc._id,
                 name: acc.nombre,
+                email: acc.email,
+                telefono: acc.telefono,
+                eps: acc.eps,
                 documentType: acc.tipoDocumento,
                 documentNumber: acc.documento
             })));
@@ -274,33 +298,31 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
         >
             <div className="grid grid-cols-2 gap-6 ">
                 <div className="flex flex-col max-w-md gap-4">
-                    <Select
-                        isRequired
-                        isInvalid={!!errors.plan}
-                        errorMessage={errors.plan}
-                        onChange={(e) => setSelectedPlan(e.target.value)}
-                        label="Plan"
-                        labelPlacement="outside"
-                        name="plan"
-                        placeholder="Select a plan"
-                        defaultSelectedKeys={initialData?.idPlan.name ? [initialData.idPlan.name] : undefined}
-                    >
-                        <SelectItem key="Romantico" value="Romantico">
-                            Romantico
-                        </SelectItem>
-                        <SelectItem key="Alojamiento" value="Alojamiento">
-                            Alojamiento
-                        </SelectItem>
-                        <SelectItem key="Dia de sol" value="Dia de sol">
-                            Dia de sol
-                        </SelectItem>
-                        <SelectItem key="Empresarial" value="Empresarial">
-                            Empresarial
-                        </SelectItem>
-                        <SelectItem key="Masaje" value="Masaje">
-                            Masaje
-                        </SelectItem>
-                    </Select>
+                    {
+                        plan.length > 0 && (
+
+                            < Select
+                                isRequired
+                                isInvalid={!!errors.plan}
+                                errorMessage={errors.plan}
+                                onChange={(e) => setSelectedPlan(e.target.value)}
+                                label="Plan"
+                                labelPlacement="outside"
+                                name="plan"
+                                placeholder="Select a plan"
+                                defaultSelectedKeys={initialData?.idPlan._id ? [initialData.idPlan._id] : undefined}
+                            >
+                                {plan.map((data) => (
+
+                                    <SelectItem key={data._id} >
+                                        {data.name}
+                                    </SelectItem>
+
+                                ))}
+                            </Select>
+
+                        )
+                    }
                     <div className="flex space-x-4">
                         <DatePicker
                             isRequired
@@ -347,7 +369,30 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                         isInvalid={!!errors.email}
                         errorMessage={errors.email}
                     />
-
+                    <div className="flex space-x-4">
+                        <Input
+                            isRequired
+                            label="Telefono"
+                            labelPlacement="outside"
+                            name="phone"
+                            placeholder="Enter your phone number"
+                            type="tel"
+                            defaultValue={initialData?.telefono || ""}
+                            isInvalid={!!errors.phone}
+                            errorMessage={errors.phone}
+                        />
+                        <Input
+                            isRequired
+                            label="Eps"
+                            labelPlacement="outside"
+                            name="eps"
+                            placeholder="Enter your eps"
+                            type="text"
+                            defaultValue={initialData?.eps || ""}
+                            isInvalid={!!errors.eps}
+                            errorMessage={errors.eps}
+                        />
+                    </div>
                     <div className="flex space-x-4">
                         <Select
                             isRequired
@@ -420,16 +465,28 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                                     <Card key={accompanist.id} className="p-4 shadow-none">
                                         <div className="flex flex-col gap-4">
                                             <div className="flex items-start justify-between">
-                                                <Input
-                                                    isRequired
-                                                    label="Name"
-                                                    labelPlacement="outside"
-                                                    value={accompanist.name}
-                                                    onChange={(e) => updateAccompanist(accompanist.id, 'name', e.target.value)}
-                                                    placeholder="Enter accompanist name"
-                                                    isInvalid={!!errors[`accompanist_${index}_name`]}
-                                                    errorMessage={errors[`accompanist_${index}_name`]}
-                                                />
+                                                <div className="flex space-x-4">
+                                                    <Input
+                                                        isRequired
+                                                        label="Name"
+                                                        labelPlacement="outside"
+                                                        value={accompanist.name}
+                                                        onChange={(e) => updateAccompanist(accompanist.id, 'name', e.target.value)}
+                                                        placeholder="Enter accompanist name"
+                                                        isInvalid={!!errors[`accompanist_${index}_name`]}
+                                                        errorMessage={errors[`accompanist_${index}_name`]}
+                                                    />
+                                                    <Input
+                                                        isRequired
+                                                        label="Email"
+                                                        labelPlacement="outside"
+                                                        name="email"
+                                                        onChange={(e) => updateAccompanist(accompanist.id, 'email', e.target.value)}
+                                                        placeholder="Enter your email"
+                                                        type="email"
+                                                        value={accompanist.email}
+                                                    />
+                                                </div>
                                                 <div className="flex items-center justify-between mb-2">
                                                     <Button
                                                         isIconOnly
@@ -441,7 +498,30 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                                                     </Button>
                                                 </div>
                                             </div>
-
+                                            <div className="flex space-x-4">
+                                                <Input
+                                                    isRequired
+                                                    label="Telefono"
+                                                    labelPlacement="outside"
+                                                    name="phone"
+                                                    placeholder="Enter your phone number"
+                                                    type="tel"
+                                                    value={accompanist.telefono}
+                                                    onChange={(e) => updateAccompanist(accompanist.id, 'phone', e.target.value)}
+                                                    isInvalid={!!errors[`accompanist_${index}_name`]}
+                                                    errorMessage={errors[`accompanist_${index}_name`]}
+                                                />
+                                                <Input
+                                                    isRequired
+                                                    label="Eps"
+                                                    labelPlacement="outside"
+                                                    name="eps"
+                                                    placeholder="Enter your eps"
+                                                    type="text"
+                                                    value={accompanist.eps}
+                                                    onChange={(e) => updateAccompanist(accompanist.id, 'eps', e.target.value)}
+                                                />
+                                            </div>
                                             <div className="flex gap-4">
                                                 <Select
                                                     defaultSelectedKeys={accompanist.documentType ? [accompanist.documentType] : undefined}
@@ -521,4 +601,3 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
         </form >
     );
 }
-
