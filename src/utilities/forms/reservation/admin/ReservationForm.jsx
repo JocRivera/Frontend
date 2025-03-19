@@ -481,6 +481,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                                                         label="Email"
                                                         labelPlacement="outside"
                                                         name="email"
+                                                        onChange={(e) => updateAccompanist(accompanist.id, 'email', e.target.value)}
                                                         placeholder="Enter your email"
                                                         type="email"
                                                         value={accompanist.email}
@@ -506,6 +507,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                                                     placeholder="Enter your phone number"
                                                     type="tel"
                                                     value={accompanist.telefono}
+                                                    onChange={(e) => updateAccompanist(accompanist.id, 'phone', e.target.value)}
                                                     isInvalid={!!errors[`accompanist_${index}_name`]}
                                                     errorMessage={errors[`accompanist_${index}_name`]}
                                                 />
@@ -517,6 +519,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                                                     placeholder="Enter your eps"
                                                     type="text"
                                                     value={accompanist.eps}
+                                                    onChange={(e) => updateAccompanist(accompanist.id, 'eps', e.target.value)}
                                                 />
                                             </div>
                                             <div className="flex gap-4">
@@ -568,8 +571,8 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                                                 <div>
                                                     <span className="flex flex-col text-sm text-gray">Capacity: {acc.capacidad}</span>
                                                     <Checkbox
-                                                        isSelected={selectedAccommodation === acc.idAlojamiento}
-                                                        onValueChange={() => setSelectedAccommodation(acc.idAlojamiento)}                                                  >
+                                                        isSelected={selectedAccommodation === acc._id}
+                                                        onValueChange={() => setSelectedAccommodation(acc._id)}                                                  >
                                                         Select
                                                     </Checkbox>
                                                 </div>
