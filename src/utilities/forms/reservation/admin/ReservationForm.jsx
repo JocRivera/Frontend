@@ -568,8 +568,8 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                                                 <div>
                                                     <span className="flex flex-col text-sm text-gray">Capacity: {acc.capacidad}</span>
                                                     <Checkbox
-                                                        isSelected={selectedAccommodation === acc._id}
-                                                        onValueChange={() => setSelectedAccommodation(acc._id)}                                                  >
+                                                        isSelected={selectedAccommodation === acc.idAlojamiento}
+                                                        onValueChange={() => setSelectedAccommodation(acc.idAlojamiento)}                                                  >
                                                         Select
                                                     </Checkbox>
                                                 </div>

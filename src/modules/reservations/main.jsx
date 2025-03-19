@@ -36,7 +36,7 @@ export default function ReservationsManagement() {
                 email: reservation.client ? (typeof reservation.client === "object" ? reservation.client.email || reservation.client.email : reservation.client) : "N/A",
                 documento: reservation.client ? (typeof reservation.client === "object" ? reservation.client.documento || reservation.client.documento : reservation.client) : "N/A",
                 tipoDocumento: reservation.client ? (typeof reservation.client === "object" ? reservation.client.tipoDocumento || reservation.client.tipoDocumento : reservation.client) : "N/A",
-                idAccommodation: reservation.idAccommodation ? reservation.idAccommodation._id : "N/A",
+                idAccommodation: reservation.idAccommodation ? reservation.idAccommodation.idAlojamiento : "N/A",
                 startDate: reservation.startDate ? new Date(reservation.startDate).toISOString().split("T")[0] : "N/A",
                 endDate: reservation.endDate ? new Date(reservation.endDate).toISOString().split("T")[0] : "N/A",
                 _originalClientData: reservation.client,
