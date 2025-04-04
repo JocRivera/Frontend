@@ -1,6 +1,8 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { LagosLogo } from "./AcmeLogo";
+import OpenModal from "../utilities/forms/login/OpenModal";
+import Login from "../utilities/forms/login/LoginForm";
 export default function App() {
   const navigate = useNavigate();
 
@@ -13,8 +15,8 @@ export default function App() {
   const handleUserRedirect = () => {
     navigate('/');
   }
-  
-  
+
+
   return (
     <Navbar isBordered className="fixed top-0 z-40 w-full"
       classNames={{
@@ -61,7 +63,15 @@ export default function App() {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">
-          <Link href="#" onClick={handleAdminRedirect}>Login</Link>
+          <OpenModal login={(onClose) =>
+          (<Login
+            onSubmit={(data) => {
+              console.log(data);
+              onClose();
+            }}
+            onClose={onClose}
+          />)
+          } formId="login-form" size="md" />
         </NavbarItem>
         <NavbarItem>
           <Button as={Link} color="primary" href="#" variant="flat"  >
