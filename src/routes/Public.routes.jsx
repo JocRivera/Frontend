@@ -1,8 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from '../modules/home/main.jsx';
 
-
-const UserRoutes = () => {
+const PublicRoutes = () => {
     return (
         <Routes>
             <Route path="/" element={<Home />} />
@@ -10,4 +9,4 @@ const UserRoutes = () => {
     );
 };
 
-export default UserRoutes;
+export default PublicRoutes;

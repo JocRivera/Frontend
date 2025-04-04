@@ -1,20 +1,12 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { LagosLogo } from "./AcmeLogo";
-import OpenModal from "../utilities/forms/login/OpenModal";
-import Login from "../utilities/forms/login/LoginForm";
+import HandleLogin from "../modules/auth/login/main";
 export default function App() {
   const navigate = useNavigate();
-
-  const handleAdminRedirect = () => {
-    navigate('/dashboard');
-  };
   const handleClientRedirect = () => {
     navigate('/client/MyBookings');
   };
-  const handleUserRedirect = () => {
-    navigate('/');
-  }
 
 
   return (
@@ -56,25 +48,17 @@ export default function App() {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#" onClick={handleClientRedirect}>
+          <Link color="foreground" onClick={handleClientRedirect}>
             Reservas
           </Link>
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <OpenModal login={(onClose) =>
-          (<Login
-            onSubmit={(data) => {
-              console.log(data);
-              onClose();
-            }}
-            onClose={onClose}
-          />)
-          } formId="login-form" size="md" />
+        <NavbarItem>
+          <HandleLogin />
         </NavbarItem>
         <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat"  >
+          <Button as={Link} color="primary" variant="flat"  >
             Sign Up
           </Button>
         </NavbarItem>
