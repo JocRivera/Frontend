@@ -18,7 +18,7 @@ export default function ReservationsManagement() {
         { uid: "status", name: "Estado" },
         { uid: "actions", name: "Acciones" },
     ];
-    const initialVisibleColumns = ["_id", "cliente", "idAccommodation", "startDate", "endDate", "status", "actions"];
+    const initialVisibleColumns = ["_id", "plan", "cliente", "idAccommodation", "startDate", "endDate", "status", "actions"];
     const statusOptions = [{ name: "Active", uid: "active" }, { name: "Inactive", uid: "inactive" }];
     useEffect(() => {
         loadReservations();
