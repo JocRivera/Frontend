@@ -13,7 +13,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<HomeLayout />}>
-            <Route path="/*" element={<PublicRoutes />} />
+            <Route path="/" element={<PublicRoutes />} />
           </Route>
           <Route path="/admin" element={<AdminLayout />}>
             <Route path="*" element={<AdminRoutes />} />
