@@ -81,15 +81,23 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
         try {
             const formattedStartDate = startDate.toString();
             const formattedEndDate = endDate ? endDate.toString() : formattedStartDate;
-            const apiUrl = `http://localhost:3000/disponibilidad?startDate=${formattedStartDate}&endDate=${formattedEndDate}&guests=${totalGuests}&plan=${selectedPlan}&id=${initialData?._id || ""}`;
-            const response = await fetch(apiUrl);
-            if (!response.ok) {
-                throw new Error(`Error ${response.status}: ${response.statusText}`);
-            }
-            console.log(apiUrl)
-            const data = await response.json();
 
-            //filtrar los datos según la capacidad
+            const apiUrl = `http://localhost:3000/disponibilidad`;
+            const response = await axios.get(apiUrl, {
+                params: {
+                    startDate: formattedStartDate,
+                    endDate: formattedEndDate,
+                    guests: totalGuests,
+                    plan: selectedPlan,
+                    id: initialData?._id || ""
+                }
+            });
+
+            console.log(apiUrl, response.config.params); // Solo para debug
+
+            const data = response.data;
+
+            // Filtrar los datos según la capacidad
             const accommodationsWithSufficientCapacity = data.filter(
                 acc => acc.estado && acc.capacidad >= totalGuests
             );
@@ -100,6 +108,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             // Aquí podrías mostrar un mensaje de error al usuario
         }
     };
+
     useEffect(() => {
         if (startDate && (endDate || isEndDateDisabled) && selectedPlan && selectedPlan !== "") {
             fetchAvailableAccommodations();
