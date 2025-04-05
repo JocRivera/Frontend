@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
             setUser(response.user);
             setIsAuthenticated(true);
             setErrors([]);
-            console.log("Logged in successfully:", response.user);
+            console.log("Logged in successfully:", response.token);
             return response;
         } catch (error) {
             console.error("Login error:", error);
@@ -83,7 +83,8 @@ export const AuthProvider = ({ children }) => {
             user,
             isAuthenticated,
             errors,
-            signin
+            signin,
+            logout,
         }}>
             {children}
         </AuthContext.Provider>

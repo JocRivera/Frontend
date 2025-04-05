@@ -6,6 +6,5 @@ function ProtectedRoutes() {
     return (
         <Outlet />
     )
-
 }
 export default ProtectedRoutes;

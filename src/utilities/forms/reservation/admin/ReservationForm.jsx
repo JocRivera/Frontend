@@ -3,6 +3,7 @@ import { DatePicker, Input, Select, SelectItem, Checkbox, Button, Card } from "@
 import { Form } from "@nextui-org/form";
 import { parseDate } from '@internationalized/date';
 import { Trash2 } from "lucide-react";
+import axios from "axios";
 
 export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     const [submitted, setSubmitted] = React.useState(null);
@@ -107,23 +108,18 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
         }
     }, [startDate, endDate, selectedPlan, totalGuests]);
     //
-    const fecthPlan = async () => {
+    const fetchPlan = async () => {
         try {
-            const apiUrl = 'http://localhost:3000/plan'
-            const response = await fetch(apiUrl);
-            if (!response.ok) {
-                throw new Error(`Error ${response.status}: ${response.statusText}`);
-            }
-            console.log(apiUrl)
-            const data = await response.json();
-            setPlan(data)
-
+            const apiUrl = 'http://localhost:3000/plan';
+            const response = await axios.get(apiUrl);
+            console.log(apiUrl);
+            setPlan(response.data);
         } catch (error) {
-            console.error(error)
+            console.error('Error al obtener el plan:', error);
         }
-    }
+    };
     useEffect(() => {
-        fecthPlan();
+        fetchPlan();
     }, [])
     // cargar datos iniciales en edicion
     useEffect(() => {

@@ -33,22 +33,22 @@ export default function App() {
       </NavbarBrand>
       <NavbarContent className="hidden gap-4 sm:flex" justify="center">
         <NavbarItem isActive>
-          <Link href="#" aria-current="page">
+          <Link href="" aria-current="page">
             Contacto
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <Link color="foreground" href="">
             Alojamientos
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <Link color="foreground" href="">
             Planes
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" onClick={handleClientRedirect}>
+          <Link color="foreground" href="" onClick={handleClientRedirect}>
             Reservas
           </Link>
         </NavbarItem>
