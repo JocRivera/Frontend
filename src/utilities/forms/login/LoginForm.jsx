@@ -1,24 +1,26 @@
 import React from "react";
 import { Input } from "@nextui-org/react";
 import { Form } from "@nextui-org/form";
-import AuthService from "../../../services/auth/Fetch";
-
-const authService = new AuthService();
-
+import { useAuth } from "../../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 export default function Login({ onSubmit, onClose }) {
     const [submitted, setSubmitted] = React.useState(false);
+    const { signin, isAuthenticated } = useAuth(); // Desestructura signin del contexto de autenticación
+    const navigate = useNavigate(); // Hook para la navegación
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/admin/dashboard"); // Redirige a la página de inicio si ya está autenticado
+        }
+    }, [isAuthenticated]);
 
     const handleLogin = async (data) => {
         setSubmitted(true);
-
-        const { email, password } = data;
         try {
-            const response = await authService.login(email, password);
-            const token = response.token; // Extrae el token
-            if (token) { // Verifica si hay un token
-                onSubmit(token); // Pasa el token a onSubmit
-            } else {
-                console.error("Login failed, token not found");
+            await signin(data);
+            if (onSubmit) {
+                onSubmit(data);
             }
         } catch (error) {
             console.error("Error during login", error);
