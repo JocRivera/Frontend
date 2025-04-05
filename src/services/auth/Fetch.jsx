@@ -27,6 +27,22 @@ class AuthService {
             throw error;
         }
     }
+
+    async verify(token) {
+        try {
+            const response = await axios.get('/verify', {
+                withCredentials: true, // Importante para enviar cookies
+                // NO incluir el token en headers, sino establecerlo como cookie
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            return response.data;
+        } catch (error) {
+            console.error("Error verifying token:", error);
+            throw error;
+        }
+    }
 }
 
 export default AuthService;
