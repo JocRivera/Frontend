@@ -10,13 +10,13 @@ export default function ReservationsManagement() {
     const [loading, setLoading] = useState(true);
     const reservationColumns = [
         { uid: "_id", name: "ID" },
-        { uid: "cliente", name: "Client" },
+        { uid: "cliente", name: "Cliente" },
         { uid: "plan", name: "Plan" },
-        { uid: "idAccommodation", name: "Room" },
+        { uid: "idAccommodation", name: "Alojamiento" },
         { uid: "startDate", name: "Check In" },
         { uid: "endDate", name: "Check Out" },
-        { uid: "status", name: "Status" },
-        { uid: "actions", name: "Actions" },
+        { uid: "status", name: "Estado" },
+        { uid: "actions", name: "Acciones" },
     ];
     const initialVisibleColumns = ["_id", "cliente", "idAccommodation", "startDate", "endDate", "status", "actions"];
     const statusOptions = [{ name: "Active", uid: "active" }, { name: "Inactive", uid: "inactive" }];
@@ -27,21 +27,36 @@ export default function ReservationsManagement() {
         setLoading(true);
         try {
             const data = await reservationService.fetchReservations();
-            const formattedData = data.map(reservation => ({
-                ...reservation,
-                plan: reservation.idPlan ? (typeof reservation.idPlan === "object" ? reservation.idPlan.nombre || reservation.idPlan.name : reservation.idPlan) : "N/A",
-                cliente: reservation.client ? (typeof reservation.client === "object" ? reservation.client.nombre || reservation.client.name : reservation.client) : "N/A",
-                telefono: reservation.client ? (typeof reservation.client === "object" ? reservation.client.telefono || reservation.client.telefono : reservation.client) : "N/A",
-                eps: reservation.client ? (typeof reservation.client === "object" ? reservation.client.eps || reservation.client.eps : reservation.client) : "N/A",
-                email: reservation.client ? (typeof reservation.client === "object" ? reservation.client.email || reservation.client.email : reservation.client) : "N/A",
-                documento: reservation.client ? (typeof reservation.client === "object" ? reservation.client.documento || reservation.client.documento : reservation.client) : "N/A",
-                tipoDocumento: reservation.client ? (typeof reservation.client === "object" ? reservation.client.tipoDocumento || reservation.client.tipoDocumento : reservation.client) : "N/A",
-                idAccommodation: reservation.idAccommodation ? reservation.idAccommodation._id : "N/A",
-                startDate: reservation.startDate ? new Date(reservation.startDate).toISOString().split("T")[0] : "N/A",
-                endDate: reservation.endDate ? new Date(reservation.endDate).toISOString().split("T")[0] : "N/A",
-                _originalClientData: reservation.client,
-                _originalAccommodationData: reservation.idAccommodation,
-            }))
+            const formattedData = data.map(reservation => {
+                // Extraer nombre del cliente
+                const clientName = reservation.client && typeof reservation.client === "object"
+                    ? reservation.client.nombre
+                    : reservation.client;
+
+                // Extraer nombre del alojamiento (habitación)
+                const roomName = reservation.idAccommodation && typeof reservation.idAccommodation === "object"
+                    ? reservation.idAccommodation.idAlojamiento
+                    : reservation.idAccommodation;
+
+                // Extraer nombre del plan
+                const planName = reservation.idPlan && typeof reservation.idPlan === "object"
+                    ? reservation.idPlan.name
+                    : reservation.idPlan;
+
+                return {
+                    ...reservation,
+                    // Campos transformados para mostrar en la tabla
+                    cliente: clientName || "N/A",
+                    idAccommodation: roomName || "N/A", // Renombrar este campo a "room" sería más claro
+                    plan: planName || "N/A",
+                    startDate: reservation.startDate ? new Date(reservation.startDate).toISOString().split("T")[0] : "N/A",
+                    endDate: reservation.endDate ? new Date(reservation.endDate).toISOString().split("T")[0] : "N/A",
+                    // Guardar datos originales para edición
+                    _originalClientData: reservation.client,
+                    _originalAccommodationData: reservation.idAccommodation,
+                    _originalPlanData: reservation.idPlan,
+                };
+            });
             console.log(formattedData);
             setReservations(formattedData);
         } catch (err) {
