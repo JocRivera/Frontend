@@ -30,7 +30,7 @@ class AuthService {
 
     async verify(token) {
         try {
-            const response = await axios.get('/verify', {
+            const response = await axios.get(`${API_URL}/verify`, {
                 withCredentials: true, // Importante para enviar cookies
                 // NO incluir el token en headers, sino establecerlo como cookie
                 headers: {

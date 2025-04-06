@@ -84,6 +84,7 @@ export const AuthProvider = ({ children }) => {
                     const response = await authService.verify(cookies.token);
                     setUser(response.user);
                     setIsAuthenticated(true);
+                    console.log("Token verified successfully:", response);
                 } catch (error) {
                     console.error("Token verification error:", error);
                     setErrors([error.message]);
