@@ -4,20 +4,18 @@ import { Form } from "@nextui-org/form";
 import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { is } from "date-fns/locale";
 export default function Login({ onSubmit, onClose }) {
     const [submitted, setSubmitted] = React.useState(false);
     const { signin, isAuthenticated, user } = useAuth(); // Desestructura signin del contexto de autenticación
     const navigate = useNavigate(); // Hook para la navegación
 
     useEffect(() => {
-        if (isAuthenticated && user.rol === 'user') {
-            console.log("User detected, redirecting to home page.");
-            navigate("/client/MyBookings"); // Redirige a la página de inicio si ya está autenticado
+        if (isAuthenticated) {
+            // Redirigir al usuario a la página de inicio después de iniciar sesión
+            navigate("/admin/dashboard");
         }
-        if (isAuthenticated && user.rol === 'admin') {
-            console.log("redirecting to admin dashboard.");
-            navigate("/admin/dashboard"); // Redirige a la página de inicio si ya está autenticado
-        }
+
     }, [isAuthenticated]);
 
     const handleLogin = async (data) => {
