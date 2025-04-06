@@ -1,5 +1,19 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, Avatar } from "@nextui-org/react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
 export default function NavbarComponent() {
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  const handleLogout = async () => {
+    try {
+      await logout();
+      console.log("Logged out successfully");
+      navigate('/'); // Redirect to home page after logout
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
   return (
     <Navbar isBordered className="fixed top-0 z-40 w-full">
       <NavbarContent>
@@ -30,7 +44,9 @@ export default function NavbarComponent() {
             <DropdownItem key="system">System</DropdownItem>
             <DropdownItem key="configurations">Configurations</DropdownItem>
             <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-            <DropdownItem key="logout" color="danger">
+            <DropdownItem key="logout" color="danger"
+              onClick={handleLogout}
+            >
               Log Out
             </DropdownItem>
           </DropdownMenu>

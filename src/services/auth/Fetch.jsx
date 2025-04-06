@@ -43,6 +43,20 @@ class AuthService {
             throw error;
         }
     }
+
+    async logout() {
+        try {
+            const response = await axios.post(`${API_URL}/logout`, {}, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error logging out:", error);
+            throw error;
+        }
+    }
 }
 
 export default AuthService;
