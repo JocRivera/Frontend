@@ -2,6 +2,7 @@ import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from "@n
 import { useNavigate } from "react-router-dom";
 import { LagosLogo } from "./AcmeLogo";
 import HandleLogin from "../modules/auth/login/main";
+import HandleRegister from "../modules/auth/register/main";
 export default function App() {
   const navigate = useNavigate();
   const handleClientRedirect = () => {
@@ -58,9 +59,7 @@ export default function App() {
           <HandleLogin />
         </NavbarItem>
         <NavbarItem>
-          <Button as={Link} color="primary" variant="flat"  >
-            Sign Up
-          </Button>
+            <HandleRegister />
         </NavbarItem>
       </NavbarContent>
     </Navbar>
