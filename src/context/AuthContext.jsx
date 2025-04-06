@@ -91,6 +91,11 @@ export const AuthProvider = ({ children }) => {
                 }
 
             }
+            else {
+                console.log("No token found, user is not authenticated.");
+                setUser(null);
+                setIsAuthenticated(false);
+            }
         }
         verifyToken();
     }, [])
