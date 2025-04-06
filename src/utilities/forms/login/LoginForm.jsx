@@ -4,7 +4,7 @@ import { Form } from "@nextui-org/form";
 import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { is } from "date-fns/locale";
+
 export default function Login({ onSubmit, onClose }) {
     const [submitted, setSubmitted] = React.useState(false);
     const { signin, isAuthenticated, user } = useAuth(); // Desestructura signin del contexto de autenticación
