@@ -30,6 +30,22 @@ export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [errors, setErrors] = useState([]);
 
+    const singup = async (user) => {
+        try {
+            const response = await authService.register(user);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${response.token}`;
+            Cookies.set('token', response.token, { expires: 1 }); // Set cookie to expire in 1 day
+            setUser(response.user);
+            setIsAuthenticated(true);
+            setErrors([]);
+            console.log("Registered successfully:", response.token);
+            return response;
+        } catch (error) {
+            console.error("Registration error:", error);
+            setErrors([error.message]);
+        }
+    }
+
     const signin = async (user) => {
         try {
             const response = await authService.login(user.email, user.password);
@@ -83,6 +99,7 @@ export const AuthProvider = ({ children }) => {
             user,
             isAuthenticated,
             errors,
+            singup,
             signin,
             logout,
         }}>

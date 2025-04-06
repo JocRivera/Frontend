@@ -8,6 +8,7 @@ export default function Register({ onSubmit, onClose }) {
     const [password, setPassword] = React.useState("");
     const [submitted, setSubmitted] = React.useState(null);
     const [errors, setErrors] = React.useState({});
+    const { singup } = useAuth();
 
     const getPasswordError = (value) => {
         if (value.length < 4) {
@@ -18,48 +19,37 @@ export default function Register({ onSubmit, onClose }) {
         }
         return null;
     };
-    const onSubmit = (e) => {
-        e.preventDefault();
-        const data = Object.fromEntries(new FormData(e.currentTarget));
-
-        // Custom validation checks
-        const newErrors = {};
-
-        // Password validation
-        const passwordError = getPasswordError(data.password);
-
-        if (passwordError) {
-            newErrors.password = passwordError;
+    const handleRegister = async (data) => {
+        setSubmitted(true);
+        try {
+            await singup(data);
+            if (onSubmit) {
+                onSubmit(data);
+            }
+        } catch (error) {
+            console.error("Error during login", error);
+        } finally {
+            setSubmitted(false);
         }
-
-        // Username validation
-        if (data.name === "admin") {
-            newErrors.name = "Nice try! Choose a different username";
-        }
-
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-
-            return;
-        }
-
-        if (data.terms !== "true") {
-            setErrors({ terms: "Please accept the terms" });
-
-            return;
-        }
-
-        // Clear errors and submit
-        setErrors({});
-        setSubmitted(data);
     };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const data = Object.fromEntries(formData);
+        handleRegister(data);
+        if (onClose) {
+            onClose();
+        }
+    }
 
     return (
         <Form
             className="items-center justify-center w-full space-y-4"
             validationErrors={errors}
             onReset={() => setSubmitted(null)}
-            onSubmit={onSubmit}
+            onSubmit={handleSubmit}
+            id="register-form"
         >
             <div className="flex flex-col max-w-md gap-4">
                 <Input
@@ -73,7 +63,7 @@ export default function Register({ onSubmit, onClose }) {
                     }}
                     label="Name"
                     labelPlacement="outside"
-                    name="name"
+                    name="nombre"
                     placeholder="Enter your name"
                 />
                 <Input
@@ -87,7 +77,7 @@ export default function Register({ onSubmit, onClose }) {
                     }}
                     label="Last Name"
                     labelPlacement="outside"
-                    name="lastname"
+                    name="apellido"
                     placeholder="Enter your lastname"
                 />
 
