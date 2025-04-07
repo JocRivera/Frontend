@@ -370,7 +370,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                         name="email"
                         placeholder="Enter your email"
                         type="email"
-                        defaultValue={initialData?.email || ""}
+                        defaultValue={initialData?.client.email || ""}
                         isInvalid={!!errors.email}
                         errorMessage={errors.email}
                     />
@@ -382,7 +382,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                             name="phone"
                             placeholder="Enter your phone number"
                             type="tel"
-                            defaultValue={initialData?.telefono || ""}
+                            defaultValue={initialData?.client.telefono || ""}
                             isInvalid={!!errors.phone}
                             errorMessage={errors.phone}
                         />
@@ -407,7 +407,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                             labelPlacement="outside"
                             name="documentType"
                             placeholder="Select a type"
-                            defaultSelectedKeys={initialData?.tipoDocumento ? [initialData.tipoDocumento] : undefined}
+                            defaultSelectedKeys={initialData?.client.tipoDocumento ? [initialData.client.tipoDocumento] : undefined}
                         >
                             <SelectItem key="cc" value="cc">
                                 Cedula de Ciudadania
