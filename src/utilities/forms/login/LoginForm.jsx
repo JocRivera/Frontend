@@ -7,7 +7,17 @@ import { useEffect } from "react";
 
 export default function Login({ onSubmit, onClose }) {
     const [submitted, setSubmitted] = React.useState(false);
-    const { signin } = useAuth(); // Desestructura signin del contexto de autenticación
+    const { signin, user, isAuthenticated } = useAuth(); // Desestructura signin del contexto de autenticación
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (isAuthenticated && user) {
+            if (user.rol === "admin") {
+                navigate("/admin/dashboard");
+            }
+        }
+    }
+        , [isAuthenticated, user, navigate]);
 
     const handleLogin = async (data) => {
         setSubmitted(true);
@@ -28,7 +38,7 @@ export default function Login({ onSubmit, onClose }) {
         const data = Object.fromEntries(formData);
         handleLogin(data);
         if (onClose) {
-            onClose();
+            onClose(); // Cierra el modal después de enviar el formulario
         }
     }
     return (

@@ -5,9 +5,7 @@ export default function HandleLogin() {
         <>
             <OpenModal login={(onClose) =>
             (<Login
-                onSubmit={(data) => {
-                    console.log(data);
-                    onClose();
+                onSubmit={() => {
                 }}
                 onClose={onClose}
             />)
