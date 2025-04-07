@@ -13,7 +13,7 @@ const AdminLayout = () => {
         <div className="min-h-screen">
             <Navbar />
             <Sidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
-            <main className="flex flex-col p-4 pt-16"> {/* Use flexbox for layout */}
+            <main className="flex flex-col p-4 pt-24 mt-4"> {/* Aumentado el padding-top y añadido margin-top */}
                 <Outlet />
             </main>
         </div>
