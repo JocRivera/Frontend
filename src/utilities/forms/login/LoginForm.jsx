@@ -7,16 +7,7 @@ import { useEffect } from "react";
 
 export default function Login({ onSubmit, onClose }) {
     const [submitted, setSubmitted] = React.useState(false);
-    const { signin, isAuthenticated, user } = useAuth(); // Desestructura signin del contexto de autenticación
-    const navigate = useNavigate(); // Hook para la navegación
-
-    useEffect(() => {
-        if (isAuthenticated) {
-            // Redirigir al usuario a la página de inicio después de iniciar sesión
-            navigate("/admin/dashboard");
-        }
-
-    }, [isAuthenticated]);
+    const { signin } = useAuth(); // Desestructura signin del contexto de autenticación
 
     const handleLogin = async (data) => {
         setSubmitted(true);

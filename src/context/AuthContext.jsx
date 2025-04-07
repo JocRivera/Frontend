@@ -29,7 +29,32 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [errors, setErrors] = useState([]);
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        const verifyToken = async () => {
+            console.log("Verifying token...");
+            const cookies = Cookies.get();
+            if (cookies.token) {
+                try {
+                    const response = await authService.verify(cookies.token);
+                    setUser(response.user);
+                    setIsAuthenticated(true);
+                    console.log("Token verified successfully:", response);
+                } catch (error) {
+                    console.error("Token verification error:", error);
+                    setErrors([error.message]);
+                }
 
+            }
+            else {
+                console.log("No token found, user is not authenticated.");
+                setUser(null);
+                setIsAuthenticated(false);
+            }
+            setLoading(false);
+        }
+        verifyToken();
+    }, [])
     const singup = async (user) => {
         try {
             const response = await authService.register(user);
@@ -75,30 +100,7 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    useEffect(() => {
-        const verifyToken = async () => {
-            console.log("Verifying token...");
-            const cookies = Cookies.get();
-            if (cookies.token) {
-                try {
-                    const response = await authService.verify(cookies.token);
-                    setUser(response.user);
-                    setIsAuthenticated(true);
-                    console.log("Token verified successfully:", response);
-                } catch (error) {
-                    console.error("Token verification error:", error);
-                    setErrors([error.message]);
-                }
 
-            }
-            else {
-                console.log("No token found, user is not authenticated.");
-                setUser(null);
-                setIsAuthenticated(false);
-            }
-        }
-        verifyToken();
-    }, [])
 
     return (
         <AuthContext.Provider value={{
@@ -108,6 +110,7 @@ export const AuthProvider = ({ children }) => {
             singup,
             signin,
             logout,
+            loading,
         }}>
             {children}
         </AuthContext.Provider>

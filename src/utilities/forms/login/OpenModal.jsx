@@ -13,7 +13,7 @@ export default function ModalView({ login, formId, size }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const targetRef = React.useRef(null);
     const [scrollBehavior, setScrollBehavior] = React.useState("inside");
-
+    
     return (
         <>
             <Button className="text-white shadow-lg bg-gradient-to-tr from-pink-500 to-yellow-500" color="primary" onPress={onOpen}>Login</Button>

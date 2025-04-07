@@ -2,10 +2,16 @@ import { useAuth } from '../context/AuthContext';
 import { Outlet, Navigate } from 'react-router-dom';
 
 function ProtectedRoutes({ allowedRoles = [] }) {
-    const { user, isAuthenticated } = useAuth();
+    const { user, isAuthenticated, loading } = useAuth();
+
+    if (loading) return null;
 
     if (!isAuthenticated) return <Navigate to='/' replace />;
-    
+
+    // Verificar que user exista antes de intentar acceder a user.rol
+    if (!user) return <Navigate to='/' replace />;
+
+    // Verificar si el rol es permitido
     if (allowedRoles.length && !allowedRoles.includes(user.rol)) {
         return <Navigate to='/' replace />;
     }
