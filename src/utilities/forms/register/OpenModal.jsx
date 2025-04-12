@@ -9,23 +9,23 @@ import {
     ModalFooter,
 } from "@nextui-org/react";
 
-export default function ModalView({ login, formId, size }) {
+export default function ModalView({ register, formId, size }) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const targetRef = React.useRef(null);
     const [scrollBehavior, setScrollBehavior] = React.useState("inside");
-    
+
     return (
         <>
-            <Button className="text-white shadow-lg bg-gradient-to-tr from-pink-500 to-yellow-500" color="primary" onPress={onOpen}>Login</Button>
+            <Button className="text-white shadow-lg bg-gradient-to-tr from-green-500 to-blue-500" color="primary" onPress={onOpen}>Register</Button>
             <Modal ref={targetRef} isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior={scrollBehavior} size={size} >
                 <ModalContent>
                     {(onClose) => (
                         <>
                             <ModalHeader className="flex flex-col gap-1">
-                                Login
+                                register
                             </ModalHeader>
                             <ModalBody>
-                                {login && login(onClose)}
+                                {register && register(onClose)}
                             </ModalBody>
                             <ModalFooter>
                                 <Button color="danger" variant="flat" onPress={onClose}>

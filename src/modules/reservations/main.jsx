@@ -7,7 +7,7 @@ const reservationService = new ReservationService();
 
 export default function ReservationsManagement() {
     const [reservations, setReservations] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setIsLoading] = useState(true);
     const reservationColumns = [
         { uid: "_id", name: "ID" },
         { uid: "cliente", name: "Cliente" },
@@ -24,7 +24,7 @@ export default function ReservationsManagement() {
         loadReservations();
     }, []);
     const loadReservations = async () => {
-        setLoading(true);
+        setIsLoading(true);
         try {
             const data = await reservationService.fetchReservations();
             const formattedData = data.map(reservation => {
@@ -62,7 +62,7 @@ export default function ReservationsManagement() {
         } catch (err) {
             console.error(err);
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
     const handleAddReservation = async (formData) => {

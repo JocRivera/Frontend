@@ -2,6 +2,7 @@ import React from 'react';
 import { Card } from '@nextui-org/react';
 // This imports the functional component from the previous sample.
 import VideoJS from './video.jsx';
+import videojs from 'video.js';
 
 const Video = () => {
     const playerRef = React.useRef(null);

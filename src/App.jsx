@@ -16,10 +16,12 @@ function App() {
           <Route path="/*" element={<HomeLayout />}>
             <Route path="*" element={<PublicRoutes />} />
           </Route>
-          <Route element={<ProtectedRoutes />}>
+          <Route element={<ProtectedRoutes allowedRoles={['admin']} />}>
             <Route path="/admin" element={<AdminLayout />}>
               <Route path="*" element={<AdminRoutes />} />
             </Route>
+          </Route>
+          <Route element={<ProtectedRoutes allowedRoles={['user']} />}>
             <Route path="/client" element={<ClientLayout />}>
               <Route path="*" element={<ClientRoutes />} />
             </Route>
