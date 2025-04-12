@@ -18,7 +18,12 @@ export default function NavbarComponent() {
     <Navbar isBordered className="fixed top-0 z-40 w-full">
       <NavbarContent>
         <NavbarBrand className="justify-center">
-          <p className="font-bold text-inherit">BOOKEDGE</p>
+          <Link
+            href="/"
+            className="flex items-center gap-2 font-bold text-inherit text-foreground"
+          >
+            BOOKEDGE
+          </Link>
         </NavbarBrand>
       </NavbarContent>
       <NavbarContent as="div" justify="end">
