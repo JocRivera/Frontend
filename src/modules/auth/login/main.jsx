@@ -7,7 +7,6 @@ export default function HandleLogin() {
             (<Login
                 onSubmit={() => {
                 }}
-                onClose={onClose}
             />)
             } formId="login-form" size="md" />
         </>

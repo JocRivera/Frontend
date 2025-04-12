@@ -5,7 +5,7 @@ import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
-export default function Login({ onSubmit, onClose }) {
+export default function Login({ onSubmit }) {
     const [submitted, setSubmitted] = React.useState(false);
     const { signin } = useAuth();
 
