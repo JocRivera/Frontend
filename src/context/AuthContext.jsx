@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [errors, setErrors] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setIsLoading] = useState(true);
     useEffect(() => {
         const verifyToken = async () => {
             console.log("Verifying token...");
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
                 setUser(null);
                 setIsAuthenticated(false);
             }
-            setLoading(false);
+            setIsLoading(false);
         }
         verifyToken();
     }, [])

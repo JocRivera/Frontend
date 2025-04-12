@@ -7,14 +7,32 @@ import { useEffect } from "react";
 
 export default function Login({ onSubmit, onClose }) {
     const [submitted, setSubmitted] = React.useState(false);
-    const { signin, user, isAuthenticated } = useAuth(); // Desestructura signin del contexto de autenticación
+    const { signin, user, isAuthenticated } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
         if (isAuthenticated) {
             onClose();
+
+            // Determine where to navigate based on user role
+            if (user && user.rol) {
+                switch (user.rol) {
+                    case 'admin':
+                        navigate('/admin/dashboard');
+                        break;
+                    case 'user':
+                        navigate('/client/MyBookings');
+                        break;
+                    default:
+                        // Reload page if no specific route
+                        window.location.reload();
+                }
+            } else {
+                // Reload page if user object doesn't have role
+                window.location.reload();
+            }
         }
-    }, [isAuthenticated, onClose]);
+    }, [isAuthenticated, onClose, navigate, user]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
