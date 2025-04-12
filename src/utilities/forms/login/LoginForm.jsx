@@ -11,16 +11,18 @@ export default function Login({ onSubmit, onClose }) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isAuthenticated && user) {
-            if (user.rol === "admin") {
-                navigate("/admin/dashboard");
-            }
+        if (isAuthenticated) {
+            onClose();
         }
-    }
-        , [isAuthenticated, user, navigate]);
+    }, [isAuthenticated, onClose]);
 
-    const handleLogin = async (data) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         setSubmitted(true);
+
+        const formData = new FormData(e.currentTarget);
+        const data = Object.fromEntries(formData);
+
         try {
             await signin(data);
             if (onSubmit) {
@@ -31,16 +33,7 @@ export default function Login({ onSubmit, onClose }) {
         } finally {
             setSubmitted(false);
         }
-    }
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const data = Object.fromEntries(formData);
-        handleLogin(data);
-        if (onClose) {
-            onClose(); // Cierra el modal después de enviar el formulario
-        }
-    }
+    };
     return (
         <Form
             id="login-form"
