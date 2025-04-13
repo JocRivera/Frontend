@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import ReservationsManagement from '../modules/reservations/main';
+import ReservationsManagement from '../client/modules/reservations/main.jsx';
 const ClientRoutes = () => {
     return (
         <Routes>
