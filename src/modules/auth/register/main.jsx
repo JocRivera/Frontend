@@ -11,7 +11,7 @@ export default function HandleRegister() {
                 }}
                 onClose={onClose}
             />)
-            } formId="register-form" size="xs" />
+            } formId="register-form" size="lg" />
         </>
     );
 }
