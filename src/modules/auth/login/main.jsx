@@ -3,9 +3,10 @@ import Login from "../../../utilities/forms/login/LoginForm.jsx"
 export default function HandleLogin() {
     return (
         <>
-            <OpenModal login={(onClose) =>
+            <OpenModal login={() =>
             (<Login
-                onSubmit={() => {
+                onSubmit={(data) => {
+                    console.log(data);
                 }}
             />)
             } formId="login-form" size="md" />

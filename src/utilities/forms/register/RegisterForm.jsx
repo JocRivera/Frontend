@@ -4,7 +4,7 @@ import { Form } from "@nextui-org/form";
 import { useAuth } from "../../../context/AuthContext";
 
 
-export default function Register({ onSubmit, onClose }) {
+export default function Register({ onSubmit }) {
     const [password, setPassword] = React.useState("");
     const [submitted, setSubmitted] = React.useState(null);
     const [errors, setErrors] = React.useState({});
@@ -19,27 +19,23 @@ export default function Register({ onSubmit, onClose }) {
         }
         return null;
     };
-    const handleRegister = async (data) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         setSubmitted(true);
+
+        const formData = new FormData(e.currentTarget);
+        const data = Object.fromEntries(formData);
         try {
             await singup(data);
             if (onSubmit) {
                 onSubmit(data);
             }
-        } catch (error) {
-            console.error("Error during login", error);
+        }
+        catch (error) {
+            console.error("Error during register", error);
+            setErrors((prev) => ({ ...prev, ...error }));
         } finally {
             setSubmitted(false);
-        }
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const data = Object.fromEntries(formData);
-        handleRegister(data);
-        if (onClose) {
-            onClose();
         }
     }
 
