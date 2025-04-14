@@ -16,6 +16,25 @@ export default function NavbarComponent() {
       console.error("Error during logout:", error);
     }
   };
+  const renderSection = () => {
+    if (user) {
+      switch (user.rol) {
+        case 'admin':
+          return (
+            <>
+              <Notification />
+              <ProfileButton user={user.nombre} handleLogout={handleLogout} />
+            </>
+          );
+        case 'user':
+          return (
+            <ProfileButton user={user.nombre} handleLogout={handleLogout} />
+          );
+        default:
+          return null;
+      }
+    }
+  }
   return (
     <Navbar isBordered className="fixed top-0 z-40 w-full">
       <NavbarContent>
@@ -29,8 +48,7 @@ export default function NavbarComponent() {
         </NavbarBrand>
       </NavbarContent>
       <NavbarContent as="div" justify="end">
-        <Notification />
-        <ProfileButton user={user.nombre} handleLogout={handleLogout} />
+        {renderSection()}
       </NavbarContent>
     </Navbar>
   );
