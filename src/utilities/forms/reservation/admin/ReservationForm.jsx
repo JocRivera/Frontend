@@ -264,7 +264,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                 startDate: data.startDate,
                 endDate: data.endDate,
                 email: data.email,
-                documentType: data.documentType, s
+                documentType: data.documentType,
             };
             onEdit(updatedData);
         } else {
