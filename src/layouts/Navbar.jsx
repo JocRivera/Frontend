@@ -2,7 +2,8 @@ import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, DropdownItem, Dro
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ProfileButton from "../utilities/profile/ProfileButton";
-
+import Notification from "../utilities/notification/Notification";
+import { useEffect, useState } from "react";
 export default function NavbarComponent() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -28,6 +29,7 @@ export default function NavbarComponent() {
         </NavbarBrand>
       </NavbarContent>
       <NavbarContent as="div" justify="end">
+        <Notification />
         <ProfileButton user={user.nombre} handleLogout={handleLogout} />
       </NavbarContent>
     </Navbar>
