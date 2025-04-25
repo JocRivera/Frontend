@@ -33,7 +33,7 @@ const Video = () => {
 
     return (
         <>
-            <Card >
+            <Card style={{ maxHeight: '510px', overflow: 'hidden' }}>
                 <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
             </Card>
         </>
