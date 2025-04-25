@@ -5,6 +5,7 @@ import HandleLogin from "../modules/auth/login/main";
 import HandleRegister from "../modules/auth/register/main";
 import { useAuth } from "../context/AuthContext";
 import ProfileButton from "../utilities/profile/ProfileButton";
+import Notification from "../utilities/notification/Notification";
 export default function App() {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
@@ -38,7 +39,10 @@ export default function App() {
       switch (user.rol) {
         case 'admin':
           return (
-            <ProfileButton user={user.rol} handleLogout={handleLogout} />
+            <>
+              <Notification />
+              <ProfileButton user={user.rol} handleLogout={handleLogout} />
+            </>
           );
         case 'user':
           return (

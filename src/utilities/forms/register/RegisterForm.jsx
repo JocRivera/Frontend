@@ -1,10 +1,10 @@
 import React from "react";
-import { Input, Checkbox } from "@nextui-org/react";
+import { Input, Checkbox, Select, SelectItem, DatePicker } from "@nextui-org/react";
 import { Form } from "@nextui-org/form";
 import { useAuth } from "../../../context/AuthContext";
 
 
-export default function Register({ onSubmit, onClose }) {
+export default function Register({ onSubmit }) {
     const [password, setPassword] = React.useState("");
     const [submitted, setSubmitted] = React.useState(null);
     const [errors, setErrors] = React.useState({});
@@ -19,27 +19,23 @@ export default function Register({ onSubmit, onClose }) {
         }
         return null;
     };
-    const handleRegister = async (data) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         setSubmitted(true);
+
+        const formData = new FormData(e.currentTarget);
+        const data = Object.fromEntries(formData);
         try {
             await singup(data);
             if (onSubmit) {
                 onSubmit(data);
             }
-        } catch (error) {
-            console.error("Error during login", error);
+        }
+        catch (error) {
+            console.error("Error during register", error);
+            setErrors((prev) => ({ ...prev, ...error }));
         } finally {
             setSubmitted(false);
-        }
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const data = Object.fromEntries(formData);
-        handleRegister(data);
-        if (onClose) {
-            onClose();
         }
     }
 
@@ -80,7 +76,69 @@ export default function Register({ onSubmit, onClose }) {
                     name="apellido"
                     placeholder="Enter your lastname"
                 />
+                <div className="flex flex-wrap w-full gap-4 mb-6 md:flex-nowrap md:mb-0">
+                    <DatePicker label="Fecha de nacimiento"
+                        isRequired
+                        errorMessage={errors.birthDate}
+                        labelPlacement="outside"
+                        name="fechaNacimiento"
+                        placeholder="Select a date"
+                        isInvalid={!!errors.birthDate}
+                    />
+                </div>
+                <div className="flex space-x-4">
+                    <Select
+                        isRequired
+                        isInvalid={!!errors.documentType}
+                        errorMessage={errors.documentType}
+                        label="Tipo de documento"
+                        labelPlacement="outside"
+                        name="tipoDocumento"
+                        placeholder="Select a type"
+                    >
+                        <SelectItem key="cc" value="cc">
+                            Cedula de Ciudadania
+                        </SelectItem>
+                        <SelectItem key="ce" value="ce">
+                            Cedula de Extranjeria
+                        </SelectItem>
+                        <SelectItem key="pp" value="pp">
+                            Pasaporte
+                        </SelectItem>
+                    </Select>
+                    <Input
+                        isRequired
+                        isInvalid={!!errors.number}
+                        errorMessage={errors.number}
+                        label="Numero de documento"
+                        labelPlacement="outside"
+                        name="documento"
+                        placeholder="Enter your number"
+                    />
 
+                </div>
+                <div className="flex space-x-4">
+                    <Input
+                        isRequired
+                        label="Telefono"
+                        labelPlacement="outside"
+                        name="telefono"
+                        placeholder="Enter your phone number"
+                        type="tel"
+                        isInvalid={!!errors.phone}
+                        errorMessage={errors.phone}
+                    />
+                    <Input
+                        isRequired
+                        label="Eps"
+                        labelPlacement="outside"
+                        name="eps"
+                        placeholder="Enter your eps"
+                        type="text"
+                        isInvalid={!!errors.eps}
+                        errorMessage={errors.eps}
+                    />
+                </div>
                 <Input
                     isRequired
                     errorMessage={({ validationDetails }) => {

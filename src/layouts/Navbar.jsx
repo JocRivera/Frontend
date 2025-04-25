@@ -1,7 +1,9 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, Avatar } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-
+import ProfileButton from "../utilities/profile/ProfileButton";
+import Notification from "../utilities/notification/Notification";
+import { useEffect, useState } from "react";
 export default function NavbarComponent() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -14,6 +16,25 @@ export default function NavbarComponent() {
       console.error("Error during logout:", error);
     }
   };
+  const renderSection = () => {
+    if (user) {
+      switch (user.rol) {
+        case 'admin':
+          return (
+            <>
+              <Notification />
+              <ProfileButton user={user.nombre} handleLogout={handleLogout} />
+            </>
+          );
+        case 'user':
+          return (
+            <ProfileButton user={user.nombre} handleLogout={handleLogout} />
+          );
+        default:
+          return null;
+      }
+    }
+  }
   return (
     <Navbar isBordered className="fixed top-0 z-40 w-full">
       <NavbarContent>
@@ -27,35 +48,7 @@ export default function NavbarComponent() {
         </NavbarBrand>
       </NavbarContent>
       <NavbarContent as="div" justify="end">
-        <Dropdown placement="bottom-end">
-          <DropdownTrigger>
-            <Avatar
-              isBordered
-              as="button"
-              className="transition-transform"
-              color="secondary"
-              name="Jason Hughes"
-              size="sm"
-              src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_22.png"
-            />
-          </DropdownTrigger>
-          <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="gap-2 h-14">
-              <p className="font-semibold">Admin</p>
-            </DropdownItem>
-            <DropdownItem key="settings">My Settings</DropdownItem>
-            <DropdownItem key="team_settings">Team Settings</DropdownItem>
-            <DropdownItem key="analytics">Analytics</DropdownItem>
-            <DropdownItem key="system">System</DropdownItem>
-            <DropdownItem key="configurations">Configurations</DropdownItem>
-            <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-            <DropdownItem key="logout" color="danger"
-              onClick={handleLogout}
-            >
-              Log Out
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
+        {renderSection()}
       </NavbarContent>
     </Navbar>
   );

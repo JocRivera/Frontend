@@ -180,29 +180,6 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             newErrors.endDate = "End date must be after start date";
         }
 
-        // Validate client information
-        if (!data.name || data.name.trim() === "") {
-            newErrors.name = "Name is required";
-        }
-        else if (!/^[a-zA-Z\s]+$/.test(data.name)) {
-            newErrors.name = "Please enter a valid name";
-        }
-
-        if (!data.email || data.email.trim() === "") {
-            newErrors.email = "Email is required";
-        }
-
-        // Validate document information
-        if (!data.documentType) {
-            newErrors.documentType = "Document type is required";
-        }
-
-        if (!data.number || data.number.trim() === "") {
-            newErrors.number = "Document number is required";
-        } else if (!/^[0-9]+$/.test(data.number)) {
-            newErrors.number = "Please enter a valid document number";
-        }
-
         // Validate accompanists if applicable
         if (hasAccompanists) {
             let hasAccompanistErrors = false;
@@ -244,6 +221,8 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
         // Custom validation checks
         const newErrors = validateForm(data);
 
+        console.log(data)
+
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
@@ -264,7 +243,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                 startDate: data.startDate,
                 endDate: data.endDate,
                 email: data.email,
-                documentType: data.documentType,
+                documentType: data.documentType, s
             };
             onEdit(updatedData);
         } else {
@@ -350,83 +329,6 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                             value={endDate}
                             isInvalid={!!errors.endDate}
                             errorMessage={errors.endDate}
-                        />
-                    </div>
-                    <Input
-                        isRequired
-                        label="Name"
-                        labelPlacement="outside"
-                        name="name"
-                        placeholder="Enter your name"
-                        defaultValue={initialData?.cliente || ""}
-                        isInvalid={!!errors.name}
-                        errorMessage={errors.name}
-                    />
-
-                    <Input
-                        isRequired
-                        label="Email"
-                        labelPlacement="outside"
-                        name="email"
-                        placeholder="Enter your email"
-                        type="email"
-                        defaultValue={initialData?.client.email || ""}
-                        isInvalid={!!errors.email}
-                        errorMessage={errors.email}
-                    />
-                    <div className="flex space-x-4">
-                        <Input
-                            isRequired
-                            label="Telefono"
-                            labelPlacement="outside"
-                            name="phone"
-                            placeholder="Enter your phone number"
-                            type="tel"
-                            defaultValue={initialData?.client.telefono || ""}
-                            isInvalid={!!errors.phone}
-                            errorMessage={errors.phone}
-                        />
-                        <Input
-                            isRequired
-                            label="Eps"
-                            labelPlacement="outside"
-                            name="eps"
-                            placeholder="Enter your eps"
-                            type="text"
-                            defaultValue={initialData?.eps || ""}
-                            isInvalid={!!errors.eps}
-                            errorMessage={errors.eps}
-                        />
-                    </div>
-                    <div className="flex space-x-4">
-                        <Select
-                            isRequired
-                            isInvalid={!!errors.documentType}
-                            errorMessage={errors.documentType}
-                            label="Tipo de documento"
-                            labelPlacement="outside"
-                            name="documentType"
-                            placeholder="Select a type"
-                            defaultSelectedKeys={initialData?.client.tipoDocumento ? [initialData.client.tipoDocumento] : undefined}
-                        >
-                            <SelectItem key="cc" value="cc">
-                                Cedula de Ciudadania
-                            </SelectItem>
-                            <SelectItem key="ce" value="ce">
-                                Cedula de Extranjeria
-                            </SelectItem>
-                            <SelectItem key="pp" value="pp">
-                                Pasaporte
-                            </SelectItem>
-                        </Select>
-                        <Input
-                            isRequired
-                            isInvalid={!!errors.number}
-                            errorMessage={errors.number}
-                            label="Numero de documento"
-                            labelPlacement="outside"
-                            name="number"
-                            placeholder="Enter your number"
                         />
                     </div>
                     <div className="grid gap-4 ">
