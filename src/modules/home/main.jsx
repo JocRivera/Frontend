@@ -11,10 +11,10 @@ export default function Home() {
         <div>
             <div className="py-4">
                 <div className="py-2 overflow-visible">
-                    <div className="mb-7">
+                    <div className="mb-0">
                         <Video />
                     </div>
-                    <div className="mb-4">
+                    <div className="mb-2">
                         <h2 className="text-2xl font-bold">¡Reserva ahora!</h2>
                     </div>
                     <Cardcomponent />
