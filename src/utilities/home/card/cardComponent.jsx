@@ -71,7 +71,7 @@ const Cardcomponent = ({ data }) => {
                         removeWrapper
                         alt="Card example background"
                         className="z-0 object-cover w-full h-full scale-125 -translate-y-6"
-                        src={plan.image || "https://hosterialoslagos.com/wp-content/uploads/2024/09/IMG_5384-768x541.jpg"}
+                        src={plan.imagen || "https://hosterialoslagos.com/wp-content/uploads/2024/09/IMG_5384-768x541.jpg"}
                     />
                     <CardFooter className="absolute bottom-0 z-10 justify-between bg-white/30 border-t-1 border-zinc-100/50">
                         <div>
@@ -81,7 +81,7 @@ const Cardcomponent = ({ data }) => {
                                 <span className="text-black text-tiny">{plan.descripcion || "Descripcion del plan, servicios que incluye"}</span>
                                 <div className="flex gap-2 mt-2">
                                     {plan.idService?.map((servicio) => (
-                                        <span key={servicio.id} className="text-black text-tiny">{iconsService[servicio.name] || servicio.name} {/* Icono basado en el nombre */}
+                                        <span key={servicio.id} className="text-black text-tiny">{iconsService[servicio.name]} {/* Icono basado en el nombre */}
                                         </span>
                                     ))}
                                 </div>
