@@ -3,7 +3,12 @@ import PlanService from "../../../services/plones/Fetch";
 import { useState, useEffect } from "react";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-
+import {
+    UtensilsCrossed,
+    Fish,
+    Flower,
+    Heart
+} from "lucide-react";
 const planService = new PlanService();
 
 const Cardcomponent = ({ data }) => {
@@ -27,6 +32,16 @@ const Cardcomponent = ({ data }) => {
             items: 1
         }
     };
+    const commonMeals = ["Desayuno", "Almuerzo", "Cena", "Refrigerio", "Snack"];
+
+    const iconsService = Object.fromEntries(
+        commonMeals.map(meal => [meal, <UtensilsCrossed />])
+    );
+
+    iconsService["Spa"] = <Flower />;
+    iconsService["Bar"] = <Fish />;
+    iconsService["Cena romantica"] = <Heart />;
+
     useEffect(() => {
         const fetchPlans = async () => {
             try {
@@ -63,7 +78,13 @@ const Cardcomponent = ({ data }) => {
                             <p className="font-bold text-black uppercase text-large">{plan.name}</p>
                             <p className="text-black uppercase text-tiny">${plan.price || "299.99"}</p>
                             <p>
-                                <span className="text-black text-tiny">{plan.description || "Descripcion del plan, servicios que incluye"}</span>
+                                <span className="text-black text-tiny">{plan.descripcion || "Descripcion del plan, servicios que incluye"}</span>
+                                <div className="flex gap-2 mt-2">
+                                    {plan.idService?.map((servicio) => (
+                                        <span key={servicio.id} className="text-black text-tiny">{iconsService[servicio.name] || servicio.name} {/* Icono basado en el nombre */}
+                                        </span>
+                                    ))}
+                                </div>
                             </p>
                         </div>
                         <div className="flex gap-2 mt-2">
