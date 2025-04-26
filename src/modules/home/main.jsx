@@ -8,7 +8,7 @@ import MapWidget from "../../utilities/home/map/MapWidget";
 import 'react-multi-carousel/lib/styles.css';
 
 export default function Home() {
-    
+
     return (
         <div>
             <div className="py-4">
@@ -19,7 +19,6 @@ export default function Home() {
                     <div className="mb-4">
                         <h2 className="text-2xl font-bold">¡Reserva ahora!</h2>
                     </div>
-
                     <Cardcomponent />
                     <div className="mt-4">
                         <h2 className="text-2xl font-bold">¿Cómo llegar?</h2>
@@ -31,8 +30,15 @@ export default function Home() {
                         <MapWidget />
                     </CardBody>
                 </Card>
-
             </div>
+            {/* footer */}
+            <footer className="py-4 text-white bg-gray-800 rounded-xl">
+                <div className="container mx-auto text-center">
+                    <p>&copy; Copyright 2025 | Hotel Los Lagos SPA
+                    </p>
+                </div>
+            </footer>
+
         </div>
 
     );
