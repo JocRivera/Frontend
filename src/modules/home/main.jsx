@@ -3,12 +3,10 @@ import { Card, CardBody } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import Video from "../../utilities/home/video/video_widget";
 import Cardcomponent from "../../utilities/home/card/cardComponent";
-import Carousel from 'react-multi-carousel';
 import MapWidget from "../../utilities/home/map/MapWidget";
 import 'react-multi-carousel/lib/styles.css';
 
 export default function Home() {
-
     return (
         <div>
             <div className="py-4">
@@ -25,11 +23,14 @@ export default function Home() {
                         <p className="text-gray-600">Vereda El Cortado Cortado, El Hatillo, Barbosa, Antioquia, Colombia</p>
                     </div>
                 </div>
-                <Card className="col-span-12 sm:col-span-4 h-[300px]">
-                    <CardBody className="w-full overflow-hidden shadow-lg h-96 rounded-xl">
-                        <MapWidget />
-                    </CardBody>
-                </Card>
+                {/* Asegurar que el Card tenga altura fija */}
+                <div className="w-full h-[400px] mb-6">
+                    <Card className="w-full h-full">
+                        <CardBody className="p-0">
+                            <MapWidget />
+                        </CardBody>
+                    </Card>
+                </div>
             </div>
             {/* footer */}
             <footer className="py-4 text-white bg-gray-800 rounded-xl">
@@ -38,8 +39,6 @@ export default function Home() {
                     </p>
                 </div>
             </footer>
-
         </div>
-
     );
 }
