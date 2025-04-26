@@ -4,46 +4,35 @@ import { useNavigate } from "react-router-dom";
 import Video from "../../utilities/home/video/video_widget";
 import Cardcomponent from "../../utilities/home/card/cardComponent";
 import Carousel from 'react-multi-carousel';
+import MapWidget from "../../utilities/home/map/MapWidget";
 import 'react-multi-carousel/lib/styles.css';
 
 export default function Home() {
-    const responsive = {
-        superLargeDesktop: {
-            // the naming can be any, depends on you.
-            breakpoint: { max: 4000, min: 3000 },
-            items: 5
-        },
-        desktop: {
-            breakpoint: { max: 3000, min: 1024 },
-            items: 3
-        },
-        tablet: {
-            breakpoint: { max: 1024, min: 464 },
-            items: 2
-        },
-        mobile: {
-            breakpoint: { max: 464, min: 0 },
-            items: 1
-        }
-    };
+    
     return (
-        <div className="settings-container ">
-            <Card className="py-4">
-                <CardBody className="py-2 overflow-visible">
-                    <div className="mb-10">
+        <div>
+            <div className="py-4">
+                <div className="py-2 overflow-visible">
+                    <div className="mb-7">
                         <Video />
                     </div>
-                    <Carousel responsive={responsive}
-                        infinite={true}
-                    >
-                        <Cardcomponent />
-                        <Cardcomponent />
-                        <Cardcomponent />
-                        <Cardcomponent />
-                    </Carousel>
+                    <div className="mb-4">
+                        <h2 className="text-2xl font-bold">¡Reserva ahora!</h2>
+                    </div>
 
-                </CardBody>
-            </Card>
+                    <Cardcomponent />
+                    <div className="mt-4">
+                        <h2 className="text-2xl font-bold">¿Cómo llegar?</h2>
+                        <p className="text-gray-600">Vereda El Cortado Cortado, El Hatillo, Barbosa, Antioquia, Colombia</p>
+                    </div>
+                </div>
+                <Card className="col-span-12 sm:col-span-4 h-[300px]">
+                    <CardBody className="w-full overflow-hidden shadow-lg h-96 rounded-xl">
+                        <MapWidget />
+                    </CardBody>
+                </Card>
+
+            </div>
         </div>
 
     );
