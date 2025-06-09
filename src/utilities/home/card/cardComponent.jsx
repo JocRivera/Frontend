@@ -7,8 +7,12 @@ import {
     UtensilsCrossed,
     Fish,
     Flower,
-    Heart
+    Heart,
+    Pizza,
+    EggFried,
+    Sandwich
 } from "lucide-react";
+
 const planService = new PlanService();
 
 const Cardcomponent = ({ data }) => {
@@ -32,7 +36,7 @@ const Cardcomponent = ({ data }) => {
             items: 1
         }
     };
-    const commonMeals = ["Desayuno", "Almuerzo", "Cena", "Refrigerio", "Snack"];
+    const commonMeals = ["Desayuno", "Almuerzo", "Cena", "Refrigerio", "Coctel de bienvenida", "Pezca", "Cena romantica"];
 
     const iconsService = Object.fromEntries(
         commonMeals.map(meal => [meal, <UtensilsCrossed />])
@@ -41,6 +45,11 @@ const Cardcomponent = ({ data }) => {
     iconsService["Spa"] = <Flower />;
     iconsService["Bar"] = <Fish />;
     iconsService["Cena romantica"] = <Heart />;
+    iconsService["Coctel de bienvenida"] = <Heart />;
+    iconsService["Pezca"] = <Fish />;
+    iconsService["Cena"] = <Pizza />;
+    iconsService["Desayuno"] = <EggFried />;
+    iconsService["Refrigerio"] = <Sandwich />;
 
     useEffect(() => {
         const fetchPlans = async () => {
