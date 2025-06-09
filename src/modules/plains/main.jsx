@@ -1,61 +1,65 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PlainsCard from "../../utilities/plains/plainsCard";
+import PlanForm from "../../utilities/forms/plains/PlanForm";
+import PlanService from "../../services/plones/Fetch";
 export default function PlainsManagement() {
-    const [plains, setPlains] = useState([
-        {
-            id: 1,
-            name: "Romatico",
-            description: "Description 1",
-            startDate: "",
-            endDate: "",
-            price: 100,
-            capacity: 2,
-            image: "https://fincahotelwayra.com/wp-content/uploads/elementor/thumbs/CabanaVIP-qdtenuig3j064luzquyfpncbo4afdldijcgycvwihs.webp"
-        },
-        {
-            id: 2,
-            name: "Alojamiento",
-            description: "Description 2",
-            startDate: "",
-            endDate: "",
-            price: 200,
-            capacity: "",
-            image: "https://hosterialoslagos.com/wp-content/uploads/2025/02/DSC00620-scaled.jpg"
-        },
-        {
-            id: 3,
-            name: "Spa",
-            description: "Description 3",
-            startDate: "2025-02-2",
-            endDate: "2025-02-27",
-            price: 300,
-            capacity: 1,
-            image: "https://hosterialoslagos.com/wp-content/uploads/2025/02/plan-spa-masaje-relajacion-hosteria-los-lagos-barbosa-antioquia.jpg"
-        },
-        {
-            id: 4,
-            name: "Empresarial",
-            description: "Description 4",
-            startDate: "",
-            endDate: "",
-            price: 400,
-            capacity: "",
-            image: "https://hosterialoslagos.com/wp-content/uploads/2024/12/13136cc1-cfe7-4f75-9ea4-b09599f000a6-1024x768.jpg"
-        },
-        {
-            id: 5,
-            name: "Dia de sol",
-            description: "Description 5",
-            startDate: "",
-            endDate: "",
-            price: 500,
-            capacity: ""
+    const [plains, setPlains] = useState([]);
+    const planService = new PlanService();
+    const loadPlains = async () => {
+        try {
+            const data = await planService.fetchPlans();
+            setPlains(data);
+        } catch (error) {
+            console.error("Error loading plains:", error);
         }
-    ]);
+    }
+    useEffect(() => {
+        loadPlains();
+    }, []);
+
+    const handleAddPlan = (data) => {
+        planService.addPlan(data)
+            .then((newPlan) => {
+                setPlains((prev) => [...prev, newPlan]);
+            })
+            .catch((error) => {
+                console.error("Error adding plan:", error);
+            });
+    }
+    const handleEditPlan = async (data) => {
+        try {
+            const updatedPlan = await planService.editPlan(data.id, data);
+
+            // Actualizar el estado con el plan modificado
+            setPlains((prev) => prev.map((plan) =>
+                plan.id === data.id ? { ...plan, ...updatedPlan } : plan
+            ));
+
+            // Opcionalmente, recargar todos los planes para asegurar sincronización
+            await loadPlains();
+
+        } catch (error) {
+            console.error("Error editing plan:", error);
+        }
+    }
 
     return (
 
-        <PlainsCard data={plains} />
+        <PlainsCard data={plains}
+            formId="plan-form"
+            size="3xl"
+            editPlains={(handleEditPlan)}
+            Dynamic={(onClose, data, onEdit) => (
+                <PlanForm
+                    onSubmit={(data) => {
+                        handleAddPlan(data);
+                    }}
+                    onClose={onClose}
+                    initialData={data}
+                    onEdit={onEdit}
+                    size="5xl"
+                />
+            )} />
 
     )
 }

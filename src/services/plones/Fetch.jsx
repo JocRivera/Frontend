@@ -23,9 +23,9 @@ class PlanService {
         }
     }
 
-    async editPlan(data) {
+    async editPlan(id, data) {
         try {
-            const response = await axios.put(API_URL, data);
+            const response = await axios.put(`${API_URL}/${id}`, data);
             return response.data;
         } catch (error) {
             console.error("Error editing plan:", error);

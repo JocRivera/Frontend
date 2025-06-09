@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { Input, Textarea, Select, SelectItem } from "@nextui-org/react";
 import { Form } from "@nextui-org/form";
-
-export const cabinStatus = [
+import ServiceService from '../../../services/plones/Fetch';
+export const planStatus = [
     { key: 'active', label: 'Active' },
     { key: 'inactive', label: 'Inactive' },
-]
+];
 
-export default function CabinForm({ onSubmit, onClose, initialData, onEdit }) {
+export default function PlanForm({ onSubmit, onClose, initialData, onEdit }) {
     const [submitted, setSubmitted] = useState(null);
     const [errors, setErrors] = useState({});
     const isEditMode = !!initialData;
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
@@ -30,10 +31,11 @@ export default function CabinForm({ onSubmit, onClose, initialData, onEdit }) {
         if (onClose) {
             onClose();
         }
-    }
+    };
+
     return (
         <Form
-            id="cabin-form"
+            id="plan-form"
             className="items-center justify-center w-full space-y-4"
             validationBehavior="native"
             validationErrors={errors}
@@ -45,66 +47,62 @@ export default function CabinForm({ onSubmit, onClose, initialData, onEdit }) {
                     <Input
                         isRequired
                         name="name"
-                        placeholder="Cabin name"
+                        placeholder="Plan name"
                         labelPlacement='outside'
-                        label='Cabin name'
+                        label='Plan name'
                         defaultValue={initialData?.name || ''}
+                    />
+                    <Textarea
+                        isRequired
+                        name="descripcion"
+                        placeholder="Plan description"
+                        labelPlacement='outside'
+                        label='Plan description'
+                        defaultValue={initialData?.descripcion || ''}
                     />
                     <Input
                         type='number'
                         isRequired
-                        name="capacity"
-                        placeholder="Cabin capacity"
+                        name="price"
+                        placeholder="Plan price"
                         labelPlacement='outside'
-                        label='Cabin capacity'
-                        defaultValue={initialData?.capacity || ''}
+                        label='Plan price'
+                        defaultValue={initialData?.price || ''}
                     />
-                    <Textarea
-                        name="description"
-                        label="Description"
-                        placeholder="Enter your description"
-                        labelPlacement='outside'
+                    <Input
+                        type='number'
                         isRequired
-                        defaultValue={initialData?.description || ''}
+                        name="capacidad"
+                        placeholder="Plan capacity"
+                        labelPlacement='outside'
+                        label='Plan capacity'
+                        defaultValue={initialData?.capacidad || ''}
                     />
                 </div>
                 <div className='flex flex-col max-w-md gap-4'>
                     <Input
-                        isRequired
-                        name="price"
-                        type='number'
-                        placeholder="Cabin price"
+                        type='file'
+                        name="image"
+                        accept="image/*"
                         labelPlacement='outside'
-                        label='Cabin price'
-                        defaultValue={initialData?.price || ''}
+                        label='Plan image'
                     />
                     <Select
                         isRequired
                         name="status"
-                        placeholder="Cabin status"
+                        placeholder="Plan status"
                         labelPlacement='outside'
-                        label='Cabin status'
-                        defaultSelectedKeys={initialData?.status ? [initialData.status] : undefined}
+                        label='Plan status'
+                        defaultValue={initialData?.status || 'active'}
                     >
-                        {cabinStatus.map((status) => (
-                            <SelectItem key={status.key} value={status.key}>{status.label}</SelectItem>
+                        {planStatus.map((status) => (
+                            <SelectItem key={status.key} value={status.key}>
+                                {status.label}
+                            </SelectItem>
                         ))}
                     </Select>
-                    <Input
-                        type='file'
-                        isRequired
-                        name="image"
-                        placeholder="Cabin image"
-                        labelPlacement='outside'
-                        label='Cabin image'
-                    />
-                    {isEditMode && (
-                        <p className="text-sm text-gray-500">
-                            {initialData.image ? 'Current image will be kept if no new image is selected' : 'No image currently set'}
-                        </p>
-                    )}
                 </div>
             </div>
         </Form>
-    )
+    );
 }
