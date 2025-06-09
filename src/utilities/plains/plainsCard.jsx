@@ -76,11 +76,11 @@ export default function PlainsCard({ data, Dynamic, formId, size, deletePlains, 
                                 <p className="font-bold text-black uppercase text-large ">{data.name}</p>
                                 <p className="text-black uppercase text-tiny">{data.price}</p>
                                 <p>
-                                    <span className="text-black text-tiny"> {data.startDate || "Plan por defecto"}</span>
+                                    <span className="text-black text-tiny"> {data.startDate || ""}</span>
                                     <span className="text-black text-tiny"> </span>
                                     <span className="text-black text-tiny">{data.endDate || ""}</span>
                                 </p>
-                                <p className="text-black uppercase text-tiny">{data.capacity || "Sin limite"}</p>
+                                <p className="text-black uppercase text-tiny">{data.capacidad || "Sin limite"}</p>
                             </div>
                             <div className="flex gap-2 mt-2">
                                 <Button

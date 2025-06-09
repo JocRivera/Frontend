@@ -4,9 +4,9 @@ import Navbar from './HomeNavbar.jsx';
 
 const HomeLayout = () => {
     return (
-        <div className="min-h-screen">
+        <div className="flex flex-col min-h-screen">
             <Navbar />
-            <main className="flex flex-col p-4 pt-24 mt-4"> {/* Aumentado el padding-top y añadido margin-top */}
+            <main className="flex flex-col p-4 pt-20"> {/* Aumentado el padding-top y añadido margin-top */}
                 <Outlet />
             </main>
         </div>
