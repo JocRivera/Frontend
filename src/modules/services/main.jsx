@@ -14,16 +14,44 @@ export default function ServicesManagement() {
     const [services, setServices] = useState([
         {
             id: 1,
-            service: "Room Service",
+            service: "Desayuno",
             description: "Room service description",
             price: "50",
             status: "active",
         },
         {
             id: 2,
-            service: "Laundry Service",
+            service: "Cena",
             description: "Laundry service description",
             price: "25",
+            status: "active",
+        },
+        {
+            id: 3,
+            service: "Almuerzo",
+            description: "Room service description",
+            price: "30",
+            status: "active",
+        },
+        {
+            id: 4,
+            service: "Spa",
+            description: "Laundry service description",
+            price: "100",
+            status: "active",
+        },
+        {
+            id: 5,
+            service: "Bar",
+            description: "Room service description",
+            price: "20",
+            status: "active",
+        },
+        {
+            id: 6,
+            service: "Cena Romántica",
+            description: "Laundry service description",
+            price: "15",
             status: "active",
         },
     ]);
@@ -57,7 +85,7 @@ export default function ServicesManagement() {
                 data={services}
                 formId="service-form"
                 size="sm"
-                columns={serviceColumns}  initialVisibleColumns={initialVisibleColumns} statusOptions={statusOptions}
+                columns={serviceColumns} initialVisibleColumns={initialVisibleColumns} statusOptions={statusOptions}
                 Dynamic={(onClose, data, onEdit) => (
                     <ServiceForm
                         onSubmit={(data) => {

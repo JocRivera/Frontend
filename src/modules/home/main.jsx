@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Video from "../../utilities/home/video/video_widget";
 import Cardcomponent from "../../utilities/home/card/cardComponent";
 import MapWidget from "../../utilities/home/map/MapWidget";
+import ServiceSection from "../../utilities/home/section/ServiceSection";
 import 'react-multi-carousel/lib/styles.css';
 
 export default function Home() {
@@ -14,8 +15,14 @@ export default function Home() {
                     <div className="mb-0">
                         <Video />
                     </div>
-                    <div className="mb-2">
-                        <h2 className="text-2xl font-bold">¡Reserva ahora!</h2>
+                    <div className="mb-4">
+                        <ServiceSection />
+                    </div>
+                    <div className="relative mb-8 -mt-8 text-center">
+                        <h2 className="pb-2 text-3xl font-bold sm:text-4xl">
+                            Nuestros Planes <span className="font-bold text-blue-600">Exclusivos</span>
+                        </h2>
+                        <div className="absolute bottom-0 w-32 h-1 transform -translate-x-1/2 bg-blue-600 rounded-full left-1/2"></div>
                     </div>
                     <Cardcomponent />
                     <div className="mt-4">
