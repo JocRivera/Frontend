@@ -39,16 +39,22 @@ function AccCard({ type }) {
     const fetchAccommodations = useCallback(async () => {
         try {
             setLoading(true);
+            setError(null);
             const response = await accommodationService.fetchAccommodations();
 
-            // Filtrar por tipo: 'cabaña' o 'habitacion'
-            const filtered = response.filter(acc => acc.tipo === type);
-            setAccommodations(filtered);
-
-            setLoading(false);
+            if (response && Array.isArray(response)) {
+                // Filtrar por tipo: 'cabaña' o 'habitacion'
+                const filtered = response.filter(acc => acc.tipo === type);
+                setAccommodations(filtered);
+            } else {
+                setAccommodations([]);
+                setError('No se encontraron alojamientos.');
+            }
         } catch (err) {
             console.error('Error fetching accommodations:', err);
             setError('No se pudieron cargar los alojamientos.');
+            setAccommodations([]);
+        } finally {
             setLoading(false);
         }
     }, [type]);
@@ -57,13 +63,9 @@ function AccCard({ type }) {
         fetchAccommodations();
     }, [fetchAccommodations]);
 
-    useEffect(() => {
-        fetchAccommodations();
-    }, [fetchAccommodations]);
-
     const handleCardClick = (accommodation) => {
         setSelectedAccommodation(accommodation);
-        console.log('Alojamiento seleccionado:', accommodation);
+        console.log('Alojamiento seleccionado:', accommodation._id);
         setShowDetail(true);
     };
 
@@ -110,6 +112,14 @@ function AccCard({ type }) {
         );
     }
 
+    if (accommodations.length === 0) {
+        return (
+            <div className="p-4 text-center text-gray-600">
+                No hay {type === 'cabaña' ? 'cabañas' : 'habitaciones'} disponibles en este momento.
+            </div>
+        );
+    }
+
     return (
         <>
             <div className="relative px-4">
@@ -127,25 +137,25 @@ function AccCard({ type }) {
                 >
                     {accommodations.map((accommodation) => (
                         <Card
-                            key={accommodation.idAlojamiento}
+                            key={accommodation._id}
                             isFooterBlurred
                             className="w-full h-[400px] cursor-pointer hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-xl"
                             onClick={() => handleCardClick(accommodation)}
                         >
                             <CardHeader className="absolute z-10 top-1 flex-col !items-start bg-black/20 backdrop-blur-sm rounded-lg m-2">
                                 <h4 className="text-lg font-bold text-white drop-shadow-lg">
-                                    {accommodation.name || 'Alojamiento'}
+                                    {accommodation.tipo || 'Alojamiento'} {accommodation.idAlojamiento || ''}
                                 </h4>
                             </CardHeader>
 
                             <Image
                                 removeWrapper
-                                alt={accommodation.name || 'Alojamiento'}
+                                alt={accommodation.tipo || 'Alojamiento'}
                                 className="z-0 object-cover w-full h-full"
                                 src={
                                     accommodation?.images?.[0]?.imagePath
                                         ? `${API_BASE_URL}/uploads/${accommodation.images[0].imagePath}`
-                                        : "https://via.placeholder.com/400x300?text=Sin+Imagen"
+                                        : "https://res.cloudinary.com/dbipj114j/image/upload/v1750868376/WhatsApp-Image-2024-09-18-at-5.19.20-PM-4-scaled_avfjhf.jpg"
                                 }
                             />
 
@@ -154,7 +164,7 @@ function AccCard({ type }) {
                                     <div className="flex items-center gap-2 text-gray-700">
                                         <Users size={16} />
                                         <span className="text-sm font-medium">
-                                            {accommodation.capacity} persona{accommodation.capacity > 1 ? 's' : ''}
+                                            {accommodation.capacidad || 0} persona{accommodation.capacidad > 1 ? 's' : ''}
                                         </span>
                                     </div>
                                     {accommodation.description && (
@@ -184,7 +194,7 @@ function AccCard({ type }) {
                 <AccDetail
                     isOpen={showDetail}
                     onClose={handleCloseDetail}
-                    accommodationId={selectedAccommodation.idAlojamiento}
+                    accommodationId={selectedAccommodation._id}
                 />
             )}
         </>

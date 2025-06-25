@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from "@nextui-org/react";
-import AccCard from './AccCard'; // Asegúrate de que la ruta es correcta
+import AccCard from './AccCard';
 
 function AccFilter() {
     const [filterActive, setFilterActive] = useState('cabaña');
@@ -15,12 +15,12 @@ function AccFilter() {
                                 ? 'bg-blue-600 text-white shadow-lg transform scale-105'
                                 : 'bg-transparent text-gray-600 hover:text-blue-600 hover:bg-white'
                                 }`}
-                            onClick={() => setFilterActive('cabanas')}
+                            onClick={() => setFilterActive('cabaña')}
                         >
                             Cabañas
                         </Button>
                         <Button
-                            className={`px-6 py-3 mx-1 rounded-lg font-semibold transition-all duration-300 ${filterActive === 'habitaciones'
+                            className={`px-6 py-3 mx-1 rounded-lg font-semibold transition-all duration-300 ${filterActive === 'habitacion'
                                 ? 'bg-blue-600 text-white shadow-lg transform scale-105'
                                 : 'bg-transparent text-gray-600 hover:text-blue-600 hover:bg-white'
                                 }`}
