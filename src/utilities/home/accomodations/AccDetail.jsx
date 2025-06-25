@@ -82,18 +82,6 @@ const AccDetail = ({ isOpen, onClose, accommodationId }) => {
             }}
         >
             <ModalContent>
-                <ModalHeader className="relative p-0">
-                    <Button
-                        isIconOnly
-                        className="absolute z-20 text-white right-2 top-2 bg-black/20 backdrop-blur-sm hover:bg-black/40"
-                        onClick={handleClose}
-                        radius="full"
-                        size="sm"
-                    >
-                        <X size={18} />
-                    </Button>
-                </ModalHeader>
-
                 <ModalBody className="p-0">
                     {loading ? (
                         <div className="flex items-center justify-center h-96">
