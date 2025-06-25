@@ -73,6 +73,8 @@ const Cardcomponent = ({ data }) => {
             autoPlaySpeed={3000}
             keyBoardControl={true}
             removeArrowOnDeviceType={["tablet", "mobile"]}
+            className="z-0"
+
         >
             {plan.map((plan) => (
                 <Card isFooterBlurred className="h-[474px] py-4 mx-2" key={plan.id}>

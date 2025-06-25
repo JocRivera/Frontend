@@ -109,6 +109,7 @@ function AccCard({ type }) {
                     keyBoardControl={true}
                     removeArrowOnDeviceType={["tablet", "mobile"]}
                     itemClass="px-2"
+                    className='z-0'
                 >
                     {accommodations.map((accommodation) => (
                         <Card
