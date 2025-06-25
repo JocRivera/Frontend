@@ -32,7 +32,7 @@ function AccFilter() {
                 </nav>
             </header>
 
-            <section className="min-h-[400px]">
+            <section >
                 <AccCard type={filterActive} />
             </section>
         </main>

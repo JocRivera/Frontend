@@ -224,7 +224,7 @@ const AccDetail = ({ isOpen, onClose, accommodationId }) => {
                                                         startContent={<CheckCircle size={14} />}
                                                         className="text-sm"
                                                     >
-                                                        {comfort.tipo || comfort.name || 'Comodidad'}
+                                                        {comfort}
                                                     </Chip>
                                                 ))}
                                             </div>
@@ -234,19 +234,6 @@ const AccDetail = ({ isOpen, onClose, accommodationId }) => {
                                             </p>
                                         )}
                                     </div>
-                                </div>
-
-                                <div className="pt-4 mt-6 border-t border-gray-200">
-                                    <Button
-                                        color="primary"
-                                        size="lg"
-                                        className="w-full font-semibold"
-                                        onClick={() => {
-                                            console.log('Reservar:', accommodation.tipo, accommodation._id);
-                                        }}
-                                    >
-                                        Reservar Ahora
-                                    </Button>
                                 </div>
                             </div>
                         </div>

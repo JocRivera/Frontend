@@ -74,28 +74,6 @@ function AccCard({ type }) {
         setSelectedAccommodation(null);
     };
 
-    const CustomLeftArrow = () => (
-        <Button
-            isIconOnly
-            className="absolute z-10 transform -translate-y-1/2 left-2 top-1/2 bg-white/70 backdrop-blur-sm hover:bg-white"
-            radius="full"
-            size="sm"
-        >
-            <ChevronLeft size={18} />
-        </Button>
-    );
-
-    const CustomRightArrow = () => (
-        <Button
-            isIconOnly
-            className="absolute z-10 transform -translate-y-1/2 right-2 top-1/2 bg-white/70 backdrop-blur-sm hover:bg-white"
-            radius="full"
-            size="sm"
-        >
-            <ChevronRight size={18} />
-        </Button>
-    );
-
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64">
@@ -122,7 +100,7 @@ function AccCard({ type }) {
 
     return (
         <>
-            <div className="relative px-4">
+            <div>
                 <Carousel
                     responsive={responsive}
                     infinite={true}
@@ -130,28 +108,20 @@ function AccCard({ type }) {
                     autoPlaySpeed={4000}
                     keyBoardControl={true}
                     removeArrowOnDeviceType={["tablet", "mobile"]}
-                    customLeftArrow={<CustomLeftArrow />}
-                    customRightArrow={<CustomRightArrow />}
-                    containerClass="carousel-container"
                     itemClass="px-2"
                 >
                     {accommodations.map((accommodation) => (
                         <Card
                             key={accommodation._id}
                             isFooterBlurred
-                            className="w-full h-[400px] cursor-pointer hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-xl"
+                            className="h-[474px] py-4 mx-2"
                             onClick={() => handleCardClick(accommodation)}
                         >
-                            <CardHeader className="absolute z-10 top-1 flex-col !items-start bg-black/20 backdrop-blur-sm rounded-lg m-2">
-                                <h4 className="text-lg font-bold text-white drop-shadow-lg">
-                                    {accommodation.tipo || 'Alojamiento'} {accommodation.idAlojamiento || ''}
-                                </h4>
-                            </CardHeader>
 
                             <Image
                                 removeWrapper
                                 alt={accommodation.tipo || 'Alojamiento'}
-                                className="z-0 object-cover w-full h-full"
+                                className="z-0 object-cover w-full h-full scale-125 -translate-y-6"
                                 src={
                                     accommodation?.images?.[0]?.imagePath
                                         ? `${API_BASE_URL}/uploads/${accommodation.images[0].imagePath}`
@@ -159,7 +129,7 @@ function AccCard({ type }) {
                                 }
                             />
 
-                            <CardFooter className="absolute bottom-0 z-10 justify-between bg-white/90 backdrop-blur-md border-t-1 border-zinc-100/50">
+                            <CardFooter className="absolute bottom-0 z-10 justify-between bg-white/30 border-t-1 border-zinc-100/50">
                                 <div className="flex flex-col flex-1 gap-1">
                                     <div className="flex items-center gap-2 text-gray-700">
                                         <Users size={16} />
@@ -167,6 +137,9 @@ function AccCard({ type }) {
                                             {accommodation.capacidad || 0} persona{accommodation.capacidad > 1 ? 's' : ''}
                                         </span>
                                     </div>
+                                    <h4 className="text-lg font-bold text-black drop-shadow-lg">
+                                        {accommodation.tipo || 'Alojamiento'} {accommodation.idAlojamiento || ''}
+                                    </h4>
                                     {accommodation.description && (
                                         <p className="text-xs text-gray-600 line-clamp-2">
                                             {accommodation.description}
