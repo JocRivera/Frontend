@@ -6,7 +6,13 @@ function AccFilter() {
     const [filterActive, setFilterActive] = useState('cabaña');
 
     return (
-        <main className="w-full px-4 py-8 mx-auto max-w-7xl">
+        <main className='py-16 mt-4'>
+            <div className="relative mb-8 -mt-8 text-center">
+                <h2 className="pb-2 text-3xl font-bold sm:text-4xl">
+                    Nuestros <span className="font-bold text-blue-600">Alojamientos</span>
+                </h2>
+                <div className="absolute bottom-0 w-32 h-1 transform -translate-x-1/2 bg-blue-600 rounded-full left-1/2"></div>
+            </div>
             <header className="mb-8 text-center">
                 <nav className="flex justify-center">
                     <div className="flex p-1 bg-gray-100 shadow-sm rounded-xl">

@@ -26,12 +26,6 @@ export default function Home() {
                         <div className="absolute bottom-0 w-32 h-1 transform -translate-x-1/2 bg-blue-600 rounded-full left-1/2"></div>
                     </div>
                     <Cardcomponent />
-                    {/* <div className="relative mb-8 -mt-8 text-center">
-                        <h2 className="pb-2 text-3xl font-bold sm:text-4xl">
-                            Alojamientos <span className="font-bold text-blue-600">Disponibles</span>
-                        </h2>
-                        <div className="absolute bottom-0 w-32 h-1 transform -translate-x-1/2 bg-blue-600 rounded-full left-1/2"></div>
-                    </div> */}
                     <AccFilter />
                     <div className="mt-4">
                         <h2 className="text-2xl font-bold">¿Cómo llegar?</h2>
