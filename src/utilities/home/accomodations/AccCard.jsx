@@ -41,7 +41,7 @@ function AccCard({ type }) {
             setLoading(true);
             setError(null);
             const response = await accommodationService.fetchAccommodations();
-
+            console.log('Fetched accommodations:', response);
             if (response && Array.isArray(response)) {
                 // Filtrar por tipo: 'cabaña' o 'habitacion'
                 const filtered = response.filter(acc => acc.tipo === type);
@@ -123,11 +123,12 @@ function AccCard({ type }) {
                                 alt={accommodation.tipo || 'Alojamiento'}
                                 className="z-0 object-cover w-full h-full scale-125 -translate-y-6"
                                 src={
-                                    accommodation?.images?.[0]?.imagePath
-                                        ? `${API_BASE_URL}/uploads/${accommodation.images[0].imagePath}`
+                                    accommodation?.images?.[0]
+                                        ? accommodation.images[0]
                                         : "https://res.cloudinary.com/dbipj114j/image/upload/v1750868376/WhatsApp-Image-2024-09-18-at-5.19.20-PM-4-scaled_avfjhf.jpg"
                                 }
                             />
+
 
                             <CardFooter className="absolute bottom-0 z-10 justify-between bg-white/30 border-t-1 border-zinc-100/50">
                                 <div className="flex flex-col flex-1 gap-1">

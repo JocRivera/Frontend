@@ -49,12 +49,6 @@ const AccDetail = ({ isOpen, onClose, accommodationId }) => {
         }
     }, [accommodationId, isOpen]);
 
-    useEffect(() => {
-        if (accommodation) {
-            console.log("Accommodation recibido:", accommodation);
-        }
-    }, [accommodation]);
-
     const handleNextImage = () => {
         if (images.length === 0) return;
         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
