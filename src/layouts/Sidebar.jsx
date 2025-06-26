@@ -20,6 +20,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
         { icon: <Home size={20} />, text: "Rooms", to: "/admin/rooms" },
         { icon: <HotelIcon size={20} />, text: "Services", to: "/admin/services" },
         { icon: <HelpCircle size={20} />, text: "Plains", to: "/admin/plains" },
+        { icon: <HelpCircle size={20} />, text: "Programming", to: "/admin/programmed" },
         { icon: <Users size={20} />, text: "Clients", to: "/admin/clients" },
         { icon: <BookCheck size={20} />, text: "Reservations", to: "/admin/reservations" },
         { icon: <Users size={20} />, text: "Users", to: "/admin/users" },
