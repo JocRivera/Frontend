@@ -10,8 +10,12 @@ import {
     ModalBody,
     ModalFooter,
     Button,
-    useDisclosure
+    useDisclosure,
+    Select,
+    SelectItem,
+    DatePicker
 } from '@nextui-org/react';
+import axios from 'axios';
 
 moment.locale('es');
 const localizer = momentLocalizer(moment);
@@ -19,6 +23,10 @@ const localizer = momentLocalizer(moment);
 export default function CalendarComponent({ events }) {
     const [calendarEvents, setCalendarEvents] = useState([]);
     const [selectedDate, setSelectedDate] = useState(null);
+    const [plan, setPlan] = useState(null);
+    const [selectedPlan, setSelectedPlan] = useState(null);
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
 
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
@@ -33,9 +41,29 @@ export default function CalendarComponent({ events }) {
         }
     }, [events]);
 
+    const fetchPlan = async () => {
+        try {
+            const apiUrl = 'http://localhost:3000/plan';
+            const response = await axios.get(apiUrl);
+            console.log(apiUrl);
+            setPlan(response.data);
+        } catch (error) {
+            console.error('Error al obtener el plan:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchPlan();
+    }, []);
+
+
     const handleSelectSlot = (slotInfo) => {
-        setSelectedDate(slotInfo.start);
-        onOpen();
+        if (slotInfo && slotInfo.start) {
+            const selectedStartDate = new Date(slotInfo.start);
+            setStartDate(selectedStartDate);
+            setEndDate(selectedStartDate);
+            onOpen();
+        }
     };
 
     return (
@@ -47,6 +75,10 @@ export default function CalendarComponent({ events }) {
                 endAccessor="end"
                 selectable
                 popup
+                views={{
+                    month: true,
+                    agenda: true,
+                }}
                 onSelectSlot={handleSelectSlot}
                 style={{ height: '100%', width: '100%' }}
             />
@@ -55,15 +87,27 @@ export default function CalendarComponent({ events }) {
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1">Crear Evento</ModalHeader>
+                            <ModalHeader className="flex flex-col gap-1">Programar Plan</ModalHeader>
                             <ModalBody>
-                                <p className="text-sm text-default-500">
-                                    Fecha seleccionada:{" "}
-                                    <span className="font-medium text-blue-600">
-                                        {selectedDate ? moment(selectedDate).format("LLLL") : ''}
-                                    </span>
-                                </p>
-                                {/* Aquí puedes agregar un formulario para nombre, hora, etc */}
+                                <Select
+                                    label="Seleccionar plan"
+                                    selectedKeys={selectedPlan ? [selectedPlan] : []}
+                                    onSelectionChange={(keys) => setSelectedPlan([...keys][0])}
+                                >
+                                    {plan.map((plan) => (
+                                        <SelectItem key={plan._id} value={plan._id}>
+                                            {plan.name}
+                                        </SelectItem>
+                                    ))}
+                                </Select>
+                                <DatePicker
+                                    label="Fecha de inicio"
+                                    onChange={(date) => setStartDate(date)}
+                                />
+                                <DatePicker
+                                    label="Fecha de fin"
+                                    onChange={(date) => setEndDate(date)}
+                                />
                             </ModalBody>
                             <ModalFooter>
                                 <Button color="danger" variant="light" onPress={onClose}>
