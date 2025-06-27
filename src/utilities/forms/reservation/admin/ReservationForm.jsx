@@ -19,6 +19,8 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     const [selectedAccommodation, setSelectedAccommodation] = useState("");
     const [totalGuests, setTotalGuests] = useState(1);
     const [plan, setPlan] = useState([]);
+    const [programmedPlans, setProgrammedPlans] = useState([]);
+
     const isEditMode = !!initialData;
     //actualizar el conteo de huespedes
     useEffect(() => {
@@ -119,16 +121,26 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     //
     const fetchPlan = async () => {
         try {
-            const apiUrl = 'http://localhost:3000/plan';
+            const apiUrl = 'http://localhost:3000/plan/static';
             const response = await axios.get(apiUrl);
-            console.log(apiUrl);
+            console.log(response.data);
             setPlan(response.data);
         } catch (error) {
             console.error('Error al obtener el plan:', error);
         }
     };
+    const fetchProgramation = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/programacion');
+            setProgrammedPlans(response.data);
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error al obtener la programación:', error);
+        }
+    };
     useEffect(() => {
         fetchPlan();
+        fetchProgramation();
     }, [])
     // cargar datos iniciales en edicion
     useEffect(() => {

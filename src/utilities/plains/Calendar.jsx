@@ -53,7 +53,7 @@ export default function CalendarComponent() {
 
             // Alternativa si sigues teniendo problemas:
             const formattedEvents = res.data.map((event, index) => {
-                const plan = event.idPlan?.[0];
+                const plan = event.idPlan?.name;
 
                 // Extraer solo la parte de la fecha (YYYY-MM-DD) y crear Date local
                 const startDateStr = event.fechaInicio.split('T')[0]; // "2025-06-27"
@@ -65,9 +65,10 @@ export default function CalendarComponent() {
 
                 const startDate = new Date(parseInt(startYear), parseInt(startMonth) - 1, parseInt(startDay));
                 const endDate = new Date(parseInt(endYear), parseInt(endMonth) - 1, parseInt(endDay));
+                console.log(plan, startDate, endDate);
 
                 return {
-                    title: plan?.name || `Evento ${index + 1}`,
+                    title: plan || `Evento ${index + 1}`,
                     start: startDate,
                     end: endDate,
                     allDay: true,
