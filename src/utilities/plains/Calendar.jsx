@@ -51,13 +51,25 @@ export default function CalendarComponent() {
             const res = await axios.get('http://localhost:3000/programacion');
             console.log('Programación obtenida:', res.data);
 
+            // Alternativa si sigues teniendo problemas:
             const formattedEvents = res.data.map((event, index) => {
                 const plan = event.idPlan?.[0];
 
+                // Extraer solo la parte de la fecha (YYYY-MM-DD) y crear Date local
+                const startDateStr = event.fechaInicio.split('T')[0]; // "2025-06-27"
+                const endDateStr = event.fechaFin.split('T')[0]; // "2025-06-30"
+
+                // Crear Date usando solo la fecha, sin hora
+                const [startYear, startMonth, startDay] = startDateStr.split('-');
+                const [endYear, endMonth, endDay] = endDateStr.split('-');
+
+                const startDate = new Date(parseInt(startYear), parseInt(startMonth) - 1, parseInt(startDay));
+                const endDate = new Date(parseInt(endYear), parseInt(endMonth) - 1, parseInt(endDay));
+
                 return {
                     title: plan?.name || `Evento ${index + 1}`,
-                    start: moment(event.fechaInicio).toDate(),
-                    end: moment(event.fechaFin).toDate(),
+                    start: startDate,
+                    end: endDate,
                     allDay: true,
                 };
             });
@@ -80,7 +92,7 @@ export default function CalendarComponent() {
         );
     };
 
-    // Función helper para convertir CalendarDate a string formato ISO
+    // Función helper para convertir CalendarDate a string formato ISO simple
     const calendarDateToString = (calendarDate) => {
         if (!calendarDate || !calendarDate.year) return null;
         const year = calendarDate.year;
