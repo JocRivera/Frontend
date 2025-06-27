@@ -105,6 +105,18 @@ export default function CalendarComponent() {
         if (slotInfo && slotInfo.start) {
             console.log('Slot seleccionado:', slotInfo.start);
 
+            // Validar que la fecha seleccionada no sea anterior a hoy
+            const today = new Date();
+            const selectedDate = new Date(slotInfo.start);
+
+            // Comparar solo fechas, sin hora
+            today.setHours(0, 0, 0, 0);
+            selectedDate.setHours(0, 0, 0, 0);
+
+            if (selectedDate < today) {
+                return;
+            }
+
             const selectedCalendarDate = dateToCalendarDate(slotInfo.start);
             console.log('CalendarDate creado:', selectedCalendarDate);
 
@@ -117,6 +129,27 @@ export default function CalendarComponent() {
     const handleSaveEvent = async () => {
         if (!selectedPlan || !startDate || !endDate) {
             console.error('Faltan datos para guardar el evento');
+            window.alert('Por favor completa todos los campos');
+            return;
+        }
+
+        // Validar que la fecha de inicio no sea anterior a la fecha actual
+        const today = new Date();
+        const startDateObj = new Date(startDate.year, startDate.month - 1, startDate.day);
+
+        // Comparar solo las fechas, sin considerar la hora
+        today.setHours(0, 0, 0, 0);
+        startDateObj.setHours(0, 0, 0, 0);
+
+        if (startDateObj < today) {
+            window.alert('No se puede programar para una fecha anterior a la actual');
+            return;
+        }
+
+        // Validar que la fecha de fin no sea anterior a la fecha de inicio
+        const endDateObj = new Date(endDate.year, endDate.month - 1, endDate.day);
+        if (endDateObj < startDateObj) {
+            window.alert('La fecha de fin no puede ser anterior a la fecha de inicio');
             return;
         }
 
