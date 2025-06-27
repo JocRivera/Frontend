@@ -15,6 +15,8 @@ import {
     SelectItem,
     DatePicker
 } from '@nextui-org/react';
+// Importar CalendarDate desde @internationalized/date
+import { CalendarDate, parseDate } from '@internationalized/date';
 import axios from 'axios';
 
 moment.locale('es');
@@ -23,10 +25,12 @@ const localizer = momentLocalizer(moment);
 export default function CalendarComponent() {
     const [calendarEvents, setCalendarEvents] = useState([]);
     const [selectedDate, setSelectedDate] = useState(null);
-    const [plan, setPlan] = useState(null);
+    const [plan, setPlan] = useState([]);
     const [selectedPlan, setSelectedPlan] = useState(null);
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+
+    // Inicializar fechas como CalendarDate
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
 
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
@@ -35,22 +39,24 @@ export default function CalendarComponent() {
             const apiUrl = 'http://localhost:3000/plan';
             const response = await axios.get(apiUrl);
             console.log(apiUrl);
-            setPlan(response.data);
+            setPlan(response.data || []);
         } catch (error) {
             console.error('Error al obtener el plan:', error);
+            setPlan([]);
         }
     };
+
     const fetchProgrammed = async () => {
         try {
             const res = await axios.get('http://localhost:3000/programacion');
             console.log('Programación obtenida:', res.data);
 
             const formattedEvents = res.data.map((event, index) => {
-                const plan = event.idPlan?.[0]; // 👈 acceder al primer plan
+                const plan = event.idPlan?.[0];
 
                 return {
                     title: plan?.name || `Evento ${index + 1}`,
-                    start: moment(event.fechaInicio).toDate(), // ✅ SIN desfase de zona horaria
+                    start: moment(event.fechaInicio).toDate(),
                     end: moment(event.fechaFin).toDate(),
                     allDay: true,
                 };
@@ -63,34 +69,58 @@ export default function CalendarComponent() {
         }
     };
 
+    // Función helper para convertir Date a CalendarDate
+    const dateToCalendarDate = (date) => {
+        if (!date) return null;
+        const jsDate = new Date(date);
+        return new CalendarDate(
+            jsDate.getFullYear(),
+            jsDate.getMonth() + 1, // Date usa 0-indexed, CalendarDate usa 1-indexed
+            jsDate.getDate()
+        );
+    };
+
+    // Función helper para convertir CalendarDate a string formato ISO
+    const calendarDateToString = (calendarDate) => {
+        if (!calendarDate || !calendarDate.year) return null;
+        const year = calendarDate.year;
+        const month = String(calendarDate.month).padStart(2, '0');
+        const day = String(calendarDate.day).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    const handleSelectSlot = (slotInfo) => {
+        if (slotInfo && slotInfo.start) {
+            console.log('Slot seleccionado:', slotInfo.start);
+
+            const selectedCalendarDate = dateToCalendarDate(slotInfo.start);
+            console.log('CalendarDate creado:', selectedCalendarDate);
+
+            setStartDate(selectedCalendarDate);
+            setEndDate(selectedCalendarDate);
+            onOpen();
+        }
+    };
+
     const handleSaveEvent = async () => {
         if (!selectedPlan || !startDate || !endDate) {
             console.error('Faltan datos para guardar el evento');
             return;
         }
+
         try {
             const apiUrl = 'http://localhost:3000/programacion';
 
-            // Formatear directamente usando las propiedades del objeto fecha
-            const formatDate = (dateObj) => {
-                if (dateObj.year && dateObj.month && dateObj.day) {
-                    // Asegurar formato YYYY-MM-DD con padding de ceros
-                    const year = dateObj.year;
-                    const month = String(dateObj.month).padStart(2, '0');
-                    const day = String(dateObj.day).padStart(2, '0');
-                    return `${year}-${month}-${day}`;
-                }
-                // Fallback para objetos Date nativos
-                return moment(dateObj).format('YYYY-MM-DD');
-            };
-
             const newEvent = {
                 idPlan: selectedPlan,
-                fechaInicio: formatDate(startDate),
-                fechaFin: formatDate(endDate),
+                fechaInicio: calendarDateToString(startDate),
+                fechaFin: calendarDateToString(endDate),
             };
 
-            console.log('Fechas seleccionadas:', { startDate, endDate });
+            console.log('Fechas a guardar:', {
+                startDate: calendarDateToString(startDate),
+                endDate: calendarDateToString(endDate)
+            });
             console.log('Nuevo evento a guardar:', newEvent);
 
             await axios.post(apiUrl, newEvent);
@@ -99,22 +129,12 @@ export default function CalendarComponent() {
         } catch (error) {
             console.error('Error al guardar el evento:', error);
         }
-    }
+    };
 
     useEffect(() => {
         fetchPlan();
         fetchProgrammed();
     }, []);
-
-
-    const handleSelectSlot = (slotInfo) => {
-        if (slotInfo && slotInfo.start) {
-            const selectedStartDate = new Date(slotInfo.start);
-            setStartDate(selectedStartDate);
-            setEndDate(selectedStartDate);
-            onOpen();
-        }
-    };
 
     return (
         <div className="w-full h-[600px] p-4 rounded-xl shadow-md">
@@ -144,27 +164,28 @@ export default function CalendarComponent() {
                                     selectedKeys={selectedPlan ? [selectedPlan] : []}
                                     onSelectionChange={(keys) => setSelectedPlan([...keys][0])}
                                 >
-                                    {plan.map((plan) => (
-                                        <SelectItem key={plan._id} value={plan._id}>
-                                            {plan.name}
+                                    {plan.map((planItem) => (
+                                        <SelectItem key={planItem._id} value={planItem._id}>
+                                            {planItem.name}
                                         </SelectItem>
                                     ))}
                                 </Select>
-                                {/* <input
-                                    type="date"
-                                    label="Fecha de inicio"
-                                    value={startDate.toISOString().split('T')[0]}
-                                    onChange={(e) => setStartDate(new Date(e.target.value))}
-                                    className="w-full p-2 border rounded"
-                                /> */}
+
                                 <DatePicker
                                     label="Fecha de inicio"
+                                    value={startDate}
                                     onChange={(date) => {
+                                        console.log('Nueva fecha de inicio:', date);
                                         setStartDate(date);
-                                    }} />
+                                    }}
+                                />
+
                                 <DatePicker
                                     label="Fecha de fin"
-                                    onChange={(date) => setEndDate(date)}
+                                    onChange={(date) => {
+                                        console.log('Nueva fecha de fin:', date);
+                                        setEndDate(date);
+                                    }}
                                 />
                             </ModalBody>
                             <ModalFooter>
@@ -173,10 +194,7 @@ export default function CalendarComponent() {
                                 </Button>
                                 <Button
                                     color="primary"
-                                    onPress={() => {
-                                        handleSaveEvent();
-                                    }
-                                    }
+                                    onPress={handleSaveEvent}
                                 >
                                     Guardar
                                 </Button>
