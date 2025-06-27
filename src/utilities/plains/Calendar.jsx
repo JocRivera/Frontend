@@ -20,7 +20,7 @@ import axios from 'axios';
 moment.locale('es');
 const localizer = momentLocalizer(moment);
 
-export default function CalendarComponent({ events }) {
+export default function CalendarComponent() {
     const [calendarEvents, setCalendarEvents] = useState([]);
     const [selectedDate, setSelectedDate] = useState(null);
     const [plan, setPlan] = useState(null);
@@ -29,17 +29,6 @@ export default function CalendarComponent({ events }) {
     const [endDate, setEndDate] = useState(new Date());
 
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-
-    useEffect(() => {
-        if (events && events.length > 0) {
-            const formattedEvents = events.map(event => ({
-                ...event,
-                start: new Date(event.start),
-                end: new Date(event.end)
-            }));
-            setCalendarEvents(formattedEvents);
-        }
-    }, [events]);
 
     const fetchPlan = async () => {
         try {
@@ -51,9 +40,70 @@ export default function CalendarComponent({ events }) {
             console.error('Error al obtener el plan:', error);
         }
     };
+    const fetchProgrammed = async () => {
+        try {
+            const res = await axios.get('http://localhost:3000/programacion');
+            console.log('Programación obtenida:', res.data);
+
+            const formattedEvents = res.data.map((event, index) => {
+                const plan = event.idPlan?.[0]; // 👈 acceder al primer plan
+
+                return {
+                    title: plan?.name || `Evento ${index + 1}`,
+                    start: moment(event.fechaInicio).toDate(), // ✅ SIN desfase de zona horaria
+                    end: moment(event.fechaFin).toDate(),
+                    allDay: true,
+                };
+            });
+
+            console.log('Eventos formateados para el calendario:', formattedEvents);
+            setCalendarEvents(formattedEvents);
+        } catch (error) {
+            console.error('Error al obtener la programación:', error);
+        }
+    };
+
+    const handleSaveEvent = async () => {
+        if (!selectedPlan || !startDate || !endDate) {
+            console.error('Faltan datos para guardar el evento');
+            return;
+        }
+        try {
+            const apiUrl = 'http://localhost:3000/programacion';
+
+            // Formatear directamente usando las propiedades del objeto fecha
+            const formatDate = (dateObj) => {
+                if (dateObj.year && dateObj.month && dateObj.day) {
+                    // Asegurar formato YYYY-MM-DD con padding de ceros
+                    const year = dateObj.year;
+                    const month = String(dateObj.month).padStart(2, '0');
+                    const day = String(dateObj.day).padStart(2, '0');
+                    return `${year}-${month}-${day}`;
+                }
+                // Fallback para objetos Date nativos
+                return moment(dateObj).format('YYYY-MM-DD');
+            };
+
+            const newEvent = {
+                idPlan: selectedPlan,
+                fechaInicio: formatDate(startDate),
+                fechaFin: formatDate(endDate),
+            };
+
+            console.log('Fechas seleccionadas:', { startDate, endDate });
+            console.log('Nuevo evento a guardar:', newEvent);
+
+            await axios.post(apiUrl, newEvent);
+            onClose();
+            fetchProgrammed();
+        } catch (error) {
+            console.error('Error al guardar el evento:', error);
+        }
+    }
 
     useEffect(() => {
         fetchPlan();
+        fetchProgrammed();
     }, []);
 
 
@@ -100,23 +150,34 @@ export default function CalendarComponent({ events }) {
                                         </SelectItem>
                                     ))}
                                 </Select>
+                                {/* <input
+                                    type="date"
+                                    label="Fecha de inicio"
+                                    value={startDate.toISOString().split('T')[0]}
+                                    onChange={(e) => setStartDate(new Date(e.target.value))}
+                                    className="w-full p-2 border rounded"
+                                /> */}
                                 <DatePicker
                                     label="Fecha de inicio"
-                                    onChange={(date) => setStartDate(date)}
-                                />
+                                    onChange={(date) => {
+                                        setStartDate(date);
+                                    }} />
                                 <DatePicker
                                     label="Fecha de fin"
                                     onChange={(date) => setEndDate(date)}
                                 />
                             </ModalBody>
                             <ModalFooter>
-                                <Button color="danger" variant="light" onPress={onClose}>
+                                <Button color="danger" variant="flat" onPress={onClose}>
                                     Cancelar
                                 </Button>
-                                <Button color="primary" onPress={() => {
-                                    // Aquí puedes guardar el evento
-                                    onClose();
-                                }}>
+                                <Button
+                                    color="primary"
+                                    onPress={() => {
+                                        handleSaveEvent();
+                                    }
+                                    }
+                                >
                                     Guardar
                                 </Button>
                             </ModalFooter>
