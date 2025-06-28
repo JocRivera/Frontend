@@ -30,7 +30,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     //manejar cambios en el plan seleccionado
     useEffect(() => {
         console.log("Plan seleccionado:", selectedPlan);
-        if (selectedPlan !== "67cb9c91ed658211aca1955d" && selectedPlan !== "67cb9ce3ed658211aca1955f" && selectedPlan !== "") {
+        if (selectedPlan !== "686055ef47c17606f805903f" && selectedPlan !== "6860563247c17606f8059044" && selectedPlan !== "") {
             setIsEndDateDisabled(true);
             setEndDate(startDate); // Establece la fecha de fin igual a la de inicio cuando se selecciona el plan
         } else {
@@ -77,7 +77,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             return;
         }
 
-        if (selectedPlan !== "67cb9c91ed658211aca1955d" && selectedPlan !== "67cb9ce3ed658211aca1955f") {
+        if (selectedPlan !== "686055ef47c17606f805903f" && selectedPlan !== "6860563247c17606f8059044") {
             setAvailableAccommodations([]);
             return;
         }

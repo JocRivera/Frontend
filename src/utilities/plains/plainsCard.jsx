@@ -41,7 +41,7 @@ export default function PlainsCard({ data, Dynamic, formId, size, deletePlains, 
         setPage(1)
     }, [])
     const handleToggle = (id) => {
-        const message = "está seguro de cambiar el estado del plan?";
+        const message = "Cambiar estado";
         if (window.confirm(message)) {
             const planToUpdate = data.find(item => item.id === id);
             if (!planToUpdate) return;
