@@ -29,7 +29,8 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     }, [numAccompanists, hasAccompanists]);
     //manejar cambios en el plan seleccionado
     useEffect(() => {
-        if (selectedPlan === "67cb9c3bed658211aca19559") {
+        console.log("Plan seleccionado:", selectedPlan);
+        if (selectedPlan !== "67cb9c91ed658211aca1955d" && selectedPlan !== "67cb9ce3ed658211aca1955f" && selectedPlan !== "") {
             setIsEndDateDisabled(true);
             setEndDate(startDate); // Establece la fecha de fin igual a la de inicio cuando se selecciona el plan
         } else {
@@ -124,7 +125,6 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
         try {
             const apiUrl = 'http://localhost:3000/plan/static';
             const response = await axios.get(apiUrl);
-            console.log(response.data);
             setPlan(response.data);
         } catch (error) {
             console.error('Error al obtener el plan:', error);
@@ -319,10 +319,6 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     const removeAccompanist = (id) => {
         setAccompanists(accompanists.filter(acc => acc.id !== id));
     };
-    const programmedPlanIds = programmedPlans.map(p => p.idPlan?._id).filter(Boolean);
-    console.log("🟢 programmedPlanIds:", programmedPlanIds);
-    console.log("📋 Todos los planes:", plan.map(p => p._id));
-
 
     return (
         <form

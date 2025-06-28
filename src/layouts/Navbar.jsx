@@ -43,7 +43,7 @@ export default function NavbarComponent() {
             href="/"
             className="flex items-center gap-2 font-bold text-inherit text-foreground"
           >
-            BOOKEDGE
+            HostalDev
           </Link>
         </NavbarBrand>
       </NavbarContent>
