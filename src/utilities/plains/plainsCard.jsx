@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardFooter, Image, Button, Input } from "@nextui-org/react";
+import { Card, CardHeader, CardFooter, Image, Button, Input, Switch } from "@nextui-org/react";
 import { SearchIcon } from "../table/SearchIcon";
 import ModalView from "../table/OpenModal";
 import OpenEditModal from "../accommodation/OpenEditModal";
@@ -40,6 +40,20 @@ export default function PlainsCard({ data, Dynamic, formId, size, deletePlains, 
         setFilterValue("")
         setPage(1)
     }, [])
+    const handleToggle = (id) => {
+        const message = "está seguro de cambiar el estado del plan?";
+        if (window.confirm(message)) {
+            const planToUpdate = data.find(item => item.id === id);
+            if (!planToUpdate) return;
+
+            const updatedPlan = {
+                ...planToUpdate,
+                status: !planToUpdate.status,
+            };
+
+            editPlains(updatedPlan);
+        }
+    };
 
 
     return (
@@ -93,10 +107,16 @@ export default function PlainsCard({ data, Dynamic, formId, size, deletePlains, 
                                     Detalles
                                 </Button>
                                 <OpenEditModal FormComponent={Dynamic} formId={formId} data={data} onEdit={editPlains} />
-                                <Button className="text-tiny" color="danger" radius="full" size="sm"
-                                    onClick={() => deletePlains(data.id)}>
-                                    Eliminar
-                                </Button>
+                                <Switch
+                                    isSelected={data.status}
+                                    onChange={() => handleToggle(data.id)}
+                                    className="text-black text-tiny"
+                                    size="sm"
+                                    color="primary"
+                                    labelPlacement="start"
+                                    label={data.status ? "Activo" : "Inactivo"}
+                                />
+
                             </div>
                         </CardFooter>
                     </Card>))}

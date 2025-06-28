@@ -44,9 +44,9 @@ export default function PlanForm({ onSubmit, onClose, initialData, onEdit }) {
                 capacidad: parseInt(data.capacidad, 10),
                 status: data.status,
                 idService: data.services,
-                image: data.image.size > 0
-                    ? URL.createObjectURL(data.image)
-                    : initialData.image
+                imagen: data.imagen.size > 0
+                    ? URL.createObjectURL(data.imagen)
+                    : initialData.imagen
             };
             onEdit(updatedData);
         } else {
@@ -58,8 +58,8 @@ export default function PlanForm({ onSubmit, onClose, initialData, onEdit }) {
                 capacidad: parseInt(data.capacidad, 10),
                 status: data.status,
                 idService: data.services,
-                image: data.image.size > 0
-                    ? URL.createObjectURL(data.image)
+                imagen: data.imagen.size > 0
+                    ? URL.createObjectURL(data.imagen)
                     : null
             };
             onSubmit(newData);
@@ -106,7 +106,6 @@ export default function PlanForm({ onSubmit, onClose, initialData, onEdit }) {
                     />
                     <Input
                         type='number'
-                        isRequired
                         name="capacidad"
                         placeholder="Plan capacity"
                         labelPlacement='outside'
@@ -134,25 +133,11 @@ export default function PlanForm({ onSubmit, onClose, initialData, onEdit }) {
                     </div>
                     <Input
                         type='file'
-                        name="image"
+                        name="imagen"
                         accept="image/*"
                         labelPlacement='outside'
-                        label='Plan image'
+                        label='Plan imagen'
                     />
-                    <Select
-                        isRequired
-                        name="status"
-                        placeholder="Plan status"
-                        labelPlacement='outside'
-                        label='Plan status'
-                        defaultValue={initialData?.status || 'active'}
-                    >
-                        {planStatus.map((status) => (
-                            <SelectItem key={status.key} value={status.key}>
-                                {status.label}
-                            </SelectItem>
-                        ))}
-                    </Select>
                 </div>
             </div>
         </Form>
