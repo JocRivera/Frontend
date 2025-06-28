@@ -130,18 +130,8 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             console.error('Error al obtener el plan:', error);
         }
     };
-    const fetchProgramation = async () => {
-        try {
-            const response = await axios.get('http://localhost:3000/programacion');
-            setProgrammedPlans(response.data);
-            console.log(response.data);
-        } catch (error) {
-            console.error('Error al obtener la programación:', error);
-        }
-    };
     useEffect(() => {
         fetchPlan();
-        fetchProgramation();
     }, [])
     //
     function calendarDateToString(cd) {
@@ -397,6 +387,11 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                                         {data.name}
                                     </SelectItem>
 
+                                ))}
+                                {programmedPlans.map((data) => (
+                                    <SelectItem key={data.idPlan._id} value={data.idPlan._id}>
+                                        {data.idPlan.name}
+                                    </SelectItem>
                                 ))}
                             </Select>
 
