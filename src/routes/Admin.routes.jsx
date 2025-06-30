@@ -8,6 +8,7 @@ import ReservationsManagement from '../modules/reservations/main.jsx';
 import PlainsManagement from '../modules/plains/main.jsx';
 import ClientsManagement from '../modules/clients/main.jsx';
 import UsersManagement from '../modules/users/main.jsx';
+import ProgrammedManagement from '../modules/programmed/main.jsx';
 const AdminRoutes = () => {
     return (
         <Routes>
@@ -20,6 +21,7 @@ const AdminRoutes = () => {
             <Route path="plains" element={<PlainsManagement />} />
             <Route path="clients" element={<ClientsManagement />} />
             <Route path="users" element={<UsersManagement />} />
+            <Route path="programmed" element={<ProgrammedManagement />} />
         </Routes>
     );
 };

@@ -8,6 +8,7 @@ export default function PlainsManagement() {
     const loadPlains = async () => {
         try {
             const data = await planService.fetchPlans();
+            console.log("Loaded plains:", data);
             setPlains(data);
         } catch (error) {
             console.error("Error loading plains:", error);

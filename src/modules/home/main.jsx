@@ -6,6 +6,7 @@ import Cardcomponent from "../../utilities/home/card/cardComponent";
 import MapWidget from "../../utilities/home/map/MapWidget";
 import ServiceSection from "../../utilities/home/section/ServiceSection";
 import 'react-multi-carousel/lib/styles.css';
+import AccFilter from "../../utilities/home/accomodations/AccFiflter";
 
 export default function Home() {
     return (
@@ -25,6 +26,7 @@ export default function Home() {
                         <div className="absolute bottom-0 w-32 h-1 transform -translate-x-1/2 bg-blue-600 rounded-full left-1/2"></div>
                     </div>
                     <Cardcomponent />
+                    <AccFilter />
                     <div className="mt-4">
                         <h2 className="text-2xl font-bold">¿Cómo llegar?</h2>
                         <p className="text-gray-600">Vereda El Cortado Cortado, El Hatillo, Barbosa, Antioquia, Colombia</p>

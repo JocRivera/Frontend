@@ -19,6 +19,9 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     const [selectedAccommodation, setSelectedAccommodation] = useState("");
     const [totalGuests, setTotalGuests] = useState(1);
     const [plan, setPlan] = useState([]);
+    const [programmedPlans, setProgrammedPlans] = useState([]);
+    const [range, setRange] = useState([]);
+
     const isEditMode = !!initialData;
     //actualizar el conteo de huespedes
     useEffect(() => {
@@ -26,7 +29,8 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     }, [numAccompanists, hasAccompanists]);
     //manejar cambios en el plan seleccionado
     useEffect(() => {
-        if (selectedPlan === "67cb9c3bed658211aca19559") {
+        console.log("Plan seleccionado:", selectedPlan);
+        if (selectedPlan !== "686055ef47c17606f805903f" && selectedPlan !== "6860563247c17606f8059044" && selectedPlan !== "") {
             setIsEndDateDisabled(true);
             setEndDate(startDate); // Establece la fecha de fin igual a la de inicio cuando se selecciona el plan
         } else {
@@ -73,7 +77,7 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
             return;
         }
 
-        if (selectedPlan !== "67cb9c91ed658211aca1955d" && selectedPlan !== "67cb9ce3ed658211aca1955f") {
+        if (selectedPlan !== "686055ef47c17606f805903f" && selectedPlan !== "6860563247c17606f8059044") {
             setAvailableAccommodations([]);
             return;
         }
@@ -119,9 +123,8 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     //
     const fetchPlan = async () => {
         try {
-            const apiUrl = 'http://localhost:3000/plan';
+            const apiUrl = 'http://localhost:3000/plan/static';
             const response = await axios.get(apiUrl);
-            console.log(apiUrl);
             setPlan(response.data);
         } catch (error) {
             console.error('Error al obtener el plan:', error);
@@ -130,6 +133,36 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
     useEffect(() => {
         fetchPlan();
     }, [])
+    //
+    function calendarDateToString(cd) {
+        return `${cd.year}-${String(cd.month).padStart(2, '0')}-${String(cd.day).padStart(2, '0')}`;
+    }
+
+    //cargar planes programados cuando se selecciona un rango de fechas
+    useEffect(() => {
+        if (startDate && endDate) {
+            const fetchProgrammedPlans = async () => {
+                try {
+                    const response = await axios.get('http://localhost:3000/programacion/rango', {
+                        params: {
+                            startDate: calendarDateToString(startDate),
+                            endDate: calendarDateToString(endDate),
+                        }
+                    });
+                    setProgrammedPlans(response.data);
+                    console.log('✅ Programmed plans in range:', response.data);
+                } catch (error) {
+                    console.error('❌ Error fetching programmed plans:', error);
+                }
+            };
+            fetchProgrammedPlans();
+        } else {
+            setProgrammedPlans([]);
+        }
+    }, [startDate, endDate]);
+
+
+
     // cargar datos iniciales en edicion
     useEffect(() => {
         if (initialData?.startDate) {
@@ -287,9 +320,6 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
         setAccompanists(accompanists.filter(acc => acc.id !== id));
     };
 
-
-
-
     return (
         <form
             id="reservation-form"
@@ -303,6 +333,36 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
         >
             <div className="grid grid-cols-2 gap-6 ">
                 <div className="flex flex-col max-w-md gap-4">
+                    <div className="flex space-x-4">
+                        <DatePicker
+                            isRequired
+                            label="Fecha de inicio"
+                            onChange={(date) => {
+                                console.log('fecha de inicio:', date);
+                                setStartDate(date);
+                            }}
+                            placeholder="yyyy-mm-dd"
+                            name="startDate"
+                            value={startDate}
+                            isInvalid={!!errors.startDate}
+                            errorMessage={errors.startDate}
+
+                        />
+                        <DatePicker
+                            isRequired
+                            label="Fecha de Fin"
+                            onChange={(date) => {
+                                console.log('fecha de fin:', date);
+                                setEndDate(date);
+                            }}
+                            placeholder="yyyy-mm-dd"
+                            isDisabled={isEndDateDisabled}
+                            name="endDate"
+                            value={endDate}
+                            isInvalid={!!errors.endDate}
+                            errorMessage={errors.endDate}
+                        />
+                    </div>
                     {
                         plan.length > 0 && (
 
@@ -324,34 +384,16 @@ export default function BookForm({ onSubmit, onClose, initialData, onEdit }) {
                                     </SelectItem>
 
                                 ))}
+                                {programmedPlans.map((data) => (
+                                    <SelectItem key={data.idPlan._id} value={data.idPlan._id}>
+                                        {data.idPlan.name}
+                                    </SelectItem>
+                                ))}
                             </Select>
 
                         )
                     }
-                    <div className="flex space-x-4">
-                        <DatePicker
-                            isRequired
-                            label="Fecha de inicio"
-                            onChange={setStartDate}
-                            placeholder="yyyy-mm-dd"
-                            name="startDate"
-                            value={startDate}
-                            isInvalid={!!errors.startDate}
-                            errorMessage={errors.startDate}
 
-                        />
-                        <DatePicker
-                            isRequired
-                            label="Fecha de Fin"
-                            onChange={setEndDate}
-                            placeholder="yyyy-mm-dd"
-                            isDisabled={isEndDateDisabled}
-                            name="endDate"
-                            value={endDate}
-                            isInvalid={!!errors.endDate}
-                            errorMessage={errors.endDate}
-                        />
-                    </div>
                     <Input
                         isRequired
                         label="Name"
